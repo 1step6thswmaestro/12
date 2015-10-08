@@ -1,5 +1,7 @@
-# JARVIS - Weather Widget
-소프트웨어 마에스트로 1단계 2차 프로젝트 
+# Weather Widget
+소프트웨어 마에스트로 1단계 2차 프로젝트
+
+Weather Widget 날씨 위젯
 
 Team. JARVIS
 
@@ -25,6 +27,7 @@ Team. JARVIS
 │── .gitignore                  # .gitignore
 │── app.js                      # 서버 사이드 Startup 스크립트
 │── gulpfile.js                 # Gulp 빌드 구성
+│── trash.js                    # trash codes
 │── package.json                # 패키지 구성
 └── README.md                   # README.md
 ```
@@ -33,13 +36,7 @@ Team. JARVIS
 
 
 ## 빌드 및 실행하기
-먼저 git clone을 다운받습니다.
-
-```shell
-$ git clone https://github.com/soma-JARVIS/weather.git
-```
-
-그 다음 node 패키지를 설치합니다.
+node 패키지를 설치합니다.
 
 ```shell
 $ npm install
