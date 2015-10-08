@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lumino", "Lumino\Lumino.csproj", "{11D8FC05-C70C-4333-950C-16E9C54C70AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|X64 = Debug|X64
+		Debug|X86 = Debug|X86
+		Release|Any CPU = Release|Any CPU
+		Release|X64 = Release|X64
+		Release|X86 = Release|X86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|X64.ActiveCfg = Debug|X64
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|X64.Build.0 = Debug|X64
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|X86.ActiveCfg = Debug|X86
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Debug|X86.Build.0 = Debug|X86
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|X64.ActiveCfg = Release|X64
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|X64.Build.0 = Release|X64
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|X86.ActiveCfg = Release|X86
+		{11D8FC05-C70C-4333-950C-16E9C54C70AB}.Release|X86.Build.0 = Release|X86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Lumino.GridWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lumino"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid x:Name="GridContent" Background="#00000000">
+            
+        </Grid>
+        <Grid x:Name="GridSelect" x:FieldModifier="private" Background="#33FFFFFF" Visibility="Collapsed"/>
+        <Grid x:Name="GridError" x:FieldModifier="private" Background="#7FFF0000" Visibility="Collapsed"/>
+    </Grid>
+</UserControl>
