@@ -1,0 +1,17 @@
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\Music.dll
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\Music.pdb
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\Music.xml
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\policy.2.0.taglib-sharp.dll
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\taglib-sharp.dll
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\bin\Debug\policy.2.0.taglib-sharp.config
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.vbprojResolveAssemblyReference.cache
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Widget.g.vb
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music_MarkupCompile.cache
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music_MarkupCompile.lref
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Widget.baml
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.g.resources
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.Resources.resources
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.vbproj.GenerateResource.Cache
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.dll
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.xml
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\Debug\Music.pdb

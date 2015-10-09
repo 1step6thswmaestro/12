@@ -14,3 +14,4 @@ c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Wi
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\policy.2.0.taglib-sharp.dll
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\taglib-sharp.dll
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\policy.2.0.taglib-sharp.config
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Music.vbprojResolveAssemblyReference.cache

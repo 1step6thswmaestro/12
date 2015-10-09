@@ -1,6 +1,7 @@
 ﻿Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Windows.Threading
+Imports System.IO
 
 Public Class Widget
 
@@ -34,6 +35,24 @@ Public Class Widget
             File.Dispose()
         Catch ex As Exception
             Return "잘못된 파일"
+        End Try
+    End Function
+
+    Public Function GetAlbumArt(ByVal Path As String) As BitmapFrame
+        Try
+            Dim File As TagLib.File = TagLib.File.Create(Path)
+            If File.Tag.Pictures.Length >= 1 Then
+                Dim Stream As New MemoryStream(File.Tag.Pictures(0).Data.Data)
+                Dim Bitmap As BitmapFrame = BitmapFrame.Create(Stream)
+
+                Return Bitmap
+            Else
+                Return Nothing
+            End If
+
+            File.Dispose()
+        Catch ex As Exception
+            Return Nothing
         End Try
     End Function
 #End Region
@@ -96,6 +115,9 @@ Public Class Widget
 #End Region
 
     Private Sub MusicView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        ' 그래픽 품질 설정
+        RenderOptions.SetBitmapScalingMode(Me, BitmapScalingMode.HighQuality)
+
         If Not DesignerProperties.GetIsInDesignMode(Me) Then
             ' 사운드 엔진 초기화
             InitFmodEX()
@@ -122,6 +144,12 @@ Public Class Widget
                 ' 태그 갱신
                 TextTitle.Text = GetTag(SetPath, TagType.Title)
                 TextArtist.Text = GetTag(SetPath, TagType.Artist)
+
+                ' 앨범 이미지 갱신
+                Dim AlbumBrush As New ImageBrush With {
+                    .ImageSource = GetAlbumArt(SetPath)
+                }
+                EllipseAlbum.Fill = AlbumBrush
             End If
         End If
     End Sub

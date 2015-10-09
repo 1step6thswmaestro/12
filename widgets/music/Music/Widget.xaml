@@ -36,9 +36,30 @@
 
     <Viewbox>
         <Grid>
+            <Ellipse x:Name="EllipseAlbum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0"/>
+            <Ellipse x:Name="EllipseAlbumOver" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0" Fill="#B2000000"/>
             <StackPanel VerticalAlignment="Center">
-                <TextBlock x:Name="TextTitle" Text="Title" Foreground="White" Width="200" TextAlignment="Center" FontSize="24" FontWeight="Bold" TextTrimming="CharacterEllipsis" Padding="10,0"/>
-                <TextBlock x:Name="TextArtist" Text="Artist" Foreground="White" Width="200" TextAlignment="Center" FontSize="18" TextTrimming="CharacterEllipsis" Padding="10,0"/>
+                <TextBlock x:Name="TextTitle"
+                           Text="Title"
+                           Foreground="White"
+                           Width="200"
+                           TextAlignment="Center"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           Padding="10,0"
+                           TextOptions.TextRenderingMode="Aliased"
+                           TextOptions.TextFormattingMode="Ideal"/>
+                <TextBlock x:Name="TextArtist"
+                           Text="Artist"
+                           Foreground="White"
+                           Width="200"
+                           TextAlignment="Center"
+                           FontSize="18"
+                           TextTrimming="CharacterEllipsis"
+                           Padding="10,0"
+                           TextOptions.TextRenderingMode="Aliased"
+                           TextOptions.TextFormattingMode="Ideal"/>
             </StackPanel>
             <Grid x:Name="SpectrumPanel" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
         </Grid>
