@@ -20,12 +20,12 @@ Music
  
  </summary>
 </member>
-<member name="T:Music.MusicView">
+<member name="T:Music.Widget">
 <summary>
-MusicView
+Widget
 </summary>
 </member>
-<member name="M:Music.MusicView.InitializeComponent">
+<member name="M:Music.Widget.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>

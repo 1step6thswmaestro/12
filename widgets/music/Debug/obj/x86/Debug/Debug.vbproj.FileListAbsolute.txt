@@ -14,3 +14,7 @@ c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\obj\x86\Debug\De
 c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\obj\x86\Debug\Debug.exe
 c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\obj\x86\Debug\Debug.xml
 c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\obj\x86\Debug\Debug.pdb
+c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\bin\x86\Debug\Music.dll
+c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\bin\x86\Debug\Music.pdb
+c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\bin\x86\Debug\Music.xml
+c:\Users\SEOP\documents\visual studio 2015\Projects\Music\Debug\bin\x86\Debug\taglib-sharp.dll

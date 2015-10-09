@@ -154,5 +154,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Music\Music.vbproj">
+      <Project>{3A39667A-A46C-4F59-86D7-8DCC24A39658}</Project>
+      <Name>Music</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
