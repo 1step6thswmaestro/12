@@ -6,6 +6,8 @@ Imports System.IO
 Public Class Widget
 
 #Region " [ 객체 ] "
+    Private AlbumStream As MemoryStream
+    Private PlayerTimer As DispatcherTimer
     Private SpectrumCount As Integer = 70
     Private SpectrumTimer As DispatcherTimer
     Private ProgressBarList As List(Of ProgressBar)
@@ -42,8 +44,13 @@ Public Class Widget
         Try
             Dim File As TagLib.File = TagLib.File.Create(Path)
             If File.Tag.Pictures.Length >= 1 Then
-                Dim Stream As New MemoryStream(File.Tag.Pictures(0).Data.Data)
-                Dim Bitmap As BitmapFrame = BitmapFrame.Create(Stream)
+                If AlbumStream IsNot Nothing Then
+                    AlbumStream.Close()
+                    AlbumStream.Dispose()
+                End If
+
+                AlbumStream = New MemoryStream(File.Tag.Pictures(0).Data.Data)
+                Dim Bitmap As BitmapFrame = BitmapFrame.Create(AlbumStream)
 
                 Return Bitmap
             Else
@@ -114,6 +121,32 @@ Public Class Widget
     End Sub
 #End Region
 
+#Region " [ 시간 변환 함수 ] "
+    Public Function Milli2HMS(ByVal lngTimeInMilliSeconds As Long) As String
+        Dim lngSecRemainder As Long
+        Dim lngMinSecRemainder As Long
+        Dim lngHoursPart As Long
+        Dim lngMinutesPart As Long
+        Dim lngSecondsPart As Long
+        Dim sTimeRemaining As String
+        Dim sMinutesPart As String
+        Dim sSecondsPart As String
+
+        lngHoursPart = lngTimeInMilliSeconds \ 3600000
+        lngMinSecRemainder = lngTimeInMilliSeconds Mod 3600000
+        lngMinutesPart = lngMinSecRemainder \ 60000
+        lngSecRemainder = lngMinSecRemainder Mod 60000
+        lngSecondsPart = lngSecRemainder \ 1000
+
+        sMinutesPart = Format(lngMinutesPart, "00")
+        sSecondsPart = Format(lngSecondsPart, "00")
+
+        sTimeRemaining = sMinutesPart & ":" & sSecondsPart
+
+        Milli2HMS = sTimeRemaining
+    End Function
+#End Region
+
     Private Sub MusicView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         ' 그래픽 품질 설정
         RenderOptions.SetBitmapScalingMode(Me, BitmapScalingMode.HighQuality)
@@ -134,9 +167,20 @@ Public Class Widget
 
             If OpenFileDialog.ShowDialog() Then
                 ' 선택된 음악 재생
+                If SetPath IsNot Nothing Then
+                    ReleaseSound()
+                End If
                 SetPath = OpenFileDialog.FileName
                 PlaySoundFmodEX()
                 SetVolume(0.5)
+
+                ' 재생 타이머 생성
+                PlayerTimer = New DispatcherTimer
+                PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
+                AddHandler PlayerTimer.Tick, Sub()
+                                                 TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
+                                             End Sub
+                PlayerTimer.Start()
 
                 ' 스펙트럼 그리기
                 StartDraw()

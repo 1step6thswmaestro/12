@@ -36,6 +36,7 @@
 
     <Viewbox>
         <Grid>
+            <Grid x:Name="SpectrumPanel" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
             <Ellipse x:Name="EllipseAlbum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0"/>
             <Ellipse x:Name="EllipseAlbumOver" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0" Fill="#B2000000"/>
             <StackPanel VerticalAlignment="Center">
@@ -50,6 +51,7 @@
                            Padding="10,0"
                            TextOptions.TextRenderingMode="Aliased"
                            TextOptions.TextFormattingMode="Ideal"/>
+
                 <TextBlock x:Name="TextArtist"
                            Text="Artist"
                            Foreground="White"
@@ -61,7 +63,18 @@
                            TextOptions.TextRenderingMode="Aliased"
                            TextOptions.TextFormattingMode="Ideal"/>
             </StackPanel>
-            <Grid x:Name="SpectrumPanel" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            <TextBlock x:Name="TextTime"
+                       Text="00:00 / 00:00"
+                       Foreground="White"
+                       Width="200"
+                       TextAlignment="Center"
+                       FontSize="10"
+                       TextTrimming="CharacterEllipsis"
+                       Padding="10,0"
+                       VerticalAlignment="Center"
+                       TextOptions.TextRenderingMode="Aliased"
+                       TextOptions.TextFormattingMode="Ideal"
+                       Margin="2.5,99,2.5,0"/>
         </Grid>
     </Viewbox>
 </UserControl>
