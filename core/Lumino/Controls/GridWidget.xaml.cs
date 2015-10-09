@@ -163,67 +163,76 @@ namespace Lumino
         #endregion
 
         #region 사용자 함수
-        public void Load(string Path)
+        public bool Load(string Path)
         {
-            // 위젯 분석
-            INI Widget = new INI(Path);
-            string Local = "<%LOCAL%>";
-            string AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-            string AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-            string AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-            int AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
-            int AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+            try
+            {
+                // 위젯 분석
+                INI Widget = new INI(Path);
+                string Local = "<%LOCAL%>";
+                string AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                string AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                string AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                int AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
+                int AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
 
-            if (AssemblyFile.Equals("local"))
-            {
-                // 내부 어셈블리 사용
-                switch (AssemblyEntry)
+                if (AssemblyFile.Equals("local"))
                 {
-                    case "WebView":
-                        ChromiumWebBrowser WebView = new ChromiumWebBrowser();
-                        WebView.Address = AssemblyArgument;
-                        GridContent.Children.Add(WebView);
-                        break;
-                }
-            }
-            else
-            {
-                // 외부 어셈블리 참조
-                UserControl WidgetControl = null;
-                Assembly WidgetAssembly = Assembly.LoadFrom(AssemblyFile);
-                Type[] TypeList = WidgetAssembly.GetTypes();
-                foreach (Type Target in TypeList)
-                {
-                    if (Target.Name == AssemblyEntry)
+                    // 내부 어셈블리 사용
+                    switch (AssemblyEntry)
                     {
-                        // 어셈블리 진입점 검색 및 인스턴스 생성
-                        WidgetControl = Activator.CreateInstance(Target) as UserControl;
-
-                        // 어셈블리에 전달할 인자가 존재하는 경우 메소드 호출
-                        if (AssemblyArgument.Length > 0)
-                        {
-                            MethodInfo WidgetMethod = Target.GetMethod("SetArgument", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                            WidgetMethod.Invoke(WidgetControl, new object[] { AssemblyArgument });
-                        }
-
-                        break;
+                        case "WebView":
+                            ChromiumWebBrowser WebView = new ChromiumWebBrowser();
+                            WebView.Address = AssemblyArgument;
+                            GridContent.Children.Add(WebView);
+                            break;
                     }
-                };
+                }
+                else
+                {
+                    // 외부 어셈블리 참조
+                    UserControl WidgetControl = null;
+                    Assembly WidgetAssembly = Assembly.LoadFrom(AssemblyFile);
+                    Type[] TypeList = WidgetAssembly.GetTypes();
+                    foreach (Type Target in TypeList)
+                    {
+                        if (Target.Name == AssemblyEntry)
+                        {
+                            // 어셈블리 진입점 검색 및 인스턴스 생성
+                            WidgetControl = Activator.CreateInstance(Target) as UserControl;
 
-                // 검색된 컨트롤을 현재 컨트롤에 추가
-                GridContent.Children.Add(WidgetControl);
-            }
+                            // 어셈블리에 전달할 인자가 존재하는 경우 메소드 호출
+                            if (AssemblyArgument.Length > 0)
+                            {
+                                MethodInfo WidgetMethod = Target.GetMethod("SetArgument", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                                WidgetMethod.Invoke(WidgetControl, new object[] { AssemblyArgument });
+                            }
 
-            // 위젯 모양새 적용
-            if (ParentDock != null)
-            {
-                Width = AppearanceWidth * ParentDock.GridWidth;
-                Height = AppearanceHeight * ParentDock.GridHeight;
+                            break;
+                        }
+                    };
+
+                    // 검색된 컨트롤을 현재 컨트롤에 추가
+                    GridContent.Children.Add(WidgetControl);
+                }
+
+                // 위젯 모양새 적용
+                if (ParentDock != null)
+                {
+                    Width = AppearanceWidth * ParentDock.GridWidth;
+                    Height = AppearanceHeight * ParentDock.GridHeight;
+                }
+                else
+                {
+                    WidthColumn = AppearanceWidth;
+                    HeightRow = AppearanceHeight;
+                }
+
+                return true;
             }
-            else
+            catch
             {
-                WidthColumn = AppearanceWidth;
-                HeightRow = AppearanceHeight;
+                return false;
             }
         }
 

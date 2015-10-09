@@ -40,13 +40,11 @@ namespace Lumino
             DockRoot.GuidelineWhenMove = true;
 
             // 위젯 불러오기
-            GridWidget Clock = new GridWidget();
-            Clock.Load(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets\Clock\Clock.ini");
-            DockRoot.Add(Clock);
-
-            GridWidget ParticleClock = new GridWidget();
-            ParticleClock.Load(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets\ParticleClock\ParticleClock.ini");
-            DockRoot.Add(ParticleClock);
+            GridWidget Music = new GridWidget();
+            if (Music.Load(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets\Music\Music.ini"))
+            {
+                DockRoot.Add(Music);
+            }
         }
     }
 }
