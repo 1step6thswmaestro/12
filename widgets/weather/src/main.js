@@ -26,8 +26,6 @@ $(document).ready(function() {
 
     WeatherIcons.initialize($, IndexLoadObserver);
     TodayWeather.initialize($);
-
-
 });
 
 
@@ -51,6 +49,7 @@ var LoadComplete = function() {
     });
 
     $('#app').removeAttr('style');
+
     $('#app').animate({
         opacity: 1
     }, '1200', 'easeInCubic');
