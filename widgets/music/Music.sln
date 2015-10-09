@@ -5,16 +5,32 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music", "Music\Music.csproj", "{17C52C79-A307-4C92-8564-22CE155A3112}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "Debug\Debug.csproj", "{6E471757-E67F-4C37-BEAC-5822F859A46C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{17C52C79-A307-4C92-8564-22CE155A3112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17C52C79-A307-4C92-8564-22CE155A3112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C52C79-A307-4C92-8564-22CE155A3112}.Debug|x86.ActiveCfg = Debug|x86
+		{17C52C79-A307-4C92-8564-22CE155A3112}.Debug|x86.Build.0 = Debug|x86
 		{17C52C79-A307-4C92-8564-22CE155A3112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C52C79-A307-4C92-8564-22CE155A3112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C52C79-A307-4C92-8564-22CE155A3112}.Release|x86.ActiveCfg = Release|x86
+		{17C52C79-A307-4C92-8564-22CE155A3112}.Release|x86.Build.0 = Release|x86
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Debug|x86.ActiveCfg = Debug|x86
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Debug|x86.Build.0 = Debug|x86
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Release|x86.ActiveCfg = Release|x86
+		{6E471757-E67F-4C37-BEAC-5822F859A46C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@
 library
 C#
 .cs
-c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\Debug\
+c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\
 Music
 none
 false
@@ -12,7 +12,7 @@ DEBUG;TRACE
 
 1759589795
 51384056908
-8138678376
+41344916615
 13-1142990016
 MusicView.xaml;
 
