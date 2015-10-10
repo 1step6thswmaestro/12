@@ -1,15 +1,16 @@
-var WeatherConditionConstants = require('../constants/WeatherConditionConstants');
+var CodedWeather = require('../constants/CodedWeather');
 
 var Icons = {};
 
-var AnimatedIcons = {
+var WeatherIcons = {
     initialize: function($, observer) {
-        for (var prop in WeatherConditionConstants) {
-            this.loadDOM($, WeatherConditionConstants[prop]['day-id']);
-            this.loadDOM($, WeatherConditionConstants[prop]['night-id']);
+        for (var prop in CodedWeather.Icons) {
+            this.loadDOM($, CodedWeather.Icons[prop]);
+            this.loadDOM($, CodedWeather.Icons[prop]);
         }
         observer.done(this.initialize);
         $('#weather-animated-icons').remove();
+        console.log("Icons", Icons);
     },
 
     loadDOM: function($, id) {
@@ -23,11 +24,10 @@ var AnimatedIcons = {
     },
 
     getIconDOM: function(id) {
-        console.log("id", id);
         if (!Icons.hasOwnProperty(id)) { throw new Error("해당 id의 날씨 정보가 없습니다."); }
         return Icons[id].DOM;
     }
 };
 
 
-module.exports = AnimatedIcons;
+module.exports = WeatherIcons;
