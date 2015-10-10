@@ -1,6 +1,5 @@
 "use strict";
 
-
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var d3 = require('d3');
@@ -49,7 +48,6 @@ var LoadComplete = function() {
     });
 
     $('#app').removeAttr('style');
-
     $('#app').animate({
         opacity: 1
     }, '1200', 'easeInCubic');

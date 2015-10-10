@@ -13251,7 +13251,6 @@ var APIActionCreator = require('../actions/APIActionCreator');
 var Constants = require('../constants/Constants');
 var request = require('superagent');
 
-console.log(APIActionCreator);
 
 var API = {
     getForecastData: function(dataAmount) {
@@ -13737,7 +13736,6 @@ module.exports = AppDispatcher;
 },{"flux":4}],19:[function(require,module,exports){
 "use strict";
 
-
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var d3 = require('d3');
@@ -13786,7 +13784,6 @@ var LoadComplete = function() {
     });
 
     $('#app').removeAttr('style');
-
     $('#app').animate({
         opacity: 1
     }, '1200', 'easeInCubic');

@@ -2,7 +2,6 @@ var APIActionCreator = require('../actions/APIActionCreator');
 var Constants = require('../constants/Constants');
 var request = require('superagent');
 
-console.log(APIActionCreator);
 
 var API = {
     getForecastData: function(dataAmount) {
