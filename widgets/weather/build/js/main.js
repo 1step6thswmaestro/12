@@ -13216,17 +13216,18 @@ var API = require('../apis/API');
 
 
 var APIActionCreator = {
-    requestForecastData: function() {
+    requestForecastData: function(dataAmount) {
         AppDispatcher.handleAPIRequestAction({
             actionType: Constants.ActionType.REQUEST_FORECAST_DATA
         });
-        API.getForecastData();
+        API.getForecastData(dataAmount);
     },
 
     requestSunMoonData: function() {
         AppDispatcher.handleAPIRequestAction({
             actionType: Constants.ActionType.REQUEST_SUN_MOON_DATA
-        })
+        });
+        API.getSunMoonData();
     },
 
     receiveForecastData: function(_forecastData) {
@@ -13234,11 +13235,18 @@ var APIActionCreator = {
             actionType: Constants.ActionType.RECEIVE_FORECAST_DATA,
             forecastData: _forecastData
         });
+    },
+
+    receiveSunMoonData: function(_sunmoonData) {
+        AppDispatcher.handleAPIReceiveAction({
+            actionType: Constants.ActionType.RECEIVE_SUN_MOON_DATA,
+            sunmoonData: _sunmoonData
+        });
     }
 };
 
 module.exports = APIActionCreator;
-},{"../apis/API":14,"../constants/Constants":17,"../dispatcher/AppDispatcher":19}],14:[function(require,module,exports){
+},{"../apis/API":14,"../constants/Constants":17,"../dispatcher/AppDispatcher":18}],14:[function(require,module,exports){
 var APIActionCreator = require('../actions/APIActionCreator');
 var Constants = require('../constants/Constants');
 var request = require('superagent');
@@ -13246,14 +13254,26 @@ var request = require('superagent');
 console.log(APIActionCreator);
 
 var API = {
-    getForecastData: function() {
+    getForecastData: function(dataAmount) {
         request
             .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
-            .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 111, filter: '3hr'})
+            .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: dataAmount, filter: '3hr'})
             .end(function(err,res) {
                 if (err) { console.log(err); }
                 else {
                     APIActionCreator.receiveForecastData(res.body.response[0]);
+                }
+            });
+    },
+
+    getSunMoonData: function() {
+        request
+            .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
+            .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+            .end(function(err,res) {
+                if (err) { console.log(err); }
+                else {
+                    APIActionCreator.receiveSunMoonData(res.body.response[0]);
                 }
             });
     }
@@ -13262,7 +13282,6 @@ var API = {
 module.exports = API;
 },{"../actions/APIActionCreator":13,"../constants/Constants":17,"superagent":9}],15:[function(require,module,exports){
 var WeatherStore = require('../../stores/WeatherStore');
-var WeatherConditionConstants = require('../../constants/WeatherConditionConstants');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
 var weatherData = null;
@@ -13301,7 +13320,7 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../constants/WeatherConditionConstants":18,"../../stores/WeatherStore":21,"../../utils/WeatherIcons":23}],16:[function(require,module,exports){
+},{"../../stores/WeatherStore":20,"../../utils/WeatherIcons":22}],16:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -13688,303 +13707,6 @@ module.exports = {
     }
 };
 },{"react/lib/keyMirror":8}],18:[function(require,module,exports){
-var WeatherConditionConstants = {
-    '200': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with light rain'
-    },
-    '201': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with rain'
-    },
-    '202': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with heavy rain'
-    },
-    '210': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'light thunderstorm'
-    },
-    '211': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm'
-    },
-    '212': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'heavy thunderstorm'
-    },
-    '221': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'ragged thunderstorm'
-    },
-    '230': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with light drizzle'
-    },
-    '231': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with drizzle'
-    },
-    '232': {
-        'day-id': 'thunder',
-        'night-id': 'thunder',
-        description: 'thunderstorm with heavy drizzle'
-    },
-
-
-
-
-
-    '300': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'light intensity drizzle'
-    },
-    '301': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'drizzle'
-    },
-    '302': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'heavy intensity drizzle'
-    },
-    '310': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'light intensity drizzle rain'
-    },
-    '311': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'drizzle rain'
-    },
-    '312': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'heavy intensity drizzle rain'
-    },
-    '313': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'shower rain and drizzle'
-    },
-    '314': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'heavy shower rain and drizzle'
-    },
-    '321': {
-        'day-id': 'cloudDrizzleAlt',
-        'night-id': 'cloudDrizzleAlt',
-        description: 'shower drizzle'
-    },
-
-
-
-
-
-    '500': {
-        'day-id': 'cloudDrizzleSun',
-        'night-id': 'cloudDrizzleMoon',
-        description: 'light rain'
-    },
-    '501': {
-        'day-id': 'cloudDrizzleSun',
-        'night-id': 'cloudDrizzleMoon',
-        description: 'moderate rain'
-    },
-    '502': {
-        'day-id': 'cloudDrizzleSun',
-        'night-id': 'cloudDrizzleMoon',
-        description: 'heavy intensity rain'
-    },
-    '503': {
-        'day-id': 'cloudDrizzleSun',
-        'night-id': 'cloudDrizzleMoon',
-        description: 'very heavy rain'
-    },
-    '504': {
-        'day-id': 'cloudDrizzleSun',
-        'night-id': 'cloudDrizzleMoon',
-        description: 'extreme rain'
-    },
-    '511': {
-        'day-id': 'cloudSnowSunAlt',
-        'night-id': 'cloudSnowAlt',
-        description: 'freezing rain'
-    },
-    '520': {
-        'day-id': 'cloudRain',
-        'night-id': 'cloudRain',
-        description: 'light intensity shower rain'
-    },
-    '521': {
-        'day-id': 'cloudRain',
-        'night-id': 'cloudRain',
-        description: 'shower rain'
-    },
-    '522': {
-        'day-id': 'cloudRain',
-        'night-id': 'cloudRain',
-        description: 'heavy intensity shower rain'
-    },
-    '531': {
-        'day-id': 'cloudRain',
-        'night-id': 'cloudRain',
-        description: 'ragged shower rain'
-    },
-
-
-
-
-    '600': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'light snow'
-    },
-    '601': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'snow'
-    },
-    '602': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'heavy snow'
-    },
-    '611': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'sleet'
-    },
-    '612': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'shower sleet'
-    },
-    '615': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'light rain and snow'
-    },
-    '616': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'rain and snow'
-    },
-    '620': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'light shower snow'
-    },
-    '621': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'shower snow'
-    },
-    '622': {
-        'day-id': 'cloudSnow',
-        'night-id': 'cloudSnow',
-        description: 'heavy shower snow'
-    },
-
-
-
-
-    '701': {
-        'day-id': 'cloudFogSun',
-        'night-id': 'cloudFogMoon',
-        description: 'mist'
-    },
-    '711': {
-        'day-id': 'cloudFogSun',
-        'night-id': 'cloudFogMoon',
-        description: 'smoke'
-    },
-    '721': {
-        'day-id': 'cloudFog',
-        'night-id': 'cloudFog',
-        description: 'haze'
-    },
-    '731': {
-        'day-id': 'tornado',
-        'night-id': 'tornado',
-        description: 'sand, dust whirls'
-    },
-    '741': {
-        'day-id': 'cloudFogSun',
-        'night-id': 'cloudFogMoon',
-        description: 'fog'
-    },
-    '751': {
-        'day-id': 'tornado',
-        'night-id': 'tornado',
-        description: 'sand'
-    },
-    '761': {
-        'day-id': 'tornado',
-        'night-id': 'tornado',
-        description: 'dust'
-    },
-    '762': {
-        'day-id': 'cloudFog',
-        'night-id': 'cloudFog',
-        description: 'volcanic ash'
-    },
-    '771': {
-        'day-id': 'tornado',
-        'night-id': 'tornado',
-        description: 'squalls'
-    },
-    '781': {
-        'day-id': 'tornado',
-        'night-id': 'tornado',
-        description: 'tornado'
-    },
-
-
-
-
-    '800': {
-        'day-id': 'sun',
-        'night-id': 'moon',
-        description: 'clear sky'
-    },
-    '801': {
-        'day-id': 'cloudSun',
-        'night-id': 'cloudMoon',
-        description: 'few clouds'
-    },
-    '802': {
-        'day-id': 'cloud',
-        'night-id': 'cloud',
-        description: 'scattered clouds'
-    },
-    '803': {
-        'day-id': 'cloud',
-        'night-id': 'cloudMoon',
-        description: 'broken clouds'
-    },
-    '804': {
-        'day-id': 'cloud',
-        'night-id': 'cloud',
-        description: 'overcast clouds'
-    }
-};
-
-module.exports = WeatherConditionConstants;
-},{}],19:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 
 var AppDispatcher = new Dispatcher();
@@ -14012,7 +13734,7 @@ AppDispatcher.handleAPIReceiveAction = function(action) {
 
 
 module.exports = AppDispatcher;
-},{"flux":4}],20:[function(require,module,exports){
+},{"flux":4}],19:[function(require,module,exports){
 "use strict";
 
 
@@ -14072,7 +13794,7 @@ var LoadComplete = function() {
     IndexLoadObserver.removeCompleteListener(LoadComplete);
 };
 
-},{"./apis/API":14,"./components/TodayWeather/TodayWeather":15,"./stores/WeatherStore":21,"./utils/Observer":22,"./utils/WeatherIcons":23,"d3":3,"events":1}],21:[function(require,module,exports){
+},{"./apis/API":14,"./components/TodayWeather/TodayWeather":15,"./stores/WeatherStore":20,"./utils/Observer":21,"./utils/WeatherIcons":22,"d3":3,"events":1}],20:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 var EventEmitter = require('events').EventEmitter;
@@ -14123,7 +13845,7 @@ AppDispatcher.register(function(payload) {
 });
 
 module.exports = WeatherStore;
-},{"../constants/Constants":17,"../dispatcher/AppDispatcher":19,"events":1,"underscore":12}],22:[function(require,module,exports){
+},{"../constants/Constants":17,"../dispatcher/AppDispatcher":18,"events":1,"underscore":12}],21:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var _ = require('underscore');
 
@@ -14172,7 +13894,7 @@ Observer.prototype.removeCompleteListener = function(callback) {
 
 
 module.exports = Observer;
-},{"events":1,"underscore":12}],23:[function(require,module,exports){
+},{"events":1,"underscore":12}],22:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var Icons = {};
@@ -14206,4 +13928,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":16}]},{},[20]);
+},{"../constants/CodedWeather":16}]},{},[19]);

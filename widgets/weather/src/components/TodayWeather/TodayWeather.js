@@ -1,5 +1,4 @@
 var WeatherStore = require('../../stores/WeatherStore');
-var WeatherConditionConstants = require('../../constants/WeatherConditionConstants');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
 var weatherData = null;
