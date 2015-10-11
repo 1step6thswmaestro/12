@@ -144,14 +144,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Fonts\MYRIAABI.TTF" />
-    <Resource Include="Fonts\MYRIAAMI.TTF" />
-    <Resource Include="Fonts\MYRIAASI.TTF" />
-    <Resource Include="Fonts\MYRIAATI.TTF" />
-    <Resource Include="Fonts\MYRIADAB.TTF" />
-    <Resource Include="Fonts\MYRIADAM.TTF" />
-    <Resource Include="Fonts\MYRIADAS.TTF" />
-    <Resource Include="Fonts\MYRIADAT.TTF" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
