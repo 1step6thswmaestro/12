@@ -108,8 +108,10 @@ namespace Lumino
                 DoubleAnimation AnimationY = new DoubleAnimation();
                 DoubleAnimation AnimationWidth = new DoubleAnimation();
                 DoubleAnimation AnimationHeight = new DoubleAnimation();
-                CubicEase AnimationEasing = new CubicEase();
-                TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(1000);
+                BackEase AnimationEasing = new BackEase();
+                TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(500);
+
+                AnimationEasing.Amplitude = 0.4;
 
                 AnimationX.From = Canvas.GetLeft(this);
                 AnimationX.To = X;
