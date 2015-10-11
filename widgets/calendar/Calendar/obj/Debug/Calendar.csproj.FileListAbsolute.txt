@@ -1,0 +1,13 @@
+C:\Users\인범\Documents\Calendar\Calendar\bin\Debug\Calendar.exe.config
+C:\Users\인범\Documents\Calendar\Calendar\bin\Debug\Calendar.exe
+C:\Users\인범\Documents\Calendar\Calendar\bin\Debug\Calendar.pdb
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.csprojResolveAssemblyReference.cache
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\MainWindow.baml
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\MainWindow.g.cs
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\App.g.cs
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar_MarkupCompile.cache
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.g.resources
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.Properties.Resources.resources
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.csproj.GenerateResource.Cache
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.exe
+C:\Users\인범\Documents\Calendar\Calendar\obj\Debug\Calendar.pdb
