@@ -66,37 +66,38 @@ Public Class Widget
 
 #Region " [ 스펙트럼 함수 ] "
     Public Sub StartDraw()
-        If Not SetPath Is Nothing Then
-            ' 값 보정
-            If ProgressBarList Is Nothing OrElse ProgressBarList.Count = 0 Then
-                SpectrumCount -= 1
-            End If
+        ' 값 보정
+        If ProgressBarList Is Nothing OrElse ProgressBarList.Count = 0 Then
+            SpectrumCount -= 1
+        End If
 
-            ' 스펙트럼 그리기
-            ProgressBarList = New List(Of ProgressBar)
-            SpectrumPanel.Children.Clear()
+        ' 스펙트럼 그리기
+        ProgressBarList = New List(Of ProgressBar)
+        SpectrumPanel.Children.Clear()
 
-            Dim Angle As Double = 360 / SpectrumCount
-            Dim TransformHeight As Double = 155
-            For i = 0 To SpectrumCount
-                Dim ProgressBar As New ProgressBar
-                ProgressBar.Orientation = Orientation.Vertical
-                ProgressBar.Height = 50
-                ProgressBar.Width = 5
-                ProgressBar.Maximum = 0
-                ProgressBar.VerticalAlignment = VerticalAlignment.Top
-                ProgressBar.Margin = New Thickness(0, 0, 0, TransformHeight + (ProgressBar.Height * 2))
-                ProgressBar.RenderTransform = New RotateTransform(Angle * i, 0, TransformHeight)
-                ProgressBar.Foreground = Brushes.White
+        Dim Angle As Double = 360 / SpectrumCount
+        Dim TransformHeight As Double = 155
+        For i = 0 To SpectrumCount
+            Dim ProgressBar As New ProgressBar
+            ProgressBar.Orientation = Orientation.Vertical
+            ProgressBar.Height = 50
+            ProgressBar.Width = 5
+            ProgressBar.Maximum = 0
+            ProgressBar.Value = 0
+            ProgressBar.VerticalAlignment = VerticalAlignment.Top
+            ProgressBar.Margin = New Thickness(0, 0, 0, TransformHeight + (ProgressBar.Height * 2))
+            ProgressBar.RenderTransform = New RotateTransform(Angle * i, 0, TransformHeight)
+            ProgressBar.Foreground = Brushes.White
 
-                SpectrumPanel.Children.Add(ProgressBar)
-                ProgressBarList.Add(ProgressBar)
-            Next
+            SpectrumPanel.Children.Add(ProgressBar)
+            ProgressBarList.Add(ProgressBar)
+        Next
 
-            ' 스펙트럼 그리기 타이머 생성
-            SpectrumTimer = New DispatcherTimer
-            SpectrumTimer.Interval = TimeSpan.FromMilliseconds(30)
-            AddHandler SpectrumTimer.Tick, Sub()
+        ' 스펙트럼 그리기 타이머 생성
+        SpectrumTimer = New DispatcherTimer
+        SpectrumTimer.Interval = TimeSpan.FromMilliseconds(30)
+        AddHandler SpectrumTimer.Tick, Sub()
+                                           If SetPath IsNot Nothing Then
                                                ' 스펙트럼 불러오기
                                                ' 2의 배수만 가능. 256 권장.
                                                Dim Spectrum As Single() = GetSpectrum(1024)
@@ -114,11 +115,11 @@ Public Class Widget
                                                    End If
                                                    ProgressBarList(i).Value = Spectrum(i)
                                                Next
-                                           End Sub
+                                           End If
+                                       End Sub
 
-            ' 스펙트럼 타이머 시작
-            SpectrumTimer.Start()
-        End If
+        ' 스펙트럼 타이머 시작
+        SpectrumTimer.Start()
     End Sub
 #End Region
 
@@ -155,6 +156,19 @@ Public Class Widget
         If Not DesignerProperties.GetIsInDesignMode(Me) Then
             ' 사운드 엔진 초기화
             InitFmodEX()
+
+            ' 계산 타이머 생성
+            PlayerTimer = New DispatcherTimer
+            PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
+            AddHandler PlayerTimer.Tick, Sub()
+                                             If SetPath IsNot Nothing Then
+                                                 TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
+                                             End If
+                                         End Sub
+            PlayerTimer.Start()
+
+            ' 스펙트럼 그리기
+            StartDraw()
         End If
     End Sub
 
@@ -174,17 +188,6 @@ Public Class Widget
                 SetPath = OpenFileDialog.FileName
                 PlaySoundFmodEX()
                 SetVolume(0.5)
-
-                ' 재생 타이머 생성
-                PlayerTimer = New DispatcherTimer
-                PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
-                AddHandler PlayerTimer.Tick, Sub()
-                                                 TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
-                                             End Sub
-                PlayerTimer.Start()
-
-                ' 스펙트럼 그리기
-                StartDraw()
 
                 ' 태그 갱신
                 TextTitle.Text = GetTag(SetPath, TagType.Title)
@@ -231,7 +234,6 @@ Public Class Widget
                     Dim AverageB As Integer = Math.Min(255, (TotalB \ TotalPX) * Light)
 
                     ' 스펙트럼 색상 변경
-
                     For i As Integer = 0 To ProgressBarList.Count - 1
                         ProgressBarList(i).Foreground = New SolidColorBrush(Color.FromArgb(255, AverageR, AverageG, AverageB))
                     Next
