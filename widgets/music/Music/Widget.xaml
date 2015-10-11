@@ -37,11 +37,14 @@
     <Viewbox>
         <Grid>
             <Grid x:Name="SpectrumPanel" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <Ellipse x:Name="EllipseAlbum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0"/>
+            <Ellipse x:Name="EllipseAlbum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Images/Default.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
             <Ellipse x:Name="EllipseAlbumOver" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0" Fill="#7F000000"/>
             <StackPanel VerticalAlignment="Center">
                 <TextBlock x:Name="TextTitle"
-                           Text="Title"
                            Foreground="White"
                            Width="200"
                            TextAlignment="Center"
@@ -53,7 +56,6 @@
                            TextOptions.TextFormattingMode="Ideal"/>
 
                 <TextBlock x:Name="TextArtist"
-                           Text="Artist"
                            Foreground="White"
                            Width="200"
                            TextAlignment="Center"
@@ -64,7 +66,6 @@
                            TextOptions.TextFormattingMode="Ideal"/>
             </StackPanel>
             <TextBlock x:Name="TextTime"
-                       Text="00:00 / 00:00"
                        Foreground="White"
                        Width="200"
                        TextAlignment="Center"
