@@ -14,7 +14,7 @@
                     <ControlTemplate TargetType="ProgressBar">
                         <Grid Background="{x:Null}" x:Name="Root">
                             <Rectangle x:Name="PART_Track" Stretch="Fill" Fill="{x:Null}"/>
-                            <Rectangle x:Name="PART_Indicator" HorizontalAlignment="Left" Fill="White"/>
+                            <Rectangle x:Name="PART_Indicator" HorizontalAlignment="Left" Fill="{TemplateBinding Foreground}"/>
                         </Grid>
 
                         <ControlTemplate.Triggers>
@@ -38,7 +38,7 @@
         <Grid>
             <Grid x:Name="SpectrumPanel" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
             <Ellipse x:Name="EllipseAlbum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0"/>
-            <Ellipse x:Name="EllipseAlbumOver" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0" Fill="#B2000000"/>
+            <Ellipse x:Name="EllipseAlbumOver" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="210" Height="210" Margin="-5,5,0,0" Fill="#7F000000"/>
             <StackPanel VerticalAlignment="Center">
                 <TextBlock x:Name="TextTitle"
                            Text="Title"

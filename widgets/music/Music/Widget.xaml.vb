@@ -1,7 +1,7 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.IO
+Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Windows.Threading
-Imports System.IO
 
 Public Class Widget
 
@@ -87,6 +87,7 @@ Public Class Widget
                 ProgressBar.VerticalAlignment = VerticalAlignment.Top
                 ProgressBar.Margin = New Thickness(0, 0, 0, TransformHeight + (ProgressBar.Height * 2))
                 ProgressBar.RenderTransform = New RotateTransform(Angle * i, 0, TransformHeight)
+                ProgressBar.Foreground = Brushes.White
 
                 SpectrumPanel.Children.Add(ProgressBar)
                 ProgressBarList.Add(ProgressBar)
@@ -190,10 +191,51 @@ Public Class Widget
                 TextArtist.Text = GetTag(SetPath, TagType.Artist)
 
                 ' 앨범 이미지 갱신
-                Dim AlbumBrush As New ImageBrush With {
-                    .ImageSource = GetAlbumArt(SetPath)
-                }
-                EllipseAlbum.Fill = AlbumBrush
+                Dim Album As BitmapFrame = GetAlbumArt(SetPath)
+                If Album IsNot Nothing Then
+                    Dim AlbumBrush As New ImageBrush With {
+                        .ImageSource = Album
+                    }
+                    EllipseAlbum.Fill = AlbumBrush
+                End If
+
+                ' 앨범 평균색 계산
+                If Album IsNot Nothing Then
+                    Dim Bitmap As System.Drawing.Bitmap
+                    Using Stream As New MemoryStream()
+                        Dim Encoder As BitmapEncoder = New BmpBitmapEncoder()
+                        Encoder.Frames.Add(BitmapFrame.Create(Album))
+                        Encoder.Save(Stream)
+                        Bitmap = New System.Drawing.Bitmap(Stream)
+                    End Using
+
+                    Dim TotalR As Integer = 0
+                    Dim TotalG As Integer = 0
+                    Dim TotalB As Integer = 0
+                    Dim TotalPX As Integer = 0
+                    Dim ScanStep As Integer = 50
+
+                    For i As Integer = 0 To Bitmap.Width - 1 Step ScanStep
+                        For j As Integer = 0 To Bitmap.Height - 1 Step ScanStep
+                            Dim RGB As System.Drawing.Color = Bitmap.GetPixel(i, j)
+                            TotalR += RGB.R
+                            TotalG += RGB.G
+                            TotalB += RGB.B
+                            TotalPX += 1
+                        Next
+                    Next
+
+                    Dim Light As Double = 1.2
+                    Dim AverageR As Integer = Math.Min(255, (TotalR \ TotalPX) * Light)
+                    Dim AverageG As Integer = Math.Min(255, (TotalG \ TotalPX) * Light)
+                    Dim AverageB As Integer = Math.Min(255, (TotalB \ TotalPX) * Light)
+
+                    ' 스펙트럼 색상 변경
+
+                    For i As Integer = 0 To ProgressBarList.Count - 1
+                        ProgressBarList(i).Foreground = New SolidColorBrush(Color.FromArgb(255, AverageR, AverageG, AverageB))
+                    Next
+                End If
             End If
         End If
     End Sub
