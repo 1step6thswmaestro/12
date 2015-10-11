@@ -19,7 +19,6 @@ var TodayWeather = {
         AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
         AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
 
-        WeatherStore.addReceiveDataListener(this.setWeatherData);
     },
 
     setWeatherData: function() {

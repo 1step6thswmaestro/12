@@ -1,50 +1,53 @@
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
-var EventEmitter = require('events').EventEmitter;
+
+var Promise = require('es6-promise').Promise;
+var request = require('superagent');
 var _ = require('underscore');
 
 
 var ForecastData;
 var SunMoonData;
 
-function initForecastData(_weatherData) {
-    ForecastData = _weatherData;
-    console.log("WeatherData", ForecastData);
-}
 
-function initSunMoonData(_sunMoonData) {
-    SunMoonData = _sunMoonData;
-}
-
-
-var WeatherStore = _.extend({}, EventEmitter.prototype, {
+var WeatherStore = {
     getForecastData: function() {
         return ForecastData;
     },
 
-    emitReceiveData: function() { this.emit('received'); },
-    addReceiveDataListener: function(callback) { this.on('received', callback); },
-    removeReceiveDataListener: function(callback) { this.removeListener('received', callback); }
-});
+    getSunMoonData: function() {
+        return SunMoonData;
+    },
 
+    notifyForecastData: AppFlowController.addTarget(Constants.FlowID.GET_FORECAST_DATA, function(payload) {
+        return new Promise(function(resolve, reject){
+            request
+                .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: payload.dataAmount, filter: '3hr'})
+                .end(function(err,res) {
+                    if (err) { console.log(err); }
+                    else {
+                        ForecastData = res.body.response[0];
+                        resolve();
+                    }
+                });
+        });
+    }),
 
-AppDispatcher.register(function(payload) {
-    var action = payload.action;
-
-    switch(action.actionType) {
-        case Constants.ActionType.RECEIVE_FORECAST_DATA:
-            initForecastData(action.forecastData);
-            WeatherStore.emitReceiveData();
-            break;
-
-        case Constants.ActionType.RECEIVE_SUN_MOON_DATA:
-            initSunMoonData(action.sunMoonData);
-            WeatherStore.emitReceiveData();
-            break;
-
-        default:
-            return true;
-    }
-});
+    notifySunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
+        return new Promise(function(resolve, reject){
+            request
+                .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .end(function(err,res) {
+                    if (err) { console.log(err); }
+                    else {
+                        SunMoonData = res.body.response[0];
+                        resolve();
+                    }
+                });
+        });
+    })
+};
 
 module.exports = WeatherStore;

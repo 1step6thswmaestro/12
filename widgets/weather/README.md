@@ -13,12 +13,11 @@ Team. JARVIS
 .
 ├── /build/                     # 컴파일 아웃풋(Compile Output)
 ├── /src/                       # 소스 코드
-│   ├── /actions/               # Flux - 액션 생성기(action creator)
-│   ├── /apis/                  # WebAPI 유틸리티
 │   ├── /components/            # 컴포넌트(model + view)
 │   ├── /constants/             # 상수
-│   ├── /dispatcher/            # Flux - Dispathcer
-│   ├── /stores/                # Flux - Store
+│   ├── /controller/            # FlowController
+│   ├── /dispatcher/            # FlowController - Dispathcer
+│   ├── /stores/                # FlowController - Store
 │   ├── /utils/                 # Util들
 │   ├── /index.html             # index.html
 │   ├── /main.js                # main.js
@@ -32,6 +31,17 @@ Team. JARVIS
 └── README.md                   # README.md
 ```
 
+## Flow Controller
+[FlowController.js](https://github.com/seokju-na/FlowController.js)
+
+쉬운 웹 앱 아키텍처 설계를 위한 JS 유틸리티. Data Flow Controller
+
+```shell
+$ npm install flow-controller
+$ npm install --save flow-controller
+```
+
+npm 패키지로 설치가 가능합니다
 
 
 

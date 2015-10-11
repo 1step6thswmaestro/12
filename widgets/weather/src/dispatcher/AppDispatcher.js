@@ -1,27 +1,20 @@
-var Dispatcher = require('flux').Dispatcher;
+var AppFlowController = require('../controller/AppFlowController');
+var Constants = require('../constants/Constants');
 
-var AppDispatcher = new Dispatcher();
+var AppDispatcher = {
+    getForecastData: function(dataAmount) {
+        AppFlowController.dispatch(
+            Constants.FlowID.GET_FORECAST_DATA,
+            { dataAmount: dataAmount }
+        );
+    },
 
-AppDispatcher.handleClientAction = function(action) {
-    this.dispatch({
-        source: 'VIEW_ACTION',
-        action: action
-    });
+    getSunMoonData: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.GET_SUN_MOON_DATA,
+            {}
+        );
+    }
 };
-
-AppDispatcher.handleAPIRequestAction = function(action) {
-    this.dispatch({
-        source: 'API_REQUEST_ACTION',
-        action: action
-    });
-};
-
-AppDispatcher.handleAPIReceiveAction = function(action) {
-    this.dispatch({
-        source: 'API_RECEIVE_ACTION',
-        action: action
-    });
-};
-
 
 module.exports = AppDispatcher;
