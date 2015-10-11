@@ -10,11 +10,9 @@ module.exports = {
         GET_SUN_MOON_DATA: APIroot + '/sunmoon'
     },
 
-    ActionType: keyMirror({
-        REQUEST_FORECAST_DATA: null,
-        REQUEST_SUN_MOON_DATA: null,
-        RECEIVE_FORECAST_DATA: null,
-        RECEIVE_SUN_MOON_DATA: null
+    FlowID: keyMirror({
+        GET_FORECAST_DATA: null,
+        GET_SUN_MOON_DATA: null
     }),
 
     CountryCode: {

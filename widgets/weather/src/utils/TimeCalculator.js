@@ -1,4 +1,3 @@
-var APIActionCreator = require('../actions/APIActionsCreator');
 var Observer = require('./Observer');
 
 
@@ -19,8 +18,7 @@ var TimeCalculator = {
     },
 
     callAPI: function(dataAmount) {
-        APIActionCreator.requestForecastData(dataAmount);
-        APIActionCreator.requestSunMoonData();
+
     }
 };
 
