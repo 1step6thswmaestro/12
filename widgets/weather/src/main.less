@@ -422,6 +422,12 @@ html, body {
 
                 display: flex;
 
+                &-title {
+                    display: inline-block;
+                    font-size: 1.5vh;
+                    margin-left: 1vh;
+                }
+
                 &-left {
                     flex: 1;
 
@@ -462,6 +468,56 @@ html, body {
                             }
                         }
                     }
+
+                    .details {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+
+                        .row {
+                            flex: 1;
+                            display: flex;
+
+                            .col {
+                                flex: 1;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+
+                                i {
+                                    font-size: 6vh;
+                                }
+
+                                .item {
+                                    font-size: 1.5vh;
+                                    font-weight: 300;
+                                    opacity: .55;
+                                }
+                                .value {
+                                    font-size: 2vh;
+                                    font-weight: 300;
+                                    color: #63b4cf;
+
+                                    &.unit {
+                                        &-celsius:after {
+                                            margin-left: .25vw;
+                                            content: "º";
+                                        }
+                                        &-percent:after {
+                                            font-size: 1.5vh;
+                                            margin-left: .25vw;
+                                            content: "%";
+                                        }
+                                        &-mm:after {
+                                            font-size: 1vh;
+                                            margin-left: .5vw;
+                                            content: "mm";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 &-right {
@@ -470,11 +526,6 @@ html, body {
                     flex-direction: column;
 
                     margin-left: .5vh;
-
-                    &-title {
-                        font-size: 1.5vh;
-                        margin-left: 1vh;
-                    }
 
                     &-top {
                         flex: 1;
