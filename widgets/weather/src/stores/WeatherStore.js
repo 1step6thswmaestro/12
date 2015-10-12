@@ -19,7 +19,7 @@ var WeatherStore = {
         return SunMoonData;
     },
 
-    notifyForecastData: AppFlowController.addTarget(Constants.FlowID.GET_FORECAST_DATA, function(payload) {
+    callbackForecastData: AppFlowController.addTarget(Constants.FlowID.GET_FORECAST_DATA, function(payload) {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
@@ -34,7 +34,7 @@ var WeatherStore = {
         });
     }),
 
-    notifySunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
+    callbackSunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
