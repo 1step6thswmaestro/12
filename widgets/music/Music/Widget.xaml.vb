@@ -1,7 +1,7 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.IO
+Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Windows.Threading
-Imports System.IO
 
 Public Class Widget
 
@@ -11,6 +11,18 @@ Public Class Widget
     Private SpectrumCount As Integer = 70
     Private SpectrumTimer As DispatcherTimer
     Private ProgressBarList As List(Of ProgressBar)
+#End Region
+
+#Region " [ 내부 함수 ] "
+    Private Function ImageLoad(ByVal Path As String) As BitmapImage
+        Dim Image As New BitmapImage()
+        Image.BeginInit()
+        Image.UriSource = New Uri(Path)
+        Image.CacheOption = BitmapCacheOption.OnDemand
+        Image.EndInit()
+
+        Return Image
+    End Function
 #End Region
 
 #Region " [ 태그 함수 ] "
@@ -24,7 +36,7 @@ Public Class Widget
             Dim File As TagLib.File = TagLib.File.Create(Path)
             Select Case Type
                 Case TagType.Title
-                    Return If(String.IsNullOrEmpty(File.Tag.Title), "알 수 없는 제목", File.Tag.Title)
+                    Return If(String.IsNullOrEmpty(File.Tag.Title), IO.Path.GetFileNameWithoutExtension(Path), File.Tag.Title)
 
                 Case TagType.Artist
                     Return If(String.IsNullOrEmpty(File.Tag.FirstPerformer), "알 수 없는 음악가", File.Tag.FirstPerformer)
@@ -66,36 +78,37 @@ Public Class Widget
 
 #Region " [ 스펙트럼 함수 ] "
     Public Sub StartDraw()
-        If Not SetPath Is Nothing Then
-            ' 값 보정
-            If ProgressBarList Is Nothing OrElse ProgressBarList.Count = 0 Then
-                SpectrumCount -= 1
-            End If
+        ' 값 보정
+        If ProgressBarList Is Nothing OrElse ProgressBarList.Count = 0 Then
+            SpectrumCount -= 1
+        End If
 
-            ' 스펙트럼 그리기
-            ProgressBarList = New List(Of ProgressBar)
-            SpectrumPanel.Children.Clear()
+        ' 스펙트럼 그리기
+        ProgressBarList = New List(Of ProgressBar)
+        SpectrumPanel.Children.Clear()
 
-            Dim Angle As Double = 360 / SpectrumCount
-            Dim TransformHeight As Double = 155
-            For i = 0 To SpectrumCount
-                Dim ProgressBar As New ProgressBar
-                ProgressBar.Orientation = Orientation.Vertical
-                ProgressBar.Height = 50
-                ProgressBar.Width = 5
-                ProgressBar.Maximum = 0
-                ProgressBar.VerticalAlignment = VerticalAlignment.Top
-                ProgressBar.Margin = New Thickness(0, 0, 0, TransformHeight + (ProgressBar.Height * 2))
-                ProgressBar.RenderTransform = New RotateTransform(Angle * i, 0, TransformHeight)
+        Dim Angle As Double = 360 / SpectrumCount
+        Dim TransformHeight As Double = 155
+        For i = 0 To SpectrumCount
+            Dim ProgressBar As New ProgressBar
+            ProgressBar.Orientation = Orientation.Vertical
+            ProgressBar.Height = 50
+            ProgressBar.Width = 5
+            ProgressBar.Maximum = 0
+            ProgressBar.VerticalAlignment = VerticalAlignment.Top
+            ProgressBar.Margin = New Thickness(0, 0, 0, TransformHeight + (ProgressBar.Height * 2))
+            ProgressBar.RenderTransform = New RotateTransform(Angle * i, 0, TransformHeight)
+            ProgressBar.Foreground = Brushes.White
 
-                SpectrumPanel.Children.Add(ProgressBar)
-                ProgressBarList.Add(ProgressBar)
-            Next
+            SpectrumPanel.Children.Add(ProgressBar)
+            ProgressBarList.Add(ProgressBar)
+        Next
 
-            ' 스펙트럼 그리기 타이머 생성
-            SpectrumTimer = New DispatcherTimer
-            SpectrumTimer.Interval = TimeSpan.FromMilliseconds(30)
-            AddHandler SpectrumTimer.Tick, Sub()
+        ' 스펙트럼 그리기 타이머 생성
+        SpectrumTimer = New DispatcherTimer
+        SpectrumTimer.Interval = TimeSpan.FromMilliseconds(30)
+        AddHandler SpectrumTimer.Tick, Sub()
+                                           If SetPath IsNot Nothing Then
                                                ' 스펙트럼 불러오기
                                                ' 2의 배수만 가능. 256 권장.
                                                Dim Spectrum As Single() = GetSpectrum(1024)
@@ -113,11 +126,11 @@ Public Class Widget
                                                    End If
                                                    ProgressBarList(i).Value = Spectrum(i)
                                                Next
-                                           End Sub
+                                           End If
+                                       End Sub
 
-            ' 스펙트럼 타이머 시작
-            SpectrumTimer.Start()
-        End If
+        ' 스펙트럼 타이머 시작
+        SpectrumTimer.Start()
     End Sub
 #End Region
 
@@ -154,6 +167,20 @@ Public Class Widget
         If Not DesignerProperties.GetIsInDesignMode(Me) Then
             ' 사운드 엔진 초기화
             InitFmodEX()
+
+            ' 계산 타이머 생성
+            PlayerTimer = New DispatcherTimer
+            PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
+            AddHandler PlayerTimer.Tick, Sub()
+                                             If SetPath IsNot Nothing Then
+                                                 TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
+                                             End If
+                                         End Sub
+            PlayerTimer.Start()
+
+            ' 스펙트럼 그리기
+            SpectrumPanel.Visibility = Visibility.Hidden
+            StartDraw()
         End If
     End Sub
 
@@ -174,26 +201,57 @@ Public Class Widget
                 PlaySoundFmodEX()
                 SetVolume(0.5)
 
-                ' 재생 타이머 생성
-                PlayerTimer = New DispatcherTimer
-                PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
-                AddHandler PlayerTimer.Tick, Sub()
-                                                 TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
-                                             End Sub
-                PlayerTimer.Start()
-
-                ' 스펙트럼 그리기
-                StartDraw()
-
                 ' 태그 갱신
                 TextTitle.Text = GetTag(SetPath, TagType.Title)
                 TextArtist.Text = GetTag(SetPath, TagType.Artist)
 
                 ' 앨범 이미지 갱신
-                Dim AlbumBrush As New ImageBrush With {
-                    .ImageSource = GetAlbumArt(SetPath)
-                }
-                EllipseAlbum.Fill = AlbumBrush
+                Dim Brush As New ImageBrush
+                Dim Album As BitmapFrame = GetAlbumArt(SetPath)
+                If Album IsNot Nothing Then
+                    Brush.ImageSource = Album
+                Else
+                    Brush.ImageSource = ImageLoad("pack://application:,,,/Music;component/Images/Default.png")
+                End If
+                EllipseAlbum.Fill = Brush
+
+                ' 앨범 평균색 계산
+                Dim Bitmap As System.Drawing.Bitmap
+                Using Stream As New MemoryStream()
+                    Dim Encoder As BitmapEncoder = New BmpBitmapEncoder()
+                    Encoder.Frames.Add(BitmapFrame.Create(TryCast(EllipseAlbum.Fill, ImageBrush).ImageSource))
+                    Encoder.Save(Stream)
+                    Bitmap = New System.Drawing.Bitmap(Stream)
+                End Using
+
+                Dim TotalR As Integer = 0
+                Dim TotalG As Integer = 0
+                Dim TotalB As Integer = 0
+                Dim TotalPX As Integer = 0
+                Dim ScanStep As Integer = 50
+
+                For i As Integer = 0 To Bitmap.Width - 1 Step ScanStep
+                    For j As Integer = 0 To Bitmap.Height - 1 Step ScanStep
+                        Dim RGB As System.Drawing.Color = Bitmap.GetPixel(i, j)
+                        TotalR += RGB.R
+                        TotalG += RGB.G
+                        TotalB += RGB.B
+                        TotalPX += 1
+                    Next
+                Next
+
+                Dim Light As Double = 1.2
+                Dim AverageR As Integer = Math.Min(255, (TotalR \ TotalPX) * Light)
+                Dim AverageG As Integer = Math.Min(255, (TotalG \ TotalPX) * Light)
+                Dim AverageB As Integer = Math.Min(255, (TotalB \ TotalPX) * Light)
+
+                ' 스펙트럼 색상 변경
+                For i As Integer = 0 To ProgressBarList.Count - 1
+                    ProgressBarList(i).Foreground = New SolidColorBrush(Color.FromArgb(255, AverageR, AverageG, AverageB))
+                Next
+
+                ' 스펙트럼 패널 표시
+                SpectrumPanel.Visibility = Visibility.Visible
             End If
         End If
     End Sub

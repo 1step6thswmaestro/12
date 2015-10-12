@@ -28,9 +28,7 @@ namespace Calendar
 
         public void Awake()
         {
-
-
-            // Canvas will replace this.Content
+/*            // Canvas will replace this.Content
             Canvas canvas = new Canvas();
 
             // List of colors used.
@@ -126,17 +124,21 @@ namespace Calendar
                     }
 
                     // draw the date
-                    Label label = new Label
+                    TextBlock label = new TextBlock
                     {
-                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right,
-                        Content = cnt,
+//                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right,
+                        Text = cnt + "",
+                        TextAlignment = System.Windows.TextAlignment.Center,
                         Foreground = NORMAL_COLOR,
                         FontFamily = new System.Windows.Media.FontFamily(FONTFAMILY),
                         FontWeight = FontWeights.Bold,
                         // Move 0.02f right to make alignment
-                        Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f + ( cnt < 10 ? 0.03f : 0.01f)),
-                            y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0)
+//                        Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f + ( cnt < 10 ? 0.03f : 0.02f)),
+//                            y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0)
                     };
+                    label.Text = label.ActualWidth + "";
+                    label.Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f),
+                            y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0);
                     canvas.Children.Add(label);
 
                     cnt++;
@@ -163,7 +165,7 @@ namespace Calendar
             }
 
             // Change content
-            this.Content = canvas;
+            this.Content = canvas;*/
         }
         public int x_in_pixel(float x_in_ratio) { return (int)(this.Width * x_in_ratio); }
         public int y_in_pixel(float y_in_ratio) { return (int)(this.Height * y_in_ratio); }
