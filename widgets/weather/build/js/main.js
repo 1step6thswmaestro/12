@@ -4376,7 +4376,7 @@ var TempGraph = {
                 ['15', 23, 11],
                 ['18', 22, 13],
                 ['21', 24, 11],
-                ['24', 33, 12]
+                ['24', 20, 12]
             ]);
 
 
@@ -4388,8 +4388,11 @@ var TempGraph = {
                 width: width,
                 height: height,
                 annotationText: true,
-                chartArea: {width: '100%', height: '100%'},
-                vAxis: {baselineColor: 'white', gridlines: {color: 'white'}},
+                chartArea: {width: '100%', height: '80%'},
+                hAxis: {
+                    textStyle: {color: 'white'}
+                },
+                vAxis: {baselineColor: 'black', gridlines: {color: 'black'}},
                 backgroundColor: 'black'
             };
 
