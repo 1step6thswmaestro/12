@@ -103,8 +103,30 @@
                 VerticalAlignment="Bottom" Stroke="White" StrokeThickness="0.1"
                 X2="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}" />
 
+            <Grid Grid.Row="2" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+            </Grid>
             <TextBlock Grid.Row="2" Grid.Column="0"
-                       Text="0"
+                       Text="99"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        TextAlignment="Center"
