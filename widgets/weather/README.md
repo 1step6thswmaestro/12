@@ -34,7 +34,7 @@ Team. JARVIS
 ## FlowingJS
 [FlowingJS](https://github.com/seokju-na/FlowingJS)
 
-쉬운 웹 앱 아키텍처 설계를 위한 JS 유틸리티. Data Flow Controller
+웹 앱의 아키텍처를 쉽게 설계하기 위한 JS 유틸리티. Data Flow Controller
 
 ```shell
 $ npm install flowing-js
