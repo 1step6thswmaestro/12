@@ -1,4 +1,4 @@
-var FlowController = require('flow-controller').FlowController;
+var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
 var AppFlowController = new FlowController();

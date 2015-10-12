@@ -22,7 +22,7 @@ gulp.task('build-js', function() {
         .bundle()
         .pipe(source('main.js'))
         .pipe(buffer())
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('./build/js'))
         .pipe(browserSync.stream());
 });
@@ -39,6 +39,10 @@ gulp.task('build-views', function() {
     return gulp.src(paths.views)
         .pipe(gulp.dest('./build'))
         .pipe(browserSync.stream());
+});
+
+gulp.task('build', ['build-js', 'build-less', 'build-views'], function() {
+    return;
 });
 
 gulp.task('run', ['build-js', 'build-less', 'build-views'], function(cb) {

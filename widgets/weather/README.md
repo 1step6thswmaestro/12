@@ -31,14 +31,14 @@ Team. JARVIS
 └── README.md                   # README.md
 ```
 
-## Flow Controller
-[FlowController.js](https://github.com/seokju-na/FlowController.js)
+## FlowingJS
+[FlowingJS](https://github.com/seokju-na/FlowingJS)
 
 쉬운 웹 앱 아키텍처 설계를 위한 JS 유틸리티. Data Flow Controller
 
 ```shell
-$ npm install flow-controller
-$ npm install --save flow-controller
+$ npm install flowing-js
+$ npm install --save flowing-js
 ```
 
 npm 패키지로 설치가 가능합니다
