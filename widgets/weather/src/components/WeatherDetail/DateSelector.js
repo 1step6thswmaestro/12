@@ -1,5 +1,8 @@
 var DateSelectorDOM;
 
+var ArrowLeftDOM;
+var ArrowRightDOM;
+
 var DateSelector = {
     initialize: function($) {
         DateSelectorDOM = $('.day-select-slider');
@@ -11,6 +14,12 @@ var DateSelector = {
             dots: false
         });
         DateSelectorDOM.slick('slickGoTo', 0);
+
+        ArrowLeftDOM = $('#arrow-left');
+        ArrowRightDOM = $('#arrow-right');
+
+        ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
+        ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
     }
 };
 
