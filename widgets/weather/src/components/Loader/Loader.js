@@ -12,8 +12,6 @@ function loadComplete() {
         return;
     }
 
-    console.log("ya");
-
     LoaderDOM.animate({
         opacity: 0
     }, '600', 'easeInCubic');
@@ -40,7 +38,6 @@ var Loader = {
     notifyForecastData: AppFlowController.addNotifyler(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
-            console.log('hello');
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
         }
     ),
@@ -48,7 +45,6 @@ var Loader = {
     notifySunMoonData: AppFlowController.addNotifyler(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
-            console.log('ho');
             loadComplete(Constants.FlowID.GET_SUN_MOON_DATA);
         }
     )

@@ -1064,7 +1064,7 @@ process.umask = function() { return 0; };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":1}],3:[function(require,module,exports){
 /*!
- * FlowController
+ * FlowController.js
  * Copyright(c) 2015 SeokJu Na
  * MIT Licensed
  */
@@ -1082,12 +1082,12 @@ var FlowController = (function() {
         this._flows = {};
     }
 
-    FlowController.prototype.addFlow = function addFlow(flow) {
-        var id = flow.ID;
+    FlowController.prototype.addFlow = function addFlow(flowID) {
+        var id = flowID;
         if (typeof id !== 'string') {
             throw new Error('FlowController.addFlow(...): ID is not a String.');
         }
-        this._flows[id] = _.extend({}, flow, {
+        this._flows[id] = _.extend({}, {
             targets: [],
             notifylers: [],
         });
@@ -1107,7 +1107,6 @@ var FlowController = (function() {
         }
 
         var callback = arguments[1];
-        console.log("callback", typeof callback);
 
         if (typeof callback !== 'function') {
             throw new Error('FlowController.addTarget(...): Callback is not a Function.');
@@ -4204,8 +4203,6 @@ function loadComplete() {
         return;
     }
 
-    console.log("ya");
-
     LoaderDOM.animate({
         opacity: 0
     }, '600', 'easeInCubic');
@@ -4232,7 +4229,6 @@ var Loader = {
     notifyForecastData: AppFlowController.addNotifyler(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
-            console.log('hello');
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
         }
     ),
@@ -4240,14 +4236,13 @@ var Loader = {
     notifySunMoonData: AppFlowController.addNotifyler(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
-            console.log('ho');
             loadComplete(Constants.FlowID.GET_SUN_MOON_DATA);
         }
     )
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":14,"../../controller/AppFlowController":15,"../../dispatcher/AppDispatcher":16}],12:[function(require,module,exports){
+},{"../../constants/Constants":16,"../../controller/AppFlowController":17,"../../dispatcher/AppDispatcher":18}],12:[function(require,module,exports){
 var WeatherStore = require('../../stores/WeatherStore');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
@@ -4286,7 +4281,36 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../stores/WeatherStore":18,"../../utils/WeatherIcons":19}],13:[function(require,module,exports){
+},{"../../stores/WeatherStore":20,"../../utils/WeatherIcons":21}],13:[function(require,module,exports){
+var DateSelectorDOM;
+
+var DateSelector = {
+    initialize: function($) {
+        DateSelectorDOM = $('.day-select-slider');
+        DateSelectorDOM.slick({
+            infinite: false,
+            slidesToShow: 5,
+            slidesToScroll: 3,
+            arrows: false,
+            dots: false
+        });
+        DateSelectorDOM.slick('slickGoTo', 0);
+    }
+};
+
+module.exports = DateSelector;
+},{}],14:[function(require,module,exports){
+
+var DateSelector = require('./DateSelector');
+
+var MainDetail = {
+    initialize: function($) {
+        DateSelector.initialize($);
+    }
+};
+
+module.exports = MainDetail;
+},{"./DateSelector":13}],15:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -4640,7 +4664,7 @@ var CodedWeather = {
 };
 
 module.exports = CodedWeather;
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 var APIroot = 'http://api.aerisapi.com';
@@ -4670,17 +4694,17 @@ module.exports = {
         BACKSPACE: 8
     }
 };
-},{"react/lib/keyMirror":6}],15:[function(require,module,exports){
+},{"react/lib/keyMirror":6}],17:[function(require,module,exports){
 var FlowController = require('flow-controller').FlowController;
 var Constants = require('../constants/Constants');
 
 var AppFlowController = new FlowController();
 
-AppFlowController.addFlow({ID: Constants.FlowID.GET_FORECAST_DATA});
-AppFlowController.addFlow({ID: Constants.FlowID.GET_SUN_MOON_DATA});
+AppFlowController.addFlow(Constants.FlowID.GET_FORECAST_DATA);
+AppFlowController.addFlow(Constants.FlowID.GET_SUN_MOON_DATA);
 
 module.exports = AppFlowController;
-},{"../constants/Constants":14,"flow-controller":3}],16:[function(require,module,exports){
+},{"../constants/Constants":16,"flow-controller":3}],18:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4701,22 +4725,24 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":14,"../controller/AppFlowController":15}],17:[function(require,module,exports){
+},{"../constants/Constants":16,"../controller/AppFlowController":17}],19:[function(require,module,exports){
 "use strict";
 
 var TodayWeather = require('./components/TodayWeather/TodayWeather');
+var WeatherDetail = require('./components/WeatherDetail/MainDetail');
 var WeatherIcons = require('./utils/WeatherIcons');
 var Loader = require('./components/Loader/Loader');
 
 $(document).ready(function() {
     WeatherIcons.initialize($);
     TodayWeather.initialize($);
+    WeatherDetail.initialize($);
 
     Loader.initialize($);
     Loader.loadStart();
 });
 
-},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./utils/WeatherIcons":19}],18:[function(require,module,exports){
+},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/MainDetail":14,"./utils/WeatherIcons":21}],20:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4738,7 +4764,7 @@ var WeatherStore = {
         return SunMoonData;
     },
 
-    notifyForecastData: AppFlowController.addTarget(Constants.FlowID.GET_FORECAST_DATA, function(payload) {
+    callbackForecastData: AppFlowController.addTarget(Constants.FlowID.GET_FORECAST_DATA, function(payload) {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
@@ -4753,7 +4779,7 @@ var WeatherStore = {
         });
     }),
 
-    notifySunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
+    callbackSunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
@@ -4770,7 +4796,7 @@ var WeatherStore = {
 };
 
 module.exports = WeatherStore;
-},{"../constants/Constants":14,"../controller/AppFlowController":15,"es6-promise":2,"superagent":7,"underscore":10}],19:[function(require,module,exports){
+},{"../constants/Constants":16,"../controller/AppFlowController":17,"es6-promise":2,"superagent":7,"underscore":10}],21:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var Icons = {};
@@ -4802,4 +4828,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":13}]},{},[17]);
+},{"../constants/CodedWeather":15}]},{},[19]);
