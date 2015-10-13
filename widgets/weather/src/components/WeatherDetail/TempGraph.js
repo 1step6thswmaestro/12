@@ -41,10 +41,12 @@ var TempGraph = {
             var options = {
                 width: width,
                 height: height,
+                areaOpacity: 0.15,
+                colors: ['#faca4e', '#63b4cf'],
                 annotationText: true,
                 chartArea: {width: '100%', height: '80%'},
                 hAxis: {
-                    textStyle: {color: 'white'}
+                    textStyle: {color: '#616161'}
                 },
                 vAxis: {baselineColor: 'black', gridlines: {color: 'black'}},
                 backgroundColor: 'black'
