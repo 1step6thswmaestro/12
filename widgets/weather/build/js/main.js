@@ -1087,16 +1087,19 @@ var Flowing = (function() {
         if (typeof id !== 'string') {
             throw new Error('FlowController.addFlow(...): ID is not a String.');
         }
+        if (this._flows.hasOwnProperty(id)) {
+            throw new Error('FlowController.addFlow(...): ' + id + ' is not a unique ID.');
+        }
         this._flows[id] = _.extend({}, {
             targets: [],
-            notifylers: []
+            subscribes: []
         });
 
         return id;
     };
 
 
-    FlowController.prototype.addTarget = function addTarget() {
+    FlowController.prototype.addTarget = function addTarget(id) {
         if (arguments.length == 0 || arguments.length == 1) {
             throw new Error ('FlowController.addTarget(...): Not enough Arguments.');
         }
@@ -1117,24 +1120,24 @@ var Flowing = (function() {
     };
 
 
-    FlowController.prototype.addNotifyler = function addNotifyler(id, notifyler) {
+    FlowController.prototype.addSubscribe = function addSubscribe(id) {
         if (arguments.length == 0 || arguments.length == 1) {
-            throw new Error ('FlowController.addNotifyler(...): Not enough Arguments.');
+            throw new Error ('FlowController.addSubscribe(...): Not enough Arguments.');
         }
 
         var id = arguments[0];
 
         if (typeof id !== 'string') {
-            throw new Error('FlowController.addNotifyler(...): ID is not a String');
+            throw new Error('FlowController.addSubscribe(...): ID is not a String');
         }
 
         var callback = arguments[1];
 
         if (typeof callback !== 'function') {
-            throw new Error('FlowController.addNotifyler(...): Callback is not a Function.');
+            throw new Error('FlowController.addSubscribe(...): Callback is not a Function.');
         }
 
-        this._flows[id].notifylers.push(callback);
+        this._flows[id].subscribes.push(callback);
         return id;
     };
 
@@ -1152,11 +1155,11 @@ var Flowing = (function() {
         var thisFlow = this._flows[id];
 
         thisFlow.targets.forEach(function(target) {
-            var len = thisFlow.notifylers.length;
+            var len = thisFlow.subscribes.length;
 
             Promise.resolve(target(payload)).then(function() {
                 for (var idx=0; idx<len; idx++) {
-                    thisFlow.notifylers[idx]();
+                    thisFlow.subscribes[idx]();
                 }
             }, function() {
                 throw new Error('FlowController.dispatch(...): Dispatcher callback unsuccessful');
@@ -4249,14 +4252,14 @@ var Loader = {
         }
     ),
 
-    notifyForecastData: AppFlowController.addNotifyler(
+    subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
         }
     ),
 
-    notifySunMoonData: AppFlowController.addNotifyler(
+    subscribeSunMoonData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_SUN_MOON_DATA);

@@ -58,14 +58,14 @@ var Loader = {
         }
     ),
 
-    notifyForecastData: AppFlowController.addNotifyler(
+    subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
         }
     ),
 
-    notifySunMoonData: AppFlowController.addNotifyler(
+    subscribeSunMoonData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_SUN_MOON_DATA);
