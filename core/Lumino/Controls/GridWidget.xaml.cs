@@ -44,28 +44,31 @@ namespace Lumino
             get { return _Expand; }
             set
             {
-                if (!Resizing)
+                if (AppearanceExpandable)
                 {
-                    _Expand = value;
-                    if (value)
+                    if (!Resizing)
                     {
-                        ParentDock.BringToFront(this);
-
-                        OriginalX = Canvas.GetLeft(this);
-                        OriginalY = Canvas.GetTop(this);
-                        OriginalWidth = ActualWidth;
-                        OriginalHeight = ActualHeight;
-
-                        if (!AssemblyEntry.Equals("local"))
+                        _Expand = value;
+                        if (value)
                         {
+                            ParentDock.BringToFront(this);
 
+                            OriginalX = Canvas.GetLeft(this);
+                            OriginalY = Canvas.GetTop(this);
+                            OriginalWidth = ActualWidth;
+                            OriginalHeight = ActualHeight;
+
+                            if (!AssemblyEntry.Equals("local"))
+                            {
+
+                            }
+
+                            Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
                         }
-
-                        Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
-                    }
-                    else
-                    {
-                        Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
+                        else
+                        {
+                            Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
+                        }
                     }
                 }
             }
@@ -131,6 +134,24 @@ namespace Lumino
         public UserControl WidgetControl
         {
             get { return _WidgetControl; }
+        }
+
+        private int _AppearanceWidth;
+        public int AppearanceWidth
+        {
+            get { return _AppearanceWidth; }
+        }
+
+        private int _AppearanceHeight;
+        public int AppearanceHeight
+        {
+            get { return _AppearanceHeight; }
+        }
+
+        private bool _AppearanceExpandable;
+        public bool AppearanceExpandable
+        {
+            get { return _AppearanceExpandable; }
         }
         #endregion
 
@@ -240,8 +261,9 @@ namespace Lumino
                 _AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
                 _AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
                 _AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                int AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
-                int AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+                _AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
+                _AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+                _AppearanceExpandable = bool.Parse(Widget.GetValue("Appearance", "Expandable"));
 
                 if (AssemblyFile.Equals("local"))
                 {
