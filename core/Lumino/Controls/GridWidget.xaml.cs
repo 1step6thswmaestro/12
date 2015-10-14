@@ -60,13 +60,18 @@ namespace Lumino
 
                             if (!AssemblyEntry.Equals("local"))
                             {
-
+                                CallMethod("IsExpand", true);
                             }
 
                             Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
                         }
                         else
                         {
+                            if (!AssemblyEntry.Equals("local"))
+                            {
+                                CallMethod("IsExpand", false);
+                            }
+
                             Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
                         }
                     }
@@ -237,12 +242,19 @@ namespace Lumino
             }
         }
 
-        private void CallMethod(String Method, String Parameter)
+        private void CallMethod(String Method, object Parameter = null)
         {
             if (WidgetTarget != null)
             {
                 MethodInfo WidgetMethod = WidgetTarget.GetMethod(Method, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                WidgetMethod.Invoke(WidgetControl, new object[] { Parameter });
+                if (Parameter == null)
+                {
+                    WidgetMethod.Invoke(WidgetControl, new object[] { });
+                }
+                else
+                {
+                    WidgetMethod.Invoke(WidgetControl, new object[] { Parameter });
+                }
             }
         }
         #endregion
