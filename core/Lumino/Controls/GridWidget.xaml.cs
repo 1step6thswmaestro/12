@@ -56,6 +56,11 @@ namespace Lumino
                         OriginalWidth = ActualWidth;
                         OriginalHeight = ActualHeight;
 
+                        if (!AssemblyEntry.Equals("local"))
+                        {
+
+                        }
+
                         Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
                     }
                     else
@@ -114,6 +119,18 @@ namespace Lumino
         public String AssemblyArgument
         {
             get { return _AssemblyArgument; }
+        }
+
+        private Type _WidgetTarget;
+        public Type WidgetTarget
+        {
+            get { return _WidgetTarget; }
+        }
+
+        private UserControl _WidgetControl;
+        public UserControl WidgetControl
+        {
+            get { return _WidgetControl; }
         }
         #endregion
 
@@ -198,6 +215,15 @@ namespace Lumino
                 ResizeAnimation.Begin();
             }
         }
+
+        private void CallMethod(String Method, String Parameter)
+        {
+            if (WidgetTarget != null)
+            {
+                MethodInfo WidgetMethod = WidgetTarget.GetMethod(Method, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                WidgetMethod.Invoke(WidgetControl, new object[] { Parameter });
+            }
+        }
         #endregion
 
         #region 사용자 함수
@@ -232,7 +258,6 @@ namespace Lumino
                 else
                 {
                     // 외부 어셈블리 참조
-                    UserControl WidgetControl = null;
                     Assembly WidgetAssembly = Assembly.LoadFrom(AssemblyFile);
                     Type[] TypeList = WidgetAssembly.GetTypes();
                     foreach (Type Target in TypeList)
@@ -240,13 +265,13 @@ namespace Lumino
                         if (Target.Name == AssemblyEntry)
                         {
                             // 어셈블리 진입점 검색 및 인스턴스 생성
-                            WidgetControl = Activator.CreateInstance(Target) as UserControl;
+                            _WidgetTarget = Target;
+                            _WidgetControl = Activator.CreateInstance(Target) as UserControl;
 
                             // 어셈블리에 전달할 인자가 존재하는 경우 메소드 호출
                             if (AssemblyArgument.Length > 0)
                             {
-                                MethodInfo WidgetMethod = Target.GetMethod("SetArgument", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                                WidgetMethod.Invoke(WidgetControl, new object[] { AssemblyArgument });
+                                CallMethod("SetArgument", AssemblyArgument);
                             }
 
                             break;
