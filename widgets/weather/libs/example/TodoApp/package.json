@@ -1,0 +1,27 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "FlowController.js Example - TodoApp",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "seokju-na",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "ejs": "^2.3.4",
+    "es6-promise": "^3.0.2",
+    "express": "^4.13.3",
+    "keymirror": "^0.1.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.9.11",
+    "browserify": "^11.2.0",
+    "gulp": "^3.9.0",
+    "gulp-less": "^3.0.3",
+    "gulp-nodemon": "^2.0.4",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
