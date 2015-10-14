@@ -79,6 +79,42 @@ namespace Lumino
             get { return _ParentDock; }
             set { _ParentDock = value; }
         }
+
+        private String _Title;
+        public String Title
+        {
+            get { return _Title; }
+        }
+
+        private String _Author;
+        public String Author
+        {
+            get { return _Author; }
+        }
+
+        private String _Summary;
+        public String Summary
+        {
+            get { return _Summary; }
+        }
+
+        private String _AssemblyFile;
+        public String AssemblyFile
+        {
+            get { return _AssemblyFile; }
+        }
+
+        private String _AssemblyEntry;
+        public String AssemblyEntry
+        {
+            get { return _AssemblyEntry; }
+        }
+
+        private String _AssemblyArgument;
+        public String AssemblyArgument
+        {
+            get { return _AssemblyArgument; }
+        }
         #endregion
 
         #region 객체
@@ -172,9 +208,12 @@ namespace Lumino
                 // 위젯 분석
                 INI Widget = new INI(Path);
                 string Local = "<%LOCAL%>";
-                string AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                string AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                string AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _Title = Widget.GetValue("General", "Title");
+                _Author = Widget.GetValue("General", "Author");
+                _Summary = Widget.GetValue("General", "Summary");
+                _AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
                 int AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
                 int AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
 
