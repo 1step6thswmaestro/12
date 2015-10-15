@@ -44,7 +44,7 @@ namespace Lumino
             get { return _Expand; }
             set
             {
-                if (!Resizing)
+                if (AppearanceExpandable && !ParentDock.IsDrawerOpening && !Resizing)
                 {
                     _Expand = value;
                     if (value)
@@ -56,10 +56,20 @@ namespace Lumino
                         OriginalWidth = ActualWidth;
                         OriginalHeight = ActualHeight;
 
+                        if (!AssemblyEntry.Equals("local"))
+                        {
+                            CallMethod("IsExpand", true);
+                        }
+
                         Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
                     }
                     else
                     {
+                        if (!AssemblyEntry.Equals("local"))
+                        {
+                            CallMethod("IsExpand", false);
+                        }
+
                         Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
                     }
                 }
@@ -78,6 +88,72 @@ namespace Lumino
         {
             get { return _ParentDock; }
             set { _ParentDock = value; }
+        }
+
+        private String _Title;
+        public String Title
+        {
+            get { return _Title; }
+        }
+
+        private String _Author;
+        public String Author
+        {
+            get { return _Author; }
+        }
+
+        private String _Summary;
+        public String Summary
+        {
+            get { return _Summary; }
+        }
+
+        private String _AssemblyFile;
+        public String AssemblyFile
+        {
+            get { return _AssemblyFile; }
+        }
+
+        private String _AssemblyEntry;
+        public String AssemblyEntry
+        {
+            get { return _AssemblyEntry; }
+        }
+
+        private String _AssemblyArgument;
+        public String AssemblyArgument
+        {
+            get { return _AssemblyArgument; }
+        }
+
+        private Type _WidgetTarget;
+        public Type WidgetTarget
+        {
+            get { return _WidgetTarget; }
+        }
+
+        private UserControl _WidgetControl;
+        public UserControl WidgetControl
+        {
+            get { return _WidgetControl; }
+        }
+
+        private int _AppearanceWidth;
+        public int AppearanceWidth
+        {
+            get { return _AppearanceWidth; }
+        }
+
+        private int _AppearanceHeight;
+        public int AppearanceHeight
+        {
+            get { return _AppearanceHeight; }
+        }
+
+        private bool _AppearanceExpandable;
+        public bool AppearanceExpandable
+        {
+            get { return _AppearanceExpandable; }
         }
         #endregion
 
@@ -162,6 +238,22 @@ namespace Lumino
                 ResizeAnimation.Begin();
             }
         }
+
+        private void CallMethod(String Method, object Parameter = null)
+        {
+            if (WidgetTarget != null)
+            {
+                MethodInfo WidgetMethod = WidgetTarget.GetMethod(Method, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                if (Parameter == null)
+                {
+                    WidgetMethod.Invoke(WidgetControl, new object[] { });
+                }
+                else
+                {
+                    WidgetMethod.Invoke(WidgetControl, new object[] { Parameter });
+                }
+            }
+        }
         #endregion
 
         #region 사용자 함수
@@ -172,11 +264,15 @@ namespace Lumino
                 // 위젯 분석
                 INI Widget = new INI(Path);
                 string Local = "<%LOCAL%>";
-                string AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                string AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                string AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                int AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
-                int AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+                _Title = Widget.GetValue("General", "Title");
+                _Author = Widget.GetValue("General", "Author");
+                _Summary = Widget.GetValue("General", "Summary");
+                _AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
+                _AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+                _AppearanceExpandable = bool.Parse(Widget.GetValue("Appearance", "Expandable"));
 
                 if (AssemblyFile.Equals("local"))
                 {
@@ -193,7 +289,6 @@ namespace Lumino
                 else
                 {
                     // 외부 어셈블리 참조
-                    UserControl WidgetControl = null;
                     Assembly WidgetAssembly = Assembly.LoadFrom(AssemblyFile);
                     Type[] TypeList = WidgetAssembly.GetTypes();
                     foreach (Type Target in TypeList)
@@ -201,13 +296,13 @@ namespace Lumino
                         if (Target.Name == AssemblyEntry)
                         {
                             // 어셈블리 진입점 검색 및 인스턴스 생성
-                            WidgetControl = Activator.CreateInstance(Target) as UserControl;
+                            _WidgetTarget = Target;
+                            _WidgetControl = Activator.CreateInstance(Target) as UserControl;
 
                             // 어셈블리에 전달할 인자가 존재하는 경우 메소드 호출
                             if (AssemblyArgument.Length > 0)
                             {
-                                MethodInfo WidgetMethod = Target.GetMethod("SetArgument", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                                WidgetMethod.Invoke(WidgetControl, new object[] { AssemblyArgument });
+                                CallMethod("SetArgument", AssemblyArgument);
                             }
 
                             break;

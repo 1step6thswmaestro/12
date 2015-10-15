@@ -1,10 +1,11 @@
 var AppFlowController = require('../../controller/AppFlowController');
-var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var Constants = require('../../constants/Constants');
 
 var AppDOM;
 var LoaderDOM;
+
 var loadedDataCount;
+var requestCount;
 
 function loadComplete() {
     if (loadedDataCount == 0) {
@@ -16,33 +17,55 @@ function loadComplete() {
         opacity: 0
     }, '600', 'easeInCubic');
 
-    AppDOM.removeAttr('style');
     AppDOM.animate({
         opacity: 1
     }, '1200', 'easeInCubic');
+
+    requestCount = 0;
+}
+
+function loadStart() {
+    if (requestCount >= 1) {
+        return;
+    }
+
+    loadedDataCount = 0;
+
+    AppDOM.animate({
+        opacity: 0
+    }, '600', 'easeInCubic');
+
+    LoaderDOM.animate({
+        opacity: 1
+    }, '1000', 'easeInCubic');
+
+    requestCount++;
 }
 
 var Loader = {
     initialize: function($) {
         LoaderDOM = $('#loader');
         AppDOM = $('#app');
+
         loadedDataCount = 0;
+        requestCount = 0;
     },
 
-    loadStart: function() {
-        loadedDataCount = 0;
-        AppDispatcher.getForecastData(114);
-        AppDispatcher.getSunMoonData();
-    },
+    callbackDispatch: AppFlowController.addTarget(
+        Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            loadStart();
+        }
+    ),
 
-    notifyForecastData: AppFlowController.addNotifyler(
+    subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
         }
     ),
 
-    notifySunMoonData: AppFlowController.addNotifyler(
+    subscribeSunMoonData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_SUN_MOON_DATA);

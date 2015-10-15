@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <main id="app" style="display: none;">
+    <main id="app">
         <section id="today-weather-component" class="today-weather" style="display: none;">
             <div weather-attr="today-weather-icon" class="today-weather-icon">
                 <svg
@@ -107,23 +107,48 @@
 
                 <div class="weather-detail-selectedDate-main">
                     <div class="weather-detail-selectedDate-main-left">
-                        <div class="day-info">
-                            <span class="day-info-title">내일</span>
-                            <div class="day-info-sub">
-                                <div class="day-info-sub-item">
-                                    <i class="material-icons">&#xE878;</i>
-                                    <span>10월 7일</span>
+                        <span class="weather-detail-selectedDate-main-title">WEATHER DETAIL</span>
+                        <div class="details">
+                            <div class="row">
+                                <div class="col">
+                                    <i class="climacon celsius"></i>
+                                    <span class="item">체감온도</span>
+                                    <span class="value unit-celsius">22</span>
                                 </div>
-                                <div class="day-info-sub-item">
-                                    <i class="material-icons">&#xE55F;</i>
-                                    <span>대한민국 서울시</span>
+                                <div class="col">
+                                    <i class="climacon drizzle"></i>
+                                    <span class="item">습도</span>
+                                    <span class="value unit-percent">32</span>
+                                </div>
+                                <div class="col">
+                                    <i class="climacon thermometer medium-low"></i>
+                                    <span class="item">이슬점</span>
+                                    <span class="value unit-celsius">8</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <i class="climacon umbrella"></i>
+                                    <span class="item">강수확률</span>
+                                    <span class="value unit-percent">12</span>
+                                </div>
+                                <div class="col">
+                                    <i class="climacon drizzle"></i>
+                                    <span class="item">강수량</span>
+                                    <span class="value unit-mm">--</span>
+                                </div>
+                                <div class="col">
+                                    <i class="climacon snow"></i>
+                                    <span class="item">적설량</span>
+                                    <span class="value unit-mm">--</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="weather-detail-selectedDate-main-right">
                         <div class="weather-detail-selectedDate-main-right-top">
-                            <span class="weather-detail-selectedDate-main-right-title">SUN & MOON</span>
+                            <span class="weather-detail-selectedDate-main-title">SUN & MOON</span>
                             <div class="sun-times" style="display: none;">
                                 <div class="sun-path">
                                     <div class="sun-animation"></div>
@@ -163,7 +188,7 @@
                         </div>
 
                         <div class="weather-detail-selectedDate-main-right-bottom">
-                            <span class="weather-detail-selectedDate-main-right-title">WIND & PRESSURE</span>
+                            <span class="weather-detail-selectedDate-main-title">WIND & PRESSURE</span>
 
                             <div class="wind-miller">
                                 <div class="mill">
@@ -210,15 +235,18 @@
                     </div>
                 </div>
             </div>
-            <div class="weather-detail-tempGraph">
-                <div weather-attr="detail-tempGraph" class="weather-detail-tempGraph-data">
+
+            <div id="tempGraph-wrapper" class="weather-detail-tempGraph">
+                <div id="detail-tempGraph" class="weather-detail-tempGraph-data">
                 </div>
             </div>
+
             <div class="weather-detail-dateSelector">
-                <div class="arrow arrow-left"><button><i class="material-icons">&#xE314;</i></button></div>
+                <div class="arrow arrow-left"><button id="arrow-left"><i class="material-icons">&#xE314;</i></button></div>
                 <div id="day-select-slider" class="day-select-slider">
                     <div class="day-select-slider-item">
                         <span class="title">오늘</span>
+                        <span class="date">10.13</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -230,6 +258,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">내일</span>
+                        <span class="date">10.14</span>
                         <div class="icon">
                             <i class="climacon sun"></i>
                         </div>
@@ -242,6 +271,7 @@
                     <div class="day-select-slider-item active"></div>
                     <div class="day-select-slider-item">
                         <span class="title">일요일</span>
+                        <span class="date">10.16</span>
                         <div class="icon">
                             <i class="climacon cloud"></i>
                         </div>
@@ -253,6 +283,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">월요일</span>
+                        <span class="date">10.17</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -264,6 +295,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">화요일</span>
+                        <span class="date">10.18</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -275,6 +307,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">수요일</span>
+                        <span class="date">10.19</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -286,6 +319,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">목요일</span>
+                        <span class="date">10.20</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -297,6 +331,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">금요일</span>
+                        <span class="date">10.21</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -308,6 +343,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">토요일</span>
+                        <span class="date">10.22</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -319,6 +355,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">일요일</span>
+                        <span class="date">10.23</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -330,6 +367,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">월요일</span>
+                        <span class="date">10.24</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -341,6 +379,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">화요일</span>
+                        <span class="date">10.25</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -352,6 +391,7 @@
                     </div>
                     <div class="day-select-slider-item">
                         <span class="title">수요일</span>
+                        <span class="date">10.26</span>
                         <div class="icon">
                             <i class="climacon rain"></i>
                         </div>
@@ -362,7 +402,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="arrow arrow-right"><button><i class="material-icons">&#xE315;</i></button></div>
+                <div class="arrow arrow-right"><button id="arrow-right"><i class="material-icons">&#xE315;</i></button></div>
             </div>
         </section>
     </main>
@@ -2268,9 +2308,13 @@
     </div>
 
 
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
+{'modules':[{'name':'visualization','version':'1.1','packages':
+['corechart']}]}"></script>
     <script type="text/javascript" src="/libs/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/libs/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/libs/slick.min.js"></script>
+    <script type="text/javascript" src="/libs/jquery.actual.min.js"></script>
     <script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

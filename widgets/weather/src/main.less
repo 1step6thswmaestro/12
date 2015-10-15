@@ -325,10 +325,10 @@ html, body {
         position: absolute;
 
         width: 100%;
-        height: 85.71428571%; // 12/14
+        height: 100%; // 12/14
 
         left: 0;
-        top: 7.14285714%; // 1/14
+        top: 0; // 1/14
 
         display: flex;
         flex-direction: column;
@@ -422,6 +422,12 @@ html, body {
 
                 display: flex;
 
+                &-title {
+                    display: inline-block;
+                    font-size: 1.5vh;
+                    margin-left: 1vh;
+                }
+
                 &-left {
                     flex: 1;
 
@@ -462,6 +468,56 @@ html, body {
                             }
                         }
                     }
+
+                    .details {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+
+                        .row {
+                            flex: 1;
+                            display: flex;
+
+                            .col {
+                                flex: 1;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+
+                                i {
+                                    font-size: 6vh;
+                                }
+
+                                .item {
+                                    font-size: 1.5vh;
+                                    font-weight: 300;
+                                    opacity: .55;
+                                }
+                                .value {
+                                    font-size: 2vh;
+                                    font-weight: 300;
+                                    color: #63b4cf;
+
+                                    &.unit {
+                                        &-celsius:after {
+                                            margin-left: .25vw;
+                                            content: "º";
+                                        }
+                                        &-percent:after {
+                                            font-size: 1.5vh;
+                                            margin-left: .25vw;
+                                            content: "%";
+                                        }
+                                        &-mm:after {
+                                            font-size: 1vh;
+                                            margin-left: .5vw;
+                                            content: "mm";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 &-right {
@@ -470,11 +526,6 @@ html, body {
                     flex-direction: column;
 
                     margin-left: .5vh;
-
-                    &-title {
-                        font-size: 1.5vh;
-                        margin-left: 1vh;
-                    }
 
                     &-top {
                         flex: 1;
@@ -794,17 +845,17 @@ html, body {
         }
 
         &-tempGraph {
+            box-sizing: content-box;
+            display: block;
             width: 100%;
             flex: 3;
-            display: flex;
+
+            overflow: hidden;
+
+            margin: .5vh 0 2vh 0;
 
             &-data {
-                flex: 1;
-                .bar-chart {
-                    display: inline-block;
-                    margin-right: 1px;
-                    background-color: hotpink;
-                }
+                transition: transform 1s cubic-bezier(0.6,0,0.4,1);
             }
         }
 
@@ -836,6 +887,7 @@ html, body {
             }
 
             .day-select-slider {
+                padding-bottom: .5vh;
                 flex: 1;
                 //display: flex;
                 //align-items: stretch;
@@ -862,7 +914,14 @@ html, body {
                     border: .22vh solid @color-white;
 
                     .title {
-                        font-size: 2vh;
+                        margin-top: .75vh;
+                        font-size: 1.75vh;
+                        line-height: 1;
+                    }
+                    .date {
+                        font-size: .88vh;
+                        font-weight: 100;
+                        line-height: 1.5;
                     }
                     .icon {
                         flex: 1;
