@@ -4,15 +4,15 @@
         Title="MainWindow" Height="400" Width="400">
     
     <Viewbox>
-        <Grid Background="Black">
+        <Grid Background="Black" Name="Grid_Number">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
@@ -25,7 +25,11 @@
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" Foreground="White">Hello World!</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7"
+                       Foreground="White"
+                       Text="2015-10-13"
+                       HorizontalAlignment="Center"
+                       Name="Date" />
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Sun"
                        HorizontalAlignment="Center"
@@ -83,7 +87,6 @@
                        FontSize="3"
                        />
             
-            
             <Line Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="7"
                 VerticalAlignment="Bottom" Stroke="White" StrokeThickness="0.3"
                 X2="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}" />
@@ -114,6 +117,161 @@
                     <RowDefinition Height="2" />
                     <RowDefinition Height="0.5" />
                 </Grid.RowDefinitions>
+                
+<!--                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         /> -->
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="27"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Text="28"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="2"
+                       Text="29"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="3"
+                       Text="30"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="4"
+                       Text="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="5"
+                       Text="2"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="2" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="6"
+                       Text="3"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+
+
+            
+            <Grid Grid.Row="3" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <!--
                 <Ellipse Grid.Row="1" Grid.Column="0"
                     Fill="Red"
                     HorizontalAlignment="Center"
@@ -124,13 +282,762 @@
                     HorizontalAlignment="Center"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
                          />
+                -->
             </Grid>
-            <TextBlock Grid.Row="2" Grid.Column="0"
-                       Text="99"
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="4"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        TextAlignment="Center"
                        Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Text="5"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="2"
+                       Text="6"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="3"
+                       Text="7"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="4"
+                       Text="8"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="5"
+                       Text="9"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="3" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="6"
+                       Text="10"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+
+            <Grid Grid.Row="4" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <!--
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+                -->
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="0"
+                       Text="11"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="1"
+                       Text="12"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="2" Name="TestGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+                
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="2"
+                       Text="13"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="3"
+                       Text="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="4"
+                       Text="15"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="5"
+                       Text="16"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="4" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="4" Grid.Column="6"
+                       Text="17"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+
+
+
+            <Grid Grid.Row="5" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <!--
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+                -->
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="0"
+                       Text="18"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="1"
+                       Text="19"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="2"
+                       Text="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="3"
+                       Text="21"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="4"
+                       Text="22"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="5"
+                       Text="23"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="5" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="5" Grid.Column="6"
+                       Text="24"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+
+
+
+            <Grid Grid.Row="6" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <!--
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+                -->
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="0"
+                       Text="25"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="1"
+                       Text="26"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="2"
+                       Text="27"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="3"
+                       Text="28"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="4"
+                       Text="29"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="5"
+                       Text="30"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="6" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="6" Grid.Column="6"
+                       Text="31"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="White"
+                       FontSize="5"
+                       />
+
+
+            <Grid Grid.Row="7" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+                <!--
+                <Ellipse Grid.Row="1" Grid.Column="0"
+                    Fill="Red"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    />
+                <Ellipse Grid.Row="3" Grid.Column="0"
+                    Fill="White"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                         />
+                -->
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="0"
+                       Text="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="1"
+                       Text="2"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="2"
+                       Text="3"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="3"
+                       Text="4"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="4"
+                       Text="5"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="5"
+                       Text="6"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="5"
+                       />
+            <Grid Grid.Row="7" Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="6.5" />
+                    <RowDefinition Height="0.5" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="0.5" />
+                </Grid.RowDefinitions>
+            </Grid>
+            <TextBlock Grid.Row="7" Grid.Column="6"
+                       Text="7"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       TextAlignment="Center"
+                       Foreground="Gray"
                        FontSize="5"
                        />
         </Grid>

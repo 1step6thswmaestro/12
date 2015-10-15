@@ -26,200 +26,253 @@ namespace Calendar
             Awake(); 
         }
 
-        public void Awake()
+        private bool is_highlighted_today (int row, int col)
         {
-/*            // Canvas will replace this.Content
-            Canvas canvas = new Canvas();
-
-            // List of colors used.
-            string FONTFAMILY       = "나눔고딕";
-            Brush BACKGROUND_COLOR  = Brushes.Black;
-            Brush NORMAL_COLOR      = Brushes.White;
-            Brush HIGHLIGHT_COLOR   = Brushes.Red;
-
-            const int NUMBER_OF_DAYS = 7; // The number of days
-
-            const float START_Y = 0.3f; // Start y-cordinate of line
-            const float COL_DIS = 0.1f; // Seperate distance between lines
-            const float ROW_DIS = 1.0f / (float)NUMBER_OF_DAYS; // not
-
-            // Set background color
-            canvas.Background = BACKGROUND_COLOR;
-
-            // Add list of days
-            string[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-            for (int i = 0; i < NUMBER_OF_DAYS; i++)
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return false;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
             {
-                canvas.Children.Add(new Label
+                if (element.GetType().ToString().Contains("Grid"))
                 {
-                    Content = days[i],
-                    Foreground = (i == 0 ? HIGHLIGHT_COLOR : NORMAL_COLOR),
-                    FontFamily = new System.Windows.Media.FontFamily (FONTFAMILY),
-                    FontWeight = FontWeights.Bold,
-                    // Move 0.02f right to make alignment
-                    Margin = new Thickness(x_in_pixel(ROW_DIS*(float)i + 0.02f),
-                        y_in_pixel(START_Y - 0.06f), 0, 0)
-                });
+                    Grid nested_grid = (Grid)element;
+                    int count = nested_grid.Children.Cast<UIElement>().Count(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0);
+                    return (count!= 0);
+
+                }
             }
+            return false;
+        }
+        private void unhighlight_today(int row, int col)
+        {
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
+            {
+                if (element.GetType().ToString().Contains("Grid"))
+                {
+                    Grid nested_grid = (Grid)element;
+                    Ellipse highlight = (Ellipse)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0);
+                    nested_grid.Children.Remove(highlight);
+                    return;
 
-            DateTime.Today.AddDays(-DateTime.Today.Day);
+                }
+            }
+        }
+        private void highlight_today(int row, int col)
+        {
 
-            CalendarInfo info = CalendarInfo.Instance;
-            int year = info.Today.Year;
-            int month = info.Today.Month;
-            int day = info.Today.Day;
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
+            {
+                if (element.GetType().ToString().Contains("Grid"))
+                {
+                    Grid nested_grid = (Grid)element;
+                    Ellipse today_highlight = new Ellipse
+                    {
+                        Width = 6.5, //nested_grid.ActualHeight * 0.65F,
+                        Height = 6.5,
+//                        Width = ((Grid)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0)).ActualHeight,
+                        Fill = Brushes.Red,
+                        HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+                    };
+                    Grid.SetRow(today_highlight, 1);
+                    Grid.SetColumn(today_highlight, 0);
+                    nested_grid.Children.Add(today_highlight);
 
-            DateTime start_day_of_month = DateTime.Today.AddDays(-day + 1);
+                }
+            }
+        }
+
+        private bool is_highlighted_schedule(int row, int col)
+        {
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return false;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
+            {
+                if (element.GetType().ToString().Contains("Grid"))
+                {
+                    Grid nested_grid = (Grid)element;
+                    int count = nested_grid.Children.Cast<UIElement>().Count(e => Grid.GetRow(e) == 3 && Grid.GetColumn(e) == 0);
+                    return (count != 0);
+
+                }
+            }
+            return false;
+        }
+        private void unhighlight_schedule(int row, int col)
+        {
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
+            {
+                if (element.GetType().ToString().Contains("Grid"))
+                {
+                    Grid nested_grid = (Grid)element;
+                    Ellipse highlight = (Ellipse)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 3 && Grid.GetColumn(e) == 0);
+                    nested_grid.Children.Remove(highlight);
+                    return;
+
+                }
+            }
+        }
+        private void highlight_schedule(int row, int col)
+        {
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
+            {
+                if (element.GetType().ToString().Contains("Grid"))
+                {
+                    Grid nested_grid = (Grid)element;
+                    Ellipse today_highlight = new Ellipse
+                    {
+                        Width = 2, //nested_grid.ActualHeight * 0.65F,
+                        Height = 2,
+                        //                        Width = ((Grid)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0)).ActualHeight,
+                        Fill = Brushes.White,
+                        HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+                    };
+                    Grid.SetRow(today_highlight,3);
+                    Grid.SetColumn(today_highlight, 0);
+                    nested_grid.Children.Add(today_highlight);
+
+                }
+            }
+        }
+
+
+        private void set_date()
+        {
+            DateTime today = DateTime.Today;
+            Date.Text = today.ToShortDateString();
+        }
+        private void set_days()
+        {
+            DateTime today = DateTime.Today;
+            int year = today.Year;
+            int month = today.Month;
+            int days = DateTime.DaysInMonth(year, month);
+            int start_day_of_month = day_of_week (DateTime.Today.AddDays(-today.Day + 1));
             int days_in_month = DateTime.DaysInMonth(year, month);
 
-            int NUMBER_OF_WEEKS;
-            int start_day = 0;
+            int day = 1;
+            Brush font_color = Brushes.White;
 
-            switch (start_day_of_month.DayOfWeek)
+            for (int row = 0; row < 6; row++)
             {
-                case DayOfWeek.Sunday :
-                    start_day = 0;
+                for (int col = (row == 0 ? start_day_of_month : 0 ); col < 7; col++)
+                {
+                    TextBlock text = get_textblock(row, col);
+                    text.Foreground = font_color;
+                    text.Text = day.ToString();
+
+                    if (day == today.Day) highlight_today(row, col);
+
+                    day++;
+                    if (day > days_in_month)
+                    {
+                        day = 1;
+                        font_color = Brushes.Gray;
+                    }
+                }
+            }
+            day = DateTime.DaysInMonth((month == 1 ? year - 1 : year), (month == 1 ? 12 : month - 1));
+            for (int row = 0, col = start_day_of_month - 1; col >= 0; col--)
+            {
+                TextBlock text = get_textblock(row, col);
+                text.Foreground = font_color;
+                text.Text = day.ToString();
+                day --;
+            }
+        }
+        private int day_of_week(DateTime date)
+        {
+            int _return = 0;
+            switch (date.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    _return = 0;
                     break;
                 case DayOfWeek.Monday:
-                    start_day = 1;
+                    _return = 1;
                     break;
-                case DayOfWeek.Tuesday :
-                    start_day = 2;
+                case DayOfWeek.Tuesday:
+                    _return = 2;
                     break;
-                case DayOfWeek.Wednesday :
-                    start_day = 3;
+                case DayOfWeek.Wednesday:
+                    _return = 3;
                     break;
-                case DayOfWeek.Thursday :
-                    start_day = 4;
+                case DayOfWeek.Thursday:
+                    _return = 4;
                     break;
-                case DayOfWeek.Friday :
-                    start_day = 5;
+                case DayOfWeek.Friday:
+                    _return = 5;
                     break;
-                case DayOfWeek.Saturday :
-                    start_day = 6;
+                case DayOfWeek.Saturday:
+                    _return = 6;
                     break;
                 default:
                     break;
             }
+            return _return;
+        }
 
-            int cnt = 1;
-            for (int i = 0; ; i++)
+        private TextBlock get_textblock(int row, int col)
+        {
+            TextBlock _return = null;
+
+            if (row >= 6 || row < 0 || col < 0 || col >= 7) return null;
+            int _row = row + 2, _col = col;
+            var elements =
+            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            foreach (var element in elements)
             {
-                int j;
-                for (j = (i == 0 ? start_day : 0); j < NUMBER_OF_DAYS; j++)
+                if (element.GetType().ToString().Contains("TextBlock"))
                 {
-                    if (cnt > days_in_month) break;
-
-                    // if draw today, make highlight
-                    if (cnt == day)
-                    {
-                        canvas.Children.Add(new Ellipse
-                        {
-                            Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f),
-                                              y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0),
-                            Width = x_in_pixel(1 / (float)NUMBER_OF_DAYS * 0.4f),
-                            Height = y_in_pixel(1 / (float)NUMBER_OF_DAYS * 0.4f),
-                            Fill = HIGHLIGHT_COLOR
-                        });
-                    }
-
-                    // draw the date
-                    TextBlock label = new TextBlock
-                    {
-//                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right,
-                        Text = cnt + "",
-                        TextAlignment = System.Windows.TextAlignment.Center,
-                        Foreground = NORMAL_COLOR,
-                        FontFamily = new System.Windows.Media.FontFamily(FONTFAMILY),
-                        FontWeight = FontWeights.Bold,
-                        // Move 0.02f right to make alignment
-//                        Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f + ( cnt < 10 ? 0.03f : 0.02f)),
-//                            y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0)
-                    };
-                    label.Text = label.ActualWidth + "";
-                    label.Margin = new Thickness(x_in_pixel(ROW_DIS * (float)j + 0.02f),
-                            y_in_pixel(START_Y + 0.01f + COL_DIS * (float)i), 0, 0);
-                    canvas.Children.Add(label);
-
-                    cnt++;
-                }
-                if (j != NUMBER_OF_DAYS)
-                {
-                    NUMBER_OF_WEEKS = i;
+                    _return = (TextBlock)element;
                     break;
+
                 }
             }
 
-            // Add horizontal lines to split weeks
-            for (int i = 0; i < NUMBER_OF_WEEKS; i++)
+            return _return;
+        }
+
+        private void reset()
+        {
+            Date.Text = "9999-99-99";
+            for (int row = 0; row < 6; row++)
             {
-                canvas.Children.Add(new Line
-                    {
-                        X1 = x_in_pixel(0.0f),
-                        Y1 = y_in_pixel(START_Y + COL_DIS * i),
-                        X2 = x_in_pixel(1.0f),
-                        Y2 = y_in_pixel(START_Y + COL_DIS * i),
-                        Stroke = NORMAL_COLOR,
-                        StrokeThickness = 1
-                    });
-            }
-
-            // Change content
-            this.Content = canvas;*/
-        }
-        public int x_in_pixel(float x_in_ratio) { return (int)(this.Width * x_in_ratio); }
-        public int y_in_pixel(float y_in_ratio) { return (int)(this.Height * y_in_ratio); }
-    }
-
-    public static class CalendarRenderer
-    {
-        static public void drawLines()
-        {
-            Line line = new Line();
-            line.X1 = 1;
-            line.Y1 = 1;
-            line.X2 = 50;
-            line.Y2 = 50;
-
-            line.StrokeThickness = 2;
-        }
-    }
-
-    public class CalendarInfo
-    {
-        // Singleton Design Pattern
-        public static CalendarInfo Instance
-        {
-            get {
-                if (_instance == null)
+                for (int col = 0; col < 7; col++)
                 {
-                    _instance = new CalendarInfo();
+                    TextBlock text = get_textblock(row, col);
+                    text.Text = "99";
+                    text.Foreground = Brushes.White;
+
+                    if (is_highlighted_today(row, col)) unhighlight_today(row, col);
+                    if (is_highlighted_schedule(row, col)) unhighlight_schedule(row, col);
                 }
-                return _instance;
-            }
-
-        }
-        private static CalendarInfo _instance;
-
-        // Private constructor
-        private CalendarInfo() {
-            Init();
-        }
-
-        private void Init()
-        {
-            setToday();
-        }
-
-        private void setToday() { today = DateTime.Today; }
-
-        public DateTime Today
-        {
-            get
-            {
-                return today;
             }
         }
-        private DateTime today;
+
+        public void Awake()
+        {
+            reset();
+            set_date();
+            set_days();
+        }
     }
 }
