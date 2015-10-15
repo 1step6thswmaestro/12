@@ -44,36 +44,33 @@ namespace Lumino
             get { return _Expand; }
             set
             {
-                if (AppearanceExpandable)
+                if (AppearanceExpandable && !ParentDock.IsDrawerOpening && !Resizing)
                 {
-                    if (!Resizing)
+                    _Expand = value;
+                    if (value)
                     {
-                        _Expand = value;
-                        if (value)
+                        ParentDock.BringToFront(this);
+
+                        OriginalX = Canvas.GetLeft(this);
+                        OriginalY = Canvas.GetTop(this);
+                        OriginalWidth = ActualWidth;
+                        OriginalHeight = ActualHeight;
+
+                        if (!AssemblyEntry.Equals("local"))
                         {
-                            ParentDock.BringToFront(this);
-
-                            OriginalX = Canvas.GetLeft(this);
-                            OriginalY = Canvas.GetTop(this);
-                            OriginalWidth = ActualWidth;
-                            OriginalHeight = ActualHeight;
-
-                            if (!AssemblyEntry.Equals("local"))
-                            {
-                                CallMethod("IsExpand", true);
-                            }
-
-                            Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
+                            CallMethod("IsExpand", true);
                         }
-                        else
+
+                        Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
+                    }
+                    else
+                    {
+                        if (!AssemblyEntry.Equals("local"))
                         {
-                            if (!AssemblyEntry.Equals("local"))
-                            {
-                                CallMethod("IsExpand", false);
-                            }
-
-                            Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
+                            CallMethod("IsExpand", false);
                         }
+
+                        Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
                     }
                 }
             }
