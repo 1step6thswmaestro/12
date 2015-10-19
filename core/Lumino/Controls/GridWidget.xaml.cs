@@ -7,6 +7,7 @@ using System.Windows.Media.Animation;
 using Lumino.Functions;
 using CefSharp.Wpf;
 using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace Lumino
 {
@@ -179,6 +180,8 @@ namespace Lumino
         private bool PositionError;
         private bool GuidelineOriginal;
         private bool Resizing = false;
+        private bool LongClick = false;
+        DispatcherTimer LongClickTimer;
         private Point LocalPosition;
         #endregion
 
@@ -448,6 +451,7 @@ namespace Lumino
             InitializeComponent();
 
             PreviewMouseLeftButtonUp += GridWidget_PreviewMouseLeftButtonUp;
+            PreviewMouseLeftButtonDown += GridWidget_PreviewMouseLeftButtonDown;
             PreviewMouseRightButtonUp += GridWidget_PreviewMouseRightButtonUp;
             PreviewMouseRightButtonDown += GridWidget_PreviewMouseRightButtonDown;
             PreviewMouseMove += GridWidget_PreviewMouseMove;
@@ -456,15 +460,49 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!NowLoading)
+            if (LongClickTimer != null)
             {
-                Expand = !Expand;
+                LongClickTimer.Stop();
+                LongClickTimer = null;
+            }
+
+            if (!LongClick)
+            {
+                if (!NowLoading)
+                {
+                    Expand = !Expand;
+                }
+                else
+                {
+                    StopMouseDown();
+                    NowLoading = false;
+                }
             }
             else
             {
-                StopMouseDown();
-                NowLoading = false;
+                LongClick = false;
             }
+        }
+
+        private void GridWidget_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (LongClickTimer == null)
+            {
+                LongClickTimer = new DispatcherTimer();
+                LongClickTimer.Interval = TimeSpan.FromMilliseconds(500);
+                LongClickTimer.Tick += (ts, te) =>
+                {
+                    LongClick = true;
+                    LongClickTimer.Stop();
+                    GridWidget_LongClick();
+                };
+                LongClickTimer.Start();
+            }
+        }
+
+        private void GridWidget_LongClick()
+        {
+            Console.WriteLine("롱 클릭 이벤트 발생");
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)
