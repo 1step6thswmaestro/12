@@ -502,7 +502,7 @@ namespace Lumino
 
         private void GridWidget_LongClick()
         {
-            Console.WriteLine("롱 클릭 이벤트 발생");
+            ParentDock.Remove(this);
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)
