@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar", "Calendar\Calendar.csproj", "{F306DB7B-D1B4-4FD8-8EFA-E30BD11CC567}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{DF62F61A-BC07-47D1-8F77-FADA8FD115AF}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\..\Downloads\client-secret.json = ..\..\..\..\..\Downloads\client-secret.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
