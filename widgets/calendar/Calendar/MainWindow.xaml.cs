@@ -13,6 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
+
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+
 namespace Calendar
 {
     /// <summary>
@@ -20,6 +30,8 @@ namespace Calendar
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Dictionary<DateTime, int> date_to_grid;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -153,11 +165,14 @@ namespace Calendar
             }
         }
 
-
         private void set_date()
         {
             DateTime today = DateTime.Today;
-            Date.Text = today.ToShortDateString();
+            Date.FontSize = 8;
+            Date.Foreground = Brushes.MediumSpringGreen;
+            Date.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            Date.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            Date.Text = today.ToString("yyyy년 MM월 dd일"); //today.ToShortDateString();
         }
         private void set_days()
         {
@@ -171,13 +186,18 @@ namespace Calendar
             int day = 1;
             Brush font_color = Brushes.White;
 
+            DateTime dateTime_for_dictionay = DateTime.Today.AddDays(-today.Day + 1);
+
             for (int row = 0; row < 6; row++)
             {
-                for (int col = (row == 0 ? start_day_of_month : 0 ); col < 7; col++)
+                for (int col = (row == 0 ? start_day_of_month : 0); col < 7; col++)
                 {
                     TextBlock text = get_textblock(row, col);
                     text.Foreground = font_color;
                     text.Text = day.ToString();
+
+                    date_to_grid.Add(dateTime_for_dictionay, row * 100 + col);
+                    dateTime_for_dictionay = dateTime_for_dictionay.AddDays(1);
 
                     if (day == today.Day) highlight_today(row, col);
 
@@ -189,12 +209,18 @@ namespace Calendar
                     }
                 }
             }
+            dateTime_for_dictionay = DateTime.Today.AddDays(-today.Day);
+
             day = DateTime.DaysInMonth((month == 1 ? year - 1 : year), (month == 1 ? 12 : month - 1));
             for (int row = 0, col = start_day_of_month - 1; col >= 0; col--)
             {
                 TextBlock text = get_textblock(row, col);
                 text.Foreground = font_color;
                 text.Text = day.ToString();
+
+                date_to_grid.Add(dateTime_for_dictionay, col);
+                dateTime_for_dictionay = dateTime_for_dictionay.AddDays(-1);
+
                 day --;
             }
         }
@@ -268,11 +294,102 @@ namespace Calendar
             }
         }
 
+        static private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
+        static private string ApplicationName = "Google Calendar API .NET Quickstart";
+        private void google_calendar_api_sample_code()
+        {
+            UserCredential credential;
+
+            using (var stream =
+                new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
+            {
+                string credPath = System.Environment.GetFolderPath(
+                    System.Environment.SpecialFolder.Personal);
+                credPath = System.IO.Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart");
+
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    Scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+                Console.WriteLine("Credential file saved to: " + credPath);
+            }
+
+            // Create Google Calendar API service.
+            var service = new CalendarService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
+
+            DateTime today = DateTime.Today;
+            int year = today.Year;
+            int month = today.Month;
+            int days = DateTime.DaysInMonth(year, month);
+            int start_day_of_month = day_of_week (DateTime.Today.AddDays(-today.Day + 1));
+            int days_in_month = DateTime.DaysInMonth(year, month);
+
+            // Define parameters of request.
+            EventsResource.ListRequest request = service.Events.List("primary");
+            request.TimeMin = DateTime.Today.AddDays(-today.Day + 1);
+            request.TimeMax = DateTime.Today.AddDays(-today.Day + 1 + days_in_month);
+            request.ShowDeleted = false;
+            request.SingleEvents = true;
+            request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
+
+            // List events.
+            Events events = request.Execute();
+            Console.WriteLine("Upcoming events:");
+            if (events.Items != null && events.Items.Count > 0)
+            {
+                foreach (var eventItem in events.Items)
+                {
+/*                    string when = eventItem.Start.DateTime.ToString();
+                    string till = eventItem.End.DateTime.ToString();
+                    if (String.IsNullOrEmpty(when))
+                    {
+                        when = eventItem.Start.Date;
+                        till = eventItem.End.Date;
+                    }
+                    Console.WriteLine("{0} ({1} ~ {2})", eventItem.Summary, when, till);*/
+
+                    try
+                    {
+                        DateTime start_date = DateTime.ParseExact(eventItem.Start.Date, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime end_date = DateTime.ParseExact(eventItem.End.Date, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture); ;
+
+                        while (start_date != end_date)
+                        {
+                            int row_and_col = date_to_grid[start_date];
+                            int row = row_and_col / 100, col = row_and_col % 100;
+                            highlight_schedule(row, col);
+                            start_date = start_date.AddDays(1);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No upcoming events found.");
+            }
+//            Console.Read();
+        }
+
         public void Awake()
         {
+
+            date_to_grid = new Dictionary<DateTime, int>();
+
             reset();
             set_date();
             set_days();
+
+            google_calendar_api_sample_code();
         }
     }
 }

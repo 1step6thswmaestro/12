@@ -38,13 +38,6 @@ namespace Lumino
             DockRoot.Column = 10;
             DockRoot.Overflow = false;
             DockRoot.GuidelineWhenMove = true;
-
-            // 위젯 불러오기
-            GridWidget Music = new GridWidget();
-            if (Music.Load(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets\Music\Music.ini"))
-            {
-                DockRoot.Add(Music);
-            }
         }
     }
 }

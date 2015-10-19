@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Lumino.Functions;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace Lumino
 {
@@ -110,7 +113,6 @@ namespace Lumino
                     RotateTransform Rotate = (RotateTransform)ImageGrip.RenderTransform;
                     AnimationRotate.From = Rotate.Angle;
                     AnimationRotate.To = value ? 180 : 0;
-                    Console.WriteLine(Rotate.Angle.ToString());
                     AnimationRotate.Duration = AnimationDuration;
                     AnimationRotate.EasingFunction = AnimationEasing;
 
@@ -190,12 +192,32 @@ namespace Lumino
         }
         #endregion
 
+        #region 내부 함수
+        private BitmapImage ImageLoad(string Path)
+        {
+            BitmapImage Image = new BitmapImage();
+            Image.BeginInit();
+            Image.UriSource = new Uri(Path);
+            Image.CacheOption = BitmapCacheOption.OnDemand;
+            Image.EndInit();
+
+            return Image;
+        }
+        #endregion
+
         #region 사용자 함수
         public void Add(GridWidget Widget)
         {
             Widget.ParentDock = this;
             WidgetList.Add(Widget);
             CanvasRoot.Children.Add(Widget);
+        }
+
+        public void Remove(GridWidget Widget)
+        {
+            Widget.ParentDock = null;
+            WidgetList.Remove(Widget);
+            CanvasRoot.Children.Remove(Widget);
         }
 
         public void BringToFront(GridWidget Widget)
@@ -240,8 +262,66 @@ namespace Lumino
             // 그래픽 표시 갱신
             InvalidateVisual();
 
-            // 서랍 위치 갱신
+            // 위젯 서랍 크기 갱신
             StackDrawer.Margin = new Thickness(0, 0, 0, -StackDrawerContent.ActualHeight);
+        }
+
+        private void LoadWidgets()
+        {
+            // 위젯 검색
+            string[] Widgets = Directory.GetFiles(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets", "*.ini", SearchOption.AllDirectories);
+
+            // 검색된 위젯 추가
+            foreach(string Path in Widgets)
+            {
+                // 위젯 구성 분석
+                INI Widget = new INI(Path);
+                string Title = Widget.GetValue("General", "Title");
+
+                // 위젯 섬네일 컨트롤 생성
+                StackPanel WidgetStack = new StackPanel
+                {
+                    Width = 120,
+                    Height = 120,
+                    Margin = new Thickness(15, 10, 0, 0)
+                };
+
+                Image WidgerThumb = new Image
+                {
+                    Width = 80,
+                    Height = 80,
+                    Source = ImageLoad(Directory.GetParent(Path) + "\\" + System.IO.Path.GetFileNameWithoutExtension(Path) + ".png")
+                };
+                WidgetStack.Children.Add(WidgerThumb);
+
+                TextBlock WidgetTitle = new TextBlock
+                {
+                    Text = Title,
+                    Margin = new Thickness(0, 10, 0, 0),
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                WidgetStack.Children.Add(WidgetTitle);
+
+                // 위젯 섬네일 컨트롤 이벤트 설정
+                WidgetStack.MouseLeftButtonDown  += (s, e) =>
+                {
+                    IsDrawerOpen = false;
+                    GridWidget Target = new GridWidget
+                    {
+                        NowLoading = true
+                    };
+                    if (Target.Load(Path))
+                    {
+                        Add(Target);
+                        Target.StartMouseDown();
+                    }
+                };
+                
+
+                // 콘텐츠 스택에 섬네일 컨트롤 추가
+                StackDrawerContent.Children.Add(WidgetStack);
+            }
         }
 
         public GridDock()
@@ -255,6 +335,7 @@ namespace Lumino
         private void GridDock_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateView();
+            LoadWidgets();
             StackDrawerContent.Visibility = Visibility.Hidden;
         }
 

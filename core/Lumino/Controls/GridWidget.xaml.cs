@@ -7,6 +7,7 @@ using System.Windows.Media.Animation;
 using Lumino.Functions;
 using CefSharp.Wpf;
 using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace Lumino
 {
@@ -155,6 +156,16 @@ namespace Lumino
         {
             get { return _AppearanceExpandable; }
         }
+
+        private bool _NowLoading;
+        public bool NowLoading
+        {
+            get { return _NowLoading; }
+            set
+            {
+                _NowLoading = value;
+            }
+        }
         #endregion
 
         #region 객체
@@ -169,6 +180,8 @@ namespace Lumino
         private bool PositionError;
         private bool GuidelineOriginal;
         private bool Resizing = false;
+        private bool LongClick = false;
+        DispatcherTimer LongClickTimer;
         private Point LocalPosition;
         #endregion
 
@@ -384,6 +397,53 @@ namespace Lumino
             Canvas.SetLeft(this, ParentDock.GridWidth * LastColumn);
             Canvas.SetTop(this, ParentDock.GridHeight * LastRow);
         }
+
+        public void StartMouseDown(MouseButtonEventArgs e = null)
+        {
+            GuidelineOriginal = ParentDock.Guideline;
+            if (ParentDock.GuidelineWhenMove)
+            {
+                ParentDock.Guideline = true;
+            }
+
+            ParentDock.BringToFront(this);
+            GridSelect.Visibility = Visibility.Visible;
+            if (e != null)
+            {
+                LocalPosition = e.GetPosition(this);
+            }
+            CaptureMouse();
+        }
+
+        public void StopMouseDown()
+        {
+            if (GuidelineOriginal == false && ParentDock.GuidelineWhenMove)
+            {
+                ParentDock.Guideline = false;
+            }
+
+            if (PositionError)
+            {
+                if (NowLoading)
+                {
+                    ParentDock.Remove(this);
+                }
+                else
+                {
+                    SetPosition(LastRow, LastColumn, true);
+                    GridError.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                LastRow = Row;
+                LastColumn = Column;
+                SetPosition(Row, Column, true);
+            }
+
+            GridSelect.Visibility = Visibility.Collapsed;
+            ReleaseMouseCapture();
+        }
         #endregion
 
         public GridWidget()
@@ -391,6 +451,7 @@ namespace Lumino
             InitializeComponent();
 
             PreviewMouseLeftButtonUp += GridWidget_PreviewMouseLeftButtonUp;
+            PreviewMouseLeftButtonDown += GridWidget_PreviewMouseLeftButtonDown;
             PreviewMouseRightButtonUp += GridWidget_PreviewMouseRightButtonUp;
             PreviewMouseRightButtonDown += GridWidget_PreviewMouseRightButtonDown;
             PreviewMouseMove += GridWidget_PreviewMouseMove;
@@ -399,7 +460,49 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Expand = !Expand;
+            if (LongClickTimer != null)
+            {
+                LongClickTimer.Stop();
+                LongClickTimer = null;
+            }
+
+            if (!LongClick)
+            {
+                if (!NowLoading)
+                {
+                    Expand = !Expand;
+                }
+                else
+                {
+                    StopMouseDown();
+                    NowLoading = false;
+                }
+            }
+            else
+            {
+                LongClick = false;
+            }
+        }
+
+        private void GridWidget_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (LongClickTimer == null)
+            {
+                LongClickTimer = new DispatcherTimer();
+                LongClickTimer.Interval = TimeSpan.FromMilliseconds(500);
+                LongClickTimer.Tick += (ts, te) =>
+                {
+                    LongClick = true;
+                    LongClickTimer.Stop();
+                    GridWidget_LongClick();
+                };
+                LongClickTimer.Start();
+            }
+        }
+
+        private void GridWidget_LongClick()
+        {
+            ParentDock.Remove(this);
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)
@@ -413,16 +516,7 @@ namespace Lumino
         {
             if (!Expand)
             {
-                GuidelineOriginal = ParentDock.Guideline;
-                if (ParentDock.GuidelineWhenMove)
-                {
-                    ParentDock.Guideline = true;
-                }
-
-                ParentDock.BringToFront(this);
-                GridSelect.Visibility = Visibility.Visible;
-                LocalPosition = e.GetPosition(this);
-                CaptureMouse();
+                StartMouseDown(e);
             }
         }
 
@@ -430,25 +524,7 @@ namespace Lumino
         {
             if (!Expand)
             {
-                if (GuidelineOriginal == false && ParentDock.GuidelineWhenMove)
-                {
-                    ParentDock.Guideline = false;
-                }
-
-                if (PositionError)
-                {
-                    SetPosition(LastRow, LastColumn, true);
-                    GridError.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    LastRow = Row;
-                    LastColumn = Column;
-                    SetPosition(Row, Column, true);
-                }
-
-                GridSelect.Visibility = Visibility.Collapsed;
-                ReleaseMouseCapture();
+                StopMouseDown();
             }
         }
 
@@ -459,8 +535,16 @@ namespace Lumino
                 Point TargetPosition = e.GetPosition(ParentDock.CanvasRoot);
                 Point TargetContentPosition = LocalPosition;
 
-                Canvas.SetLeft(this, TargetPosition.X - TargetContentPosition.X);
-                Canvas.SetTop(this, TargetPosition.Y - TargetContentPosition.Y);
+                if (NowLoading)
+                {
+                    Canvas.SetLeft(this, TargetPosition.X - ActualWidth / 2);
+                    Canvas.SetTop(this, TargetPosition.Y - ActualHeight / 2);
+                }
+                else
+                {
+                    Canvas.SetLeft(this, TargetPosition.X - TargetContentPosition.X);
+                    Canvas.SetTop(this, TargetPosition.Y - TargetContentPosition.Y);
+                }
 
                 _Column = (int)Math.Round(Canvas.GetLeft(this) / ParentDock.GridWidth);
                 _Row = (int)Math.Round(Canvas.GetTop(this) / ParentDock.GridHeight);
@@ -490,6 +574,10 @@ namespace Lumino
                                 Rect RectThis = new Rect(ParentDock.GridWidth * Column, ParentDock.GridHeight * Row, Width - Margin, Height - Margin);
                                 Rect RectTarget = new Rect(Canvas.GetLeft(Widget), Canvas.GetTop(Widget), Widget.Width - Margin, Widget.Height - Margin);
                                 IsIntersect = RectThis.IntersectsWith(RectTarget);
+                                if (IsIntersect)
+                                {
+                                    break;
+                                }
                             }
                         }
 
