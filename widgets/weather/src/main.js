@@ -6,7 +6,6 @@ var WeatherDetail = require('./components/WeatherDetail/WeatherDetail');
 var WeatherIcons = require('./utils/WeatherIcons');
 var TimeCalculator = require('./utils/TimeCalculator');
 
-
 $(document).ready(function() {
     WeatherIcons.initialize($);
 
