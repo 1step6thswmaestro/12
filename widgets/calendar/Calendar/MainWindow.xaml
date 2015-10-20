@@ -25,11 +25,21 @@
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7"
-                       Foreground="White"
-                       Text="2015-10-13"
-                       HorizontalAlignment="Center"
-                       Name="Date" />
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7"
+                        Margin="5, 0, 0, 0"
+                        >
+                <TextBlock Text="2015년"
+                           Margin="5, 0, 0, 0"
+                           Foreground="White"   FontSize="8"   FontFamily="Nanum Gothic"
+                           HorizontalAlignment="Left"  VerticalAlignment="Top"
+                           Name="Year"
+                           />
+                <TextBlock Text="10월 13일"
+                           Foreground="White"   FontSize="9"   FontFamily="Nanum Gothic"
+                           HorizontalAlignment="Left"  VerticalAlignment="Top"
+                           Name="Date"
+                           />
+            </StackPanel>
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Sun"
                        HorizontalAlignment="Center"

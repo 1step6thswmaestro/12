@@ -30,6 +30,11 @@ namespace Calendar
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        /* Dictionary for matching DateTime to <row, column> in Grid_Number
+         * Key = DateTime
+         * Value = row * 100 + column
+         */
         private Dictionary<DateTime, int> date_to_grid;
 
         public MainWindow()
@@ -38,141 +43,146 @@ namespace Calendar
             Awake(); 
         }
 
-        private bool is_highlighted_today (int row, int col)
+        static private int NUMBER_OF_GRID_ROW = 6;
+        static private int NUMBER_OF_GRID_COL = 7;
+
+        // Check if it's out of Grid_Number's range
+        static private bool is_out_of_grid(int row, int col) {
+            return (row >= NUMBER_OF_GRID_ROW 
+                || row < 0 
+                || col < 0 
+                || col >= NUMBER_OF_GRID_COL);
+        }
+        // Get inner grid of Grid_Number
+        private Grid get_nested_grid (int row, int col) {
+            return (Grid)first(Grid_Number, row, col, "Grid");
+        }
+        // Get TextBlock of Grid_Number
+        private TextBlock get_textblock(int row, int col)
         {
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return false;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
+            if (is_out_of_grid(row, col)) return null;
+
+            row += 2;
+
+            return (TextBlock)first(Grid_Number, row, col, "TextBlock");
+        }
+
+        // Refactored methods to access inner UIElements of grids
+        private IEnumerable<UIElement> cast(Grid grid)
+        {
+            return grid.Children.Cast<UIElement>();
+        }
+        private IEnumerable<UIElement> where(Grid grid, int row, int col)
+        {
+            return cast(grid).Where(e => Grid.GetRow(e) == row && Grid.GetColumn(e) == col);
+        }
+        private UIElement first(Grid grid, int row, int col)
+        {
+            return where(grid, row, col).ElementAt(0);
+        }
+        private UIElement first(Grid grid, int row, int col, string type)
+        {
+            var elements = where(grid, row, col);
             foreach (var element in elements)
             {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    int count = nested_grid.Children.Cast<UIElement>().Count(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0);
-                    return (count!= 0);
-
-                }
+                if (element.GetType().ToString().Contains(type)) return element;
             }
-            return false;
+            return null;
+        }
+        private int count(Grid grid, int row, int col)
+        {
+            return where(grid, row, col).Count();
+        }
+
+        // Methods for highlight of today
+        private bool is_highlighted_today (int row, int col)
+        {
+            if (is_out_of_grid(row, col)) return false;
+
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            return (count(nested_grid, 1, 0) != 0);
         }
         private void unhighlight_today(int row, int col)
         {
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    Ellipse highlight = (Ellipse)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0);
-                    nested_grid.Children.Remove(highlight);
-                    return;
+            if (is_out_of_grid(row, col)) return;
 
-                }
-            }
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            Ellipse highlight = (Ellipse)first(nested_grid, 1, 0, "Ellipse"); //(Ellipse)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0);
+            nested_grid.Children.Remove(highlight);
+            return;
         }
         private void highlight_today(int row, int col)
         {
 
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    Ellipse today_highlight = new Ellipse
-                    {
-                        Width = 6.5, //nested_grid.ActualHeight * 0.65F,
-                        Height = 6.5,
-//                        Width = ((Grid)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0)).ActualHeight,
-                        Fill = Brushes.Red,
-                        HorizontalAlignment = System.Windows.HorizontalAlignment.Center
-                    };
-                    Grid.SetRow(today_highlight, 1);
-                    Grid.SetColumn(today_highlight, 0);
-                    nested_grid.Children.Add(today_highlight);
+            if (is_out_of_grid(row, col)) return;
 
-                }
-            }
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            Ellipse today_highlight = new Ellipse
+            {
+                Width = 6.5,
+                Height = 6.5,
+                Fill = Brushes.Red,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+            };
+            Grid.SetRow(today_highlight, 1);
+            Grid.SetColumn(today_highlight, 0);
+            nested_grid.Children.Add(today_highlight);
         }
 
+        // Methods for highlights of schedules
         private bool is_highlighted_schedule(int row, int col)
         {
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return false;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    int count = nested_grid.Children.Cast<UIElement>().Count(e => Grid.GetRow(e) == 3 && Grid.GetColumn(e) == 0);
-                    return (count != 0);
+            if (is_out_of_grid(row, col)) return false;
 
-                }
-            }
-            return false;
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            return (count(nested_grid, 3, 0) != 0);
         }
         private void unhighlight_schedule(int row, int col)
         {
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    Ellipse highlight = (Ellipse)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 3 && Grid.GetColumn(e) == 0);
-                    nested_grid.Children.Remove(highlight);
-                    return;
+            if (is_out_of_grid(row, col)) return;
 
-                }
-            }
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            Ellipse highlight = (Ellipse)first(nested_grid, 3, 0);
+            nested_grid.Children.Remove(highlight);
         }
         private void highlight_schedule(int row, int col)
         {
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("Grid"))
-                {
-                    Grid nested_grid = (Grid)element;
-                    Ellipse today_highlight = new Ellipse
-                    {
-                        Width = 2, //nested_grid.ActualHeight * 0.65F,
-                        Height = 2,
-                        //                        Width = ((Grid)nested_grid.Children.Cast<UIElement>().First(e => Grid.GetRow(e) == 1 && Grid.GetColumn(e) == 0)).ActualHeight,
-                        Fill = Brushes.White,
-                        HorizontalAlignment = System.Windows.HorizontalAlignment.Center
-                    };
-                    Grid.SetRow(today_highlight,3);
-                    Grid.SetColumn(today_highlight, 0);
-                    nested_grid.Children.Add(today_highlight);
+            if (is_out_of_grid(row, col)) return;
 
-                }
-            }
+            row += 2;
+
+            Grid nested_grid = get_nested_grid(row, col);
+            Ellipse today_highlight = new Ellipse
+            {
+                Width = 2,
+                Height = 2,
+                Fill = Brushes.White,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+            };
+            Grid.SetRow(today_highlight,3);
+            Grid.SetColumn(today_highlight, 0);
+            nested_grid.Children.Add(today_highlight);
         }
 
+        /* Set date and days
+         * date is text at the top, in "YYYY년 MM월 DD일" format
+         * days are numbers in grid.
+         */
         private void set_date()
         {
             DateTime today = DateTime.Today;
-            Date.FontSize = 8;
-            Date.Foreground = Brushes.MediumSpringGreen;
-            Date.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            Date.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            Date.Text = today.ToString("yyyy년 MM월 dd일"); //today.ToShortDateString();
+            Year.Text = today.ToString("yyyy년");
+            Date.Text = today.ToString("MM월 dd일");
         }
         private void set_days()
         {
@@ -180,7 +190,7 @@ namespace Calendar
             int year = today.Year;
             int month = today.Month;
             int days = DateTime.DaysInMonth(year, month);
-            int start_day_of_month = day_of_week (DateTime.Today.AddDays(-today.Day + 1));
+            int start_day_of_month = (int)DateTime.Today.AddDays(-today.Day + 1).DayOfWeek;
             int days_in_month = DateTime.DaysInMonth(year, month);
 
             int day = 1;
@@ -224,62 +234,12 @@ namespace Calendar
                 day --;
             }
         }
-        private int day_of_week(DateTime date)
-        {
-            int _return = 0;
-            switch (date.DayOfWeek)
-            {
-                case DayOfWeek.Sunday:
-                    _return = 0;
-                    break;
-                case DayOfWeek.Monday:
-                    _return = 1;
-                    break;
-                case DayOfWeek.Tuesday:
-                    _return = 2;
-                    break;
-                case DayOfWeek.Wednesday:
-                    _return = 3;
-                    break;
-                case DayOfWeek.Thursday:
-                    _return = 4;
-                    break;
-                case DayOfWeek.Friday:
-                    _return = 5;
-                    break;
-                case DayOfWeek.Saturday:
-                    _return = 6;
-                    break;
-                default:
-                    break;
-            }
-            return _return;
-        }
 
-        private TextBlock get_textblock(int row, int col)
-        {
-            TextBlock _return = null;
-
-            if (row >= 6 || row < 0 || col < 0 || col >= 7) return null;
-            int _row = row + 2, _col = col;
-            var elements =
-            Grid_Number.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == _row && Grid.GetColumn(e) == _col);
-            foreach (var element in elements)
-            {
-                if (element.GetType().ToString().Contains("TextBlock"))
-                {
-                    _return = (TextBlock)element;
-                    break;
-
-                }
-            }
-
-            return _return;
-        }
-
+        // Reset all UIElements
         private void reset()
         {
-            Date.Text = "9999-99-99";
+            Year.Text = "9999년";
+            Date.Text = "99월 99일";
             for (int row = 0; row < 6; row++)
             {
                 for (int col = 0; col < 7; col++)
@@ -294,9 +254,10 @@ namespace Calendar
             }
         }
 
+        // Get and highlight schedules from Google Calendar
         static private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static private string ApplicationName = "Google Calendar API .NET Quickstart";
-        private void google_calendar_api_sample_code()
+        private void set_schedule_highlight()
         {
             UserCredential credential;
 
@@ -327,7 +288,7 @@ namespace Calendar
             int year = today.Year;
             int month = today.Month;
             int days = DateTime.DaysInMonth(year, month);
-            int start_day_of_month = day_of_week (DateTime.Today.AddDays(-today.Day + 1));
+            int start_day_of_month = (int)DateTime.Today.AddDays(-today.Day + 1).DayOfWeek;
             int days_in_month = DateTime.DaysInMonth(year, month);
 
             // Define parameters of request.
@@ -345,14 +306,6 @@ namespace Calendar
             {
                 foreach (var eventItem in events.Items)
                 {
-/*                    string when = eventItem.Start.DateTime.ToString();
-                    string till = eventItem.End.DateTime.ToString();
-                    if (String.IsNullOrEmpty(when))
-                    {
-                        when = eventItem.Start.Date;
-                        till = eventItem.End.Date;
-                    }
-                    Console.WriteLine("{0} ({1} ~ {2})", eventItem.Summary, when, till);*/
 
                     try
                     {
@@ -377,19 +330,18 @@ namespace Calendar
             {
                 Console.WriteLine("No upcoming events found.");
             }
-//            Console.Read();
         }
 
+        // Initialize
         public void Awake()
         {
-
             date_to_grid = new Dictionary<DateTime, int>();
 
             reset();
+
             set_date();
             set_days();
-
-            google_calendar_api_sample_code();
+            set_schedule_highlight();
         }
     }
 }
