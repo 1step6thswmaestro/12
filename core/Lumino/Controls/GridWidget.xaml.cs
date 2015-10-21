@@ -92,38 +92,44 @@ namespace Lumino
             set { _ParentDock = value; }
         }
 
-        private String _Title;
-        public String Title
+        private string _INI;
+        public string INI
+        {
+            get { return _INI; }
+        }
+
+        private string _Title;
+        public string Title
         {
             get { return _Title; }
         }
 
-        private String _Author;
-        public String Author
+        private string _Author;
+        public string Author
         {
             get { return _Author; }
         }
 
-        private String _Summary;
-        public String Summary
+        private string _Summary;
+        public string Summary
         {
             get { return _Summary; }
         }
 
-        private String _AssemblyFile;
-        public String AssemblyFile
+        private string _AssemblyFile;
+        public string AssemblyFile
         {
             get { return _AssemblyFile; }
         }
 
-        private String _AssemblyEntry;
-        public String AssemblyEntry
+        private string _AssemblyEntry;
+        public string AssemblyEntry
         {
             get { return _AssemblyEntry; }
         }
 
-        private String _AssemblyArgument;
-        public String AssemblyArgument
+        private string _AssemblyArgument;
+        public string AssemblyArgument
         {
             get { return _AssemblyArgument; }
         }
@@ -278,6 +284,7 @@ namespace Lumino
                 // 위젯 분석
                 INI Widget = new INI(Path);
                 string Local = "<%LOCAL%>";
+                _INI = Path;
                 _Title = Widget.GetValue("General", "Title");
                 _Author = Widget.GetValue("General", "Author");
                 _Summary = Widget.GetValue("General", "Summary");
@@ -440,6 +447,7 @@ namespace Lumino
                 LastRow = Row;
                 LastColumn = Column;
                 SetPosition(Row, Column, true);
+                ParentDock.Config.SaveWidgets();
             }
 
             GridSelect.Visibility = Visibility.Collapsed;

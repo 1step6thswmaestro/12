@@ -22,6 +22,5 @@ C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\
 C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Lumino.csproj.GenerateResource.Cache
 C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Lumino.exe
 C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Lumino.pdb
-C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Lumino.csprojResolveAssemblyReference.cache
 C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Controls\AlertDialog.g.cs
 C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Lumino\obj\X86\Debug\Controls\AlertDialog.baml
