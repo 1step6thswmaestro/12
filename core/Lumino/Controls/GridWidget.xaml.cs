@@ -8,6 +8,7 @@ using Lumino.Functions;
 using CefSharp.Wpf;
 using System.Collections.Generic;
 using System.Windows.Threading;
+using Lumino.Controls;
 
 namespace Lumino
 {
@@ -91,38 +92,44 @@ namespace Lumino
             set { _ParentDock = value; }
         }
 
-        private String _Title;
-        public String Title
+        private string _INI;
+        public string INI
+        {
+            get { return _INI; }
+        }
+
+        private string _Title;
+        public string Title
         {
             get { return _Title; }
         }
 
-        private String _Author;
-        public String Author
+        private string _Author;
+        public string Author
         {
             get { return _Author; }
         }
 
-        private String _Summary;
-        public String Summary
+        private string _Summary;
+        public string Summary
         {
             get { return _Summary; }
         }
 
-        private String _AssemblyFile;
-        public String AssemblyFile
+        private string _AssemblyFile;
+        public string AssemblyFile
         {
             get { return _AssemblyFile; }
         }
 
-        private String _AssemblyEntry;
-        public String AssemblyEntry
+        private string _AssemblyEntry;
+        public string AssemblyEntry
         {
             get { return _AssemblyEntry; }
         }
 
-        private String _AssemblyArgument;
-        public String AssemblyArgument
+        private string _AssemblyArgument;
+        public string AssemblyArgument
         {
             get { return _AssemblyArgument; }
         }
@@ -277,6 +284,7 @@ namespace Lumino
                 // 위젯 분석
                 INI Widget = new INI(Path);
                 string Local = "<%LOCAL%>";
+                _INI = Path;
                 _Title = Widget.GetValue("General", "Title");
                 _Author = Widget.GetValue("General", "Author");
                 _Summary = Widget.GetValue("General", "Summary");
@@ -439,6 +447,7 @@ namespace Lumino
                 LastRow = Row;
                 LastColumn = Column;
                 SetPosition(Row, Column, true);
+                ParentDock.Config.SaveWidgets();
             }
 
             GridSelect.Visibility = Visibility.Collapsed;
@@ -486,23 +495,37 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (LongClickTimer == null)
+            if (!Expand)
             {
-                LongClickTimer = new DispatcherTimer();
-                LongClickTimer.Interval = TimeSpan.FromMilliseconds(500);
-                LongClickTimer.Tick += (ts, te) =>
+                if (LongClickTimer == null)
                 {
-                    LongClick = true;
-                    LongClickTimer.Stop();
-                    GridWidget_LongClick();
-                };
-                LongClickTimer.Start();
+                    LongClickTimer = new DispatcherTimer();
+                    LongClickTimer.Interval = TimeSpan.FromMilliseconds(300);
+                    LongClickTimer.Tick += (ts, te) =>
+                    {
+                        LongClick = true;
+                        LongClickTimer.Stop();
+                        LongClickTimer = null;
+                        GridWidget_LongClick();
+                    };
+                    LongClickTimer.Start();
+                }
             }
         }
 
         private void GridWidget_LongClick()
         {
-            ParentDock.Remove(this);
+            AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
+                "선택된 위젯 삭제",
+                "선택한 위젯을 삭제하시겠습니까? 삭제한 위젯은 애플리케이션의 위젯 서랍에서 다시 불러올 수 있습니다.",
+                true);
+
+            Dialog.ShowDialog();
+            LongClick = false;
+            if (Dialog.GetResult())
+            {
+                ParentDock.Remove(this);
+            }
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)

@@ -98,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AlertDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\GridDock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -114,12 +118,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\AlertDialog.xaml.cs">
+      <DependentUpon>AlertDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GridDock.xaml.cs">
       <DependentUpon>GridDock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\GridWidget.xaml.cs">
       <DependentUpon>GridWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Functions\ConfigManager.cs" />
     <Compile Include="Functions\INI.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

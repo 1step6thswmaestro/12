@@ -157,6 +157,7 @@ namespace Lumino
         #endregion
 
         #region 객체
+        public ConfigManager Config = new ConfigManager();
         public List<GridWidget> WidgetList = new List<GridWidget>();
         #endregion
 
@@ -211,6 +212,7 @@ namespace Lumino
             Widget.ParentDock = this;
             WidgetList.Add(Widget);
             CanvasRoot.Children.Add(Widget);
+            Config.SaveWidgets();
         }
 
         public void Remove(GridWidget Widget)
@@ -218,6 +220,7 @@ namespace Lumino
             Widget.ParentDock = null;
             WidgetList.Remove(Widget);
             CanvasRoot.Children.Remove(Widget);
+            Config.SaveWidgets();
         }
 
         public void BringToFront(GridWidget Widget)
@@ -330,6 +333,8 @@ namespace Lumino
             Loaded += GridDock_Loaded;
             SizeChanged += GridDock_SizeChanged;
             GripDrawer.MouseLeftButtonDown += GripDrawer_MouseLeftButtonDown;
+            Config.Initialize(this);
+            Config.LoadWidgets();
         }
 
         private void GridDock_Loaded(object sender, RoutedEventArgs e)

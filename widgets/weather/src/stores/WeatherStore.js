@@ -28,6 +28,7 @@ var WeatherStore = {
                     if (err) { console.log(err); }
                     else {
                         ForecastData = res.body.response[0];
+                        console.log("ForecastData", res.body.response[0]);
                         resolve();
                     }
                 });

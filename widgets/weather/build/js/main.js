@@ -4245,12 +4245,9 @@ var Loader = {
         requestCount = 0;
     },
 
-    callbackDispatch: AppFlowController.addTarget(
-        Constants.FlowID.GET_FORECAST_DATA,
-        function() {
-            loadStart();
-        }
-    ),
+    loadStart: function() {
+        loadStart();
+    },
 
     subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
@@ -4268,7 +4265,7 @@ var Loader = {
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":17,"../../controller/AppFlowController":18}],12:[function(require,module,exports){
+},{"../../constants/Constants":21,"../../controller/AppFlowController":22}],12:[function(require,module,exports){
 var WeatherStore = require('../../stores/WeatherStore');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
@@ -4307,7 +4304,7 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../stores/WeatherStore":21,"../../utils/WeatherIcons":23}],13:[function(require,module,exports){
+},{"../../stores/WeatherStore":25,"../../utils/WeatherIcons":27}],13:[function(require,module,exports){
 var DateSelectorDOM;
 
 var ArrowLeftDOM;
@@ -4335,6 +4332,41 @@ var DateSelector = {
 
 module.exports = DateSelector;
 },{}],14:[function(require,module,exports){
+
+var DayWeatherDetail = {
+    initialize: function($) {
+    }
+};
+
+
+//TODO:
+
+module.exports = DayWeatherDetail;
+},{}],15:[function(require,module,exports){
+var DayWeatherHeader = {
+    initialize: function($) {
+
+    }
+};
+
+module.exports = DayWeatherHeader;
+},{}],16:[function(require,module,exports){
+var SunAndMoon = {
+    initialize: function($) {
+
+    }
+};
+
+module.exports = SunAndMoon;
+},{}],17:[function(require,module,exports){
+var WindAndPressure = {
+    initialize: function($) {
+
+    }
+};
+
+module.exports = WindAndPressure;
+},{}],18:[function(require,module,exports){
 var TempGraphDOM;
 var WrapperDOM;
 
@@ -4396,20 +4428,70 @@ var TempGraph = {
 };
 
 module.exports = TempGraph;
-},{}],15:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
+var AppFlowController = require('../../controller/AppFlowController');
+var Constants = require('../../constants/Constants');
+
 var DateSelector = require('./DateSelector');
 var TempGraph = require('./TempGraph');
+
+var DayWeatherDetail = require('./MainDetail/DayWeatherDetail');
+var DayWeatherHeader = require('./MainDetail/DayWeatherHeader');
+var SunAndMoon = require('./MainDetail/SunAndMoon');
+var WindAndPressure = require('./MainDetail/WindAndPressure');
+
+
+var countCallback = 0;
+
+function setDataOfIndex(index) {
+
+}
+
+function initializeDatas() {
+    if (countCallback == 0) {
+        countCallback++;
+        return;
+    }
+
+    //TempGraph.initGraph();
+    //DateSelector.initItems();
+
+    setDataOfIndex(0);
+
+    countCallback = 0;
+}
 
 
 var WeatherDetail = {
     initialize: function($) {
+        countCallback = 0;
+
         DateSelector.initialize($);
         TempGraph.initialize($);
-    }
+
+        DayWeatherDetail.initialize($);
+        DayWeatherHeader.initialize($);
+        SunAndMoon.initialize($);
+        WindAndPressure.initialize($);
+    },
+
+    subscribeForecastData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeSunMoonData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_SUN_MOON_DATA,
+        function() {
+            initializeDatas();
+        }
+    )
 };
 
 module.exports = WeatherDetail;
-},{"./DateSelector":13,"./TempGraph":14}],16:[function(require,module,exports){
+},{"../../constants/Constants":21,"../../controller/AppFlowController":22,"./DateSelector":13,"./MainDetail/DayWeatherDetail":14,"./MainDetail/DayWeatherHeader":15,"./MainDetail/SunAndMoon":16,"./MainDetail/WindAndPressure":17,"./TempGraph":18}],20:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -4763,7 +4845,7 @@ var CodedWeather = {
 };
 
 module.exports = CodedWeather;
-},{}],17:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 var APIroot = 'http://api.aerisapi.com';
@@ -4793,7 +4875,7 @@ module.exports = {
         BACKSPACE: 8
     }
 };
-},{"react/lib/keyMirror":6}],18:[function(require,module,exports){
+},{"react/lib/keyMirror":6}],22:[function(require,module,exports){
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
@@ -4803,7 +4885,7 @@ AppFlowController.addFlow(Constants.FlowID.GET_FORECAST_DATA);
 AppFlowController.addFlow(Constants.FlowID.GET_SUN_MOON_DATA);
 
 module.exports = AppFlowController;
-},{"../constants/Constants":17,"flowing-js":3}],19:[function(require,module,exports){
+},{"../constants/Constants":21,"flowing-js":3}],23:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4824,7 +4906,7 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":17,"../controller/AppFlowController":18}],20:[function(require,module,exports){
+},{"../constants/Constants":21,"../controller/AppFlowController":22}],24:[function(require,module,exports){
 "use strict";
 var Loader = require('./components/Loader/Loader');
 var TodayWeather = require('./components/TodayWeather/TodayWeather');
@@ -4843,7 +4925,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":15,"./utils/TimeCalculator":22,"./utils/WeatherIcons":23}],21:[function(require,module,exports){
+},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":19,"./utils/TimeCalculator":26,"./utils/WeatherIcons":27}],25:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4874,6 +4956,7 @@ var WeatherStore = {
                     if (err) { console.log(err); }
                     else {
                         ForecastData = res.body.response[0];
+                        console.log("ForecastData", res.body.response[0]);
                         resolve();
                     }
                 });
@@ -4897,15 +4980,16 @@ var WeatherStore = {
 };
 
 module.exports = WeatherStore;
-},{"../constants/Constants":17,"../controller/AppFlowController":18,"es6-promise":2,"superagent":7,"underscore":10}],22:[function(require,module,exports){
+},{"../constants/Constants":21,"../controller/AppFlowController":22,"es6-promise":2,"superagent":7,"underscore":10}],26:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
+var Loader = require('../components/Loader/Loader');
 
 var SECONDS_OF_3HOUR = 3 * 60 * 60;
 var DATA_AMOUNT_OF_2WEEKS = 104; //2주치 데이터 (8 x 14)
 
 var TimeCalculator = {
     initialize: function() {
-        this.dispatchAction(7 - Math.floor((new Date).getHours() / 3));
+        this.dispatchAction(7 - Math.floor((new Date).getHours() / 3) + DATA_AMOUNT_OF_2WEEKS);
         this.setTimer();
     },
 
@@ -4918,13 +5002,14 @@ var TimeCalculator = {
     },
 
     dispatchAction: function(dataAmount) {
+        Loader.loadStart();
         AppDispatcher.getForecastData(dataAmount);
         AppDispatcher.getSunMoonData();
     }
 };
 
 module.exports = TimeCalculator;
-},{"../dispatcher/AppDispatcher":19}],23:[function(require,module,exports){
+},{"../components/Loader/Loader":11,"../dispatcher/AppDispatcher":23}],27:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var Icons = {};
@@ -4956,4 +5041,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":16}]},{},[20]);
+},{"../constants/CodedWeather":20}]},{},[24]);

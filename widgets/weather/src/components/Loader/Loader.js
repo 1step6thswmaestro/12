@@ -51,12 +51,9 @@ var Loader = {
         requestCount = 0;
     },
 
-    callbackDispatch: AppFlowController.addTarget(
-        Constants.FlowID.GET_FORECAST_DATA,
-        function() {
-            loadStart();
-        }
-    ),
+    loadStart: function() {
+        loadStart();
+    },
 
     subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
