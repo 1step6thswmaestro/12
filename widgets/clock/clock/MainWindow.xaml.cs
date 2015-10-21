@@ -33,8 +33,8 @@ namespace clock
         // Initialization
         private void Awake()
         {
-            Hour.Text = "Init";
-            Minute.Text = "alize";
+            Hour.Text = "INIT";
+            Minute.Text = "ALIZE";
 
             Timer.Tick += new EventHandler(timer_tick);
             Timer.Interval = new TimeSpan(0, 0, 1);
