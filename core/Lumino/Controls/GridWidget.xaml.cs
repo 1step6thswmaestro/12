@@ -8,6 +8,7 @@ using Lumino.Functions;
 using CefSharp.Wpf;
 using System.Collections.Generic;
 using System.Windows.Threading;
+using Lumino.Controls;
 
 namespace Lumino
 {
@@ -486,23 +487,37 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (LongClickTimer == null)
+            if (!Expand)
             {
-                LongClickTimer = new DispatcherTimer();
-                LongClickTimer.Interval = TimeSpan.FromMilliseconds(500);
-                LongClickTimer.Tick += (ts, te) =>
+                if (LongClickTimer == null)
                 {
-                    LongClick = true;
-                    LongClickTimer.Stop();
-                    GridWidget_LongClick();
-                };
-                LongClickTimer.Start();
+                    LongClickTimer = new DispatcherTimer();
+                    LongClickTimer.Interval = TimeSpan.FromMilliseconds(300);
+                    LongClickTimer.Tick += (ts, te) =>
+                    {
+                        LongClick = true;
+                        LongClickTimer.Stop();
+                        LongClickTimer = null;
+                        GridWidget_LongClick();
+                    };
+                    LongClickTimer.Start();
+                }
             }
         }
 
         private void GridWidget_LongClick()
         {
-            ParentDock.Remove(this);
+            AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
+                "선택된 위젯 삭제",
+                "선택한 위젯을 삭제하시겠습니까? 삭제한 위젯은 애플리케이션의 위젯 서랍에서 다시 불러올 수 있습니다.",
+                true);
+
+            Dialog.ShowDialog();
+            LongClick = false;
+            if (Dialog.GetResult())
+            {
+                ParentDock.Remove(this);
+            }
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)
