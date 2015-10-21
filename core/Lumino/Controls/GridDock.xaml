@@ -10,7 +10,7 @@
 
     <Grid ClipToBounds="True">
         <Canvas x:Name="CanvasRoot"/>
-        <StackPanel x:Name="StackDrawer" SnapsToDevicePixels="True" VerticalAlignment="Bottom">
+            <StackPanel x:Name="StackDrawer" SnapsToDevicePixels="True" VerticalAlignment="Bottom">
             <Border x:Name="GripDrawer" HorizontalAlignment="Center" Background="#B2FFFFFF" CornerRadius="10,10,0,0" Height="50" Width="140">
                 <Image x:Name="ImageGrip" Source="/Lumino;component/Images/BtnUp.png" RenderTransformOrigin="0.5,0.5" >
                     <Image.RenderTransform>
