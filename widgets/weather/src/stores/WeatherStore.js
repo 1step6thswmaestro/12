@@ -48,7 +48,26 @@ var WeatherStore = {
                     }
                 });
         });
-    })
+    }),
+
+
+    callbackActiveApp: AppFlowController.addTarget(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    ),
+
+    callbackDisableApp: AppFlowController.addTarget(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    )
 };
 
 module.exports = WeatherStore;

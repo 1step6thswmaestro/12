@@ -14,6 +14,20 @@ var AppDispatcher = {
             Constants.FlowID.GET_SUN_MOON_DATA,
             {}
         );
+    },
+
+    activeApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.ACTIVE_APP,
+            {}
+        );
+    },
+
+    disableApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.DISABLE_APP,
+            {}
+        );
     }
 };
 

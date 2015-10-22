@@ -4209,7 +4209,9 @@ function loadComplete() {
 
     LoaderDOM.animate({
         opacity: 0
-    }, '600', 'easeInCubic');
+    }, '600', 'easeInCubic', function() {
+        LoaderDOM.attr('style', 'display: none;');
+    });
 
     AppDOM.animate({
         opacity: 1
@@ -4224,6 +4226,7 @@ function loadStart() {
     }
 
     loadedDataCount = 0;
+    LoaderDOM.removeAttr('style');
 
     AppDOM.animate({
         opacity: 0
@@ -4266,8 +4269,13 @@ var Loader = {
 
 module.exports = Loader;
 },{"../../constants/Constants":21,"../../controller/AppFlowController":22}],12:[function(require,module,exports){
+var AppFlowController = require('../../controller/AppFlowController');
+var AppDispatcher = require('../../dispatcher/AppDispatcher');
+
 var WeatherStore = require('../../stores/WeatherStore');
 var WeatherIcons = require('../../utils/WeatherIcons');
+
+var Constants = require('../../constants/Constants');
 
 var weatherData = null;
 var DOM;
@@ -4278,15 +4286,35 @@ var AttrDOMs = {
     Description: null
 };
 
+function activeComponent() {
+    DOM.removeAttr('style');
+    DOM.animate({
+        opacity: 1
+    }, '1000', 'easeInCubic');
+}
+
+function disableComponent() {
+    DOM.animate({
+        opacity: 0
+    }, '600', 'easeInCubic', function() {
+        DOM.attr('style', 'display: none;');
+    });
+}
+
 var TodayWeather = {
     initialize: function($) {
-        DOM = $('section.today-weather');
+        DOM = $('section#today-weather-component');
 
         AttrDOMs.Icon = DOM.find('[weather-attr = today-weather-icon]');
         AttrDOMs.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
         AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
         AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
 
+        DOM.on('click tap', function(event) {
+            if (event.which == 1) { //Left Mouse Clicked
+                AppDispatcher.activeApp();
+            }
+        });
     },
 
     setWeatherData: function() {
@@ -4299,20 +4327,31 @@ var TodayWeather = {
         AttrDOMs.LowTemp.text(parseInt(weatherData.temp['min'] - 273.15));
         AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
         */
-    }
+    },
+
+    subscribeActiveApp: AppFlowController.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            disableComponent();
+        }
+    )
 };
 
 
 module.exports = TodayWeather;
-},{"../../stores/WeatherStore":25,"../../utils/WeatherIcons":27}],13:[function(require,module,exports){
+},{"../../constants/Constants":21,"../../controller/AppFlowController":22,"../../dispatcher/AppDispatcher":23,"../../stores/WeatherStore":25,"../../utils/WeatherIcons":27}],13:[function(require,module,exports){
 var DateSelectorDOM;
-
 var ArrowLeftDOM;
 var ArrowRightDOM;
+var ItemProtoDOM;
+
+var ItemDatas = [];
+var currentIndex;
+
 
 var DateSelector = {
     initialize: function($) {
-        DateSelectorDOM = $('.day-select-slider');
+        DateSelectorDOM = $('#day-select-slider');
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -4325,8 +4364,17 @@ var DateSelector = {
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
 
+        ItemProtoDOM = $('#day-item-PROTO').clone();
+        $('#day-item-PROTO').remove();
+        ItemProtoDOM.removeAttr('id');
+        ItemProtoDOM.removeAttr('style');
+
         ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
+    },
+
+    initItems: function() {
+
     }
 };
 
@@ -4441,6 +4489,8 @@ var SunAndMoon = require('./MainDetail/SunAndMoon');
 var WindAndPressure = require('./MainDetail/WindAndPressure');
 
 
+var DOM;
+
 var countCallback = 0;
 
 function setDataOfIndex(index) {
@@ -4461,9 +4511,27 @@ function initializeDatas() {
     countCallback = 0;
 }
 
+function activeComponent() {
+    DOM.removeAttr('style');
+    DOM.css('opacity', 0);
+    DOM.animate({
+        opacity: 1
+    }, '1000', 'easeInCubic');
+}
+
+function disableComponent() {
+    DOM.animate({
+        opacity: 0
+    }, '600', 'easeInCubic', function() {
+        DOM.attr('style', 'display: none;');
+    });
+}
+
 
 var WeatherDetail = {
     initialize: function($) {
+        DOM = $('section#weather-detail-component');
+
         countCallback = 0;
 
         DateSelector.initialize($);
@@ -4486,6 +4554,13 @@ var WeatherDetail = {
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
             initializeDatas();
+        }
+    ),
+
+    subscribeActiveApp: AppFlowController.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            activeComponent();
         }
     )
 };
@@ -4860,7 +4935,10 @@ module.exports = {
 
     FlowID: keyMirror({
         GET_FORECAST_DATA: null,
-        GET_SUN_MOON_DATA: null
+        GET_SUN_MOON_DATA: null,
+
+        ACTIVE_APP: null,
+        DISABLE_APP: null
     }),
 
     CountryCode: {
@@ -4884,6 +4962,9 @@ var AppFlowController = new FlowController();
 AppFlowController.addFlow(Constants.FlowID.GET_FORECAST_DATA);
 AppFlowController.addFlow(Constants.FlowID.GET_SUN_MOON_DATA);
 
+AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
+AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
+
 module.exports = AppFlowController;
 },{"../constants/Constants":21,"flowing-js":3}],23:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
@@ -4900,6 +4981,20 @@ var AppDispatcher = {
     getSunMoonData: function() {
         AppFlowController.dispatch(
             Constants.FlowID.GET_SUN_MOON_DATA,
+            {}
+        );
+    },
+
+    activeApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.ACTIVE_APP,
+            {}
+        );
+    },
+
+    disableApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.DISABLE_APP,
             {}
         );
     }
@@ -4976,7 +5071,26 @@ var WeatherStore = {
                     }
                 });
         });
-    })
+    }),
+
+
+    callbackActiveApp: AppFlowController.addTarget(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    ),
+
+    callbackDisableApp: AppFlowController.addTarget(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    )
 };
 
 module.exports = WeatherStore;

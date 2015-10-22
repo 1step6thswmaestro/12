@@ -15,7 +15,9 @@ function loadComplete() {
 
     LoaderDOM.animate({
         opacity: 0
-    }, '600', 'easeInCubic');
+    }, '600', 'easeInCubic', function() {
+        LoaderDOM.attr('style', 'display: none;');
+    });
 
     AppDOM.animate({
         opacity: 1
@@ -30,6 +32,7 @@ function loadStart() {
     }
 
     loadedDataCount = 0;
+    LoaderDOM.removeAttr('style');
 
     AppDOM.animate({
         opacity: 0
