@@ -44,8 +44,8 @@ namespace clock
         static private bool divider_visible = false;
         private void timer_tick(object sender, EventArgs e)
         {
-            Hour.Text = DateTime.Now.Hour.ToString();
-            Minute.Text = DateTime.Now.Minute.ToString();
+            Hour.Text = DateTime.Now.Hour.ToString("00");
+            Minute.Text = DateTime.Now.Minute.ToString("00");
 
             Divider.Visibility = (divider_visible ? Visibility.Visible : Visibility.Hidden); //Visibility.Hidden;
             divider_visible = !divider_visible;
