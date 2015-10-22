@@ -5,16 +5,16 @@
     <Viewbox>
         <Grid Background="Black">
             <Grid.RowDefinitions>
-                <RowDefinition Height="13"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="17"
-                       FontFamily="NanumGothic"
+                       FontFamily="High speed"
                        Foreground="White"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
@@ -22,7 +22,7 @@
                 />
             <TextBlock Grid.Row="0" Grid.Column="1"
                        Text=":"
-                       FontFamily="NanumGothic"
+                       FontFamily="High speed"
                        Foreground="White"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -30,7 +30,7 @@
                 />
             <TextBlock Grid.Row="0" Grid.Column="2"
                        Text="56"
-                       FontFamily="NanumGothic"
+                       FontFamily="High speed"
                        Foreground="White"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"

@@ -63,6 +63,8 @@ namespace Lumino
                             CallMethod("IsExpand", true);
                         }
 
+                        ParentDock.GripDrawer.Visibility = Visibility.Collapsed;
+                        ParentDock.StackDrawerContent.Visibility = Visibility.Collapsed;
                         Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
                     }
                     else
@@ -72,13 +74,15 @@ namespace Lumino
                             CallMethod("IsExpand", false);
                         }
 
+                        ParentDock.GripDrawer.Visibility = Visibility.Visible;
+                        ParentDock.StackDrawerContent.Visibility = Visibility.Visible;
                         Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
                     }
                 }
             }
         }
 
-        private int _ExpandMargin;
+        private int _ExpandMargin = 0;
         public int ExpandMargin
         {
             get { return _ExpandMargin; }
@@ -204,10 +208,8 @@ namespace Lumino
                 DoubleAnimation AnimationY = new DoubleAnimation();
                 DoubleAnimation AnimationWidth = new DoubleAnimation();
                 DoubleAnimation AnimationHeight = new DoubleAnimation();
-                BackEase AnimationEasing = new BackEase();
+                CubicEase AnimationEasing = new CubicEase();
                 TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(500);
-
-                AnimationEasing.Amplitude = 0.4;
 
                 AnimationX.From = Canvas.GetLeft(this);
                 AnimationX.To = X;
@@ -303,7 +305,7 @@ namespace Lumino
                         case "WebView":
                             ChromiumWebBrowser WebView = new ChromiumWebBrowser();
                             WebView.Address = AssemblyArgument;
-                            GridContent.Children.Add(WebView);
+                            BorderContent.Child = WebView;
                             break;
                     }
                 }
@@ -331,7 +333,7 @@ namespace Lumino
                     };
 
                     // 검색된 컨트롤을 현재 컨트롤에 추가
-                    GridContent.Children.Add(WidgetControl);
+                    BorderContent.Child = WidgetControl;
                 }
 
                 // 위젯 모양새 적용
