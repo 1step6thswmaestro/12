@@ -58,3 +58,4 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Newt
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\System.Net.Http.Extensions.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\System.Net.Http.Primitives.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Zlib.Portable.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\client_secret.json

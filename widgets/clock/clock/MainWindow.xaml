@@ -14,7 +14,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="17"
-                       FontFamily="High speed"
+                       FontFamily="./#High Speed"
                        Foreground="White"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
@@ -22,7 +22,7 @@
                 />
             <TextBlock Grid.Row="0" Grid.Column="1"
                        Text=":"
-                       FontFamily="High speed"
+                       FontFamily="./#High Speed"
                        Foreground="White"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -30,7 +30,7 @@
                 />
             <TextBlock Grid.Row="0" Grid.Column="2"
                        Text="56"
-                       FontFamily="High speed"
+                       FontFamily="./#High Speed"
                        Foreground="White"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"

@@ -11,3 +11,4 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock\obj\Debug\clock.Prop
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock\obj\Debug\clock.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock\obj\Debug\clock.exe
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock\obj\Debug\clock.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock\obj\Debug\Resources.baml
