@@ -4202,14 +4202,16 @@ var loadedDataCount;
 var requestCount;
 
 function loadComplete() {
-    if (loadedDataCount == 0) {
+    if (loadedDataCount == 0 || loadedDataCount == 1) {
         loadedDataCount++;
         return;
     }
 
     LoaderDOM.animate({
         opacity: 0
-    }, '600', 'easeInCubic');
+    }, '600', 'easeInCubic', function () {
+        LoaderDOM.attr('style', 'display: none;');
+    });
 
     AppDOM.animate({
         opacity: 1
@@ -4218,23 +4220,6 @@ function loadComplete() {
     requestCount = 0;
 }
 
-function loadStart() {
-    if (requestCount >= 1) {
-        return;
-    }
-
-    loadedDataCount = 0;
-
-    AppDOM.animate({
-        opacity: 0
-    }, '600', 'easeInCubic');
-
-    LoaderDOM.animate({
-        opacity: 1
-    }, '1000', 'easeInCubic');
-
-    requestCount++;
-}
 
 var Loader = {
     initialize: function($) {
@@ -4246,13 +4231,31 @@ var Loader = {
     },
 
     loadStart: function() {
-        loadStart();
+        loadedDataCount = 0;
+        LoaderDOM.removeAttr('style');
+
+        AppDOM.animate({
+            opacity: 0
+        }, '600', 'easeInCubic');
+
+        LoaderDOM.animate({
+            opacity: 1
+        }, '1000', 'easeInCubic');
+
+        requestCount++;
     },
 
     subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            loadComplete(Constants.FlowID.GET_14_FORECAST_DATA);
         }
     ),
 
@@ -4265,9 +4268,14 @@ var Loader = {
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":21,"../../controller/AppFlowController":22}],12:[function(require,module,exports){
+},{"../../constants/Constants":22,"../../controller/AppFlowController":24}],12:[function(require,module,exports){
+var AppFlowController = require('../../controller/AppFlowController');
+var AppDispatcher = require('../../dispatcher/AppDispatcher');
+
 var WeatherStore = require('../../stores/WeatherStore');
 var WeatherIcons = require('../../utils/WeatherIcons');
+
+var Constants = require('../../constants/Constants');
 
 var weatherData = null;
 var DOM;
@@ -4278,15 +4286,35 @@ var AttrDOMs = {
     Description: null
 };
 
+function activeComponent() {
+    DOM.removeAttr('style');
+    DOM.animate({
+        opacity: 1
+    }, '1000', 'easeInCubic');
+}
+
+function disableComponent() {
+    DOM.animate({
+        opacity: 0
+    }, '600', 'easeInCubic', function() {
+        DOM.attr('style', 'display: none;');
+    });
+}
+
 var TodayWeather = {
     initialize: function($) {
-        DOM = $('section.today-weather');
+        DOM = $('section#today-weather-component');
 
         AttrDOMs.Icon = DOM.find('[weather-attr = today-weather-icon]');
         AttrDOMs.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
         AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
         AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
 
+        DOM.on('click tap', function(event) {
+            if (event.which == 1) { //Left Mouse Clicked
+                AppDispatcher.activeApp();
+            }
+        });
     },
 
     setWeatherData: function() {
@@ -4299,20 +4327,41 @@ var TodayWeather = {
         AttrDOMs.LowTemp.text(parseInt(weatherData.temp['min'] - 273.15));
         AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
         */
-    }
+    },
+
+    subscribeActiveApp: AppFlowController.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            disableComponent();
+        }
+    )
 };
 
 
 module.exports = TodayWeather;
-},{"../../stores/WeatherStore":25,"../../utils/WeatherIcons":27}],13:[function(require,module,exports){
-var DateSelectorDOM;
+},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../dispatcher/AppDispatcher":25,"../../stores/WeatherStore":27,"../../utils/WeatherIcons":30}],13:[function(require,module,exports){
+var AppFlowController = require('../../controller/AppFlowController');
+var WeatherStore = require('../../stores/WeatherStore');
+var Constants = require('../../constants/Constants');
 
+var _DayItemView = require('./_DayItemView');
+
+var DateSelectorDOM;
 var ArrowLeftDOM;
 var ArrowRightDOM;
+var ItemProtoDOM;
+
+var ItemDatas = [];
+var currentIndex;
+
 
 var DateSelector = {
     initialize: function($) {
-        DateSelectorDOM = $('.day-select-slider');
+        DateSelectorDOM = $('#day-select-slider');
+
+        ArrowLeftDOM = $('#arrow-left');
+        ArrowRightDOM = $('#arrow-right');
+
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -4322,16 +4371,37 @@ var DateSelector = {
         });
         DateSelectorDOM.slick('slickGoTo', 0);
 
-        ArrowLeftDOM = $('#arrow-left');
-        ArrowRightDOM = $('#arrow-right');
-
         ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
-    }
+
+        /*
+        ItemProtoDOM = $('#day-item-PROTO').clone();
+        $('#day-item-PROTO').remove();
+        ItemProtoDOM.removeAttr('id');
+        ItemProtoDOM.removeAttr('style');
+        */
+    },
+
+    initItems: function() {
+        ItemDatas = (WeatherStore.getTwoWeeksData()).periods;
+
+        for (var idx= 0, len=ItemDatas.length; idx<len; idx++) {
+            var ItemView = new _DayItemView(DateSelectorDOM.children().find('[idx=' + idx +']'));
+            ItemView.initialize(ItemDatas[idx]);
+        }
+        DateSelectorDOM.slick('slickGoTo', 0);
+    },
+
+    subscribeActiveApp: AppFlowController.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            DateSelectorDOM.slick('slickGoTo', 0);
+        }
+    )
 };
 
 module.exports = DateSelector;
-},{}],14:[function(require,module,exports){
+},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../stores/WeatherStore":27,"./_DayItemView":20}],14:[function(require,module,exports){
 
 var DayWeatherDetail = {
     initialize: function($) {
@@ -4441,6 +4511,8 @@ var SunAndMoon = require('./MainDetail/SunAndMoon');
 var WindAndPressure = require('./MainDetail/WindAndPressure');
 
 
+var DOM;
+
 var countCallback = 0;
 
 function setDataOfIndex(index) {
@@ -4448,22 +4520,39 @@ function setDataOfIndex(index) {
 }
 
 function initializeDatas() {
-    if (countCallback == 0) {
+    if (countCallback == 0 || countCallback == 1) {
         countCallback++;
         return;
     }
-
     //TempGraph.initGraph();
-    //DateSelector.initItems();
+    DateSelector.initItems();
 
-    setDataOfIndex(0);
+    //setDataOfIndex(0);
 
     countCallback = 0;
+}
+
+function activeComponent() {
+    DOM.removeAttr('style');
+    DOM.css('opacity', 0);
+    DOM.animate({
+        opacity: 1
+    }, '1000', 'easeInCubic');
+}
+
+function disableComponent() {
+    DOM.animate({
+        opacity: 0
+    }, '600', 'easeInCubic', function() {
+        DOM.attr('style', 'display: none;');
+    });
 }
 
 
 var WeatherDetail = {
     initialize: function($) {
+        DOM = $('section#weather-detail-component');
+
         countCallback = 0;
 
         DateSelector.initialize($);
@@ -4482,16 +4571,101 @@ var WeatherDetail = {
         }
     ),
 
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
     subscribeSunMoonData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_SUN_MOON_DATA,
         function() {
             initializeDatas();
         }
+    ),
+
+    subscribeActiveApp: AppFlowController.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            activeComponent();
+        }
     )
 };
 
 module.exports = WeatherDetail;
-},{"../../constants/Constants":21,"../../controller/AppFlowController":22,"./DateSelector":13,"./MainDetail/DayWeatherDetail":14,"./MainDetail/DayWeatherHeader":15,"./MainDetail/SunAndMoon":16,"./MainDetail/WindAndPressure":17,"./TempGraph":18}],20:[function(require,module,exports){
+},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"./DateSelector":13,"./MainDetail/DayWeatherDetail":14,"./MainDetail/DayWeatherHeader":15,"./MainDetail/SunAndMoon":16,"./MainDetail/WindAndPressure":17,"./TempGraph":18}],20:[function(require,module,exports){
+var Localize = require('../../constants/Localize');
+var LanguageSelector = require('../../utils/LanguageSelector');
+var CodedWeather = require('../../constants/CodedWeather');
+var WeatherIcons = require('../../utils/WeatherIcons');
+var _ = require('underscore');
+
+
+function _calcDayOfWeek(day) {
+    var days = [
+        {EN: 'SUN', KR: '일요일'},
+        {EN: 'MON', KR: '월요일'},
+        {EN: 'TUE', KR: '화요일'},
+        {EN: 'WED', KR: '수요일'},
+        {EN: 'THU', KR: '목요일'},
+        {EN: 'FRI', KR: '금요일'},
+        {EN: 'SAT', KR: '토요일'}
+    ];
+
+    switch(day) {
+        case -2: return Localize.DateSelector['today'][LanguageSelector.getCurrentLanguage()];
+        case -1: return Localize.DateSelector['tomorrow'][LanguageSelector.getCurrentLanguage()];
+        default: return days[day][LanguageSelector.getCurrentLanguage()];
+    }
+}
+
+var _DayItemView = (function() {
+    function _DayItemView(_DOM) {
+        this.DOM = _DOM;
+
+        this.day = _DOM.find('[item-attr=day-of-week]');
+        this.date = _DOM.find('[item-attr=date]');
+        this.icon = _DOM.find('[item-attr=icon]');
+        this.highTemp = _DOM.find('[item-attr=high-temp]');
+        this.lowTemp = _DOM.find('[item-attr=low-temp]');
+    }
+
+    _DayItemView.prototype.initialize = function(datas) {
+        var thisDate = new Date(datas['dateTimeISO']);
+
+        var today = new Date();
+        var tomorrow = new Date(today.valueOf() + (24*60*60*1000));
+
+        var dayOfWeek;
+
+        if ((thisDate.getDate() == today.getDate()) && (thisDate.getMonth() == today.getMonth())) {
+            dayOfWeek = _calcDayOfWeek(-2);
+        }
+        else if ((thisDate.getDate() == tomorrow.getDate()) && (thisDate.getMonth() == tomorrow.getMonth())) {
+            dayOfWeek = _calcDayOfWeek(-1);
+        }
+        else {
+            dayOfWeek = _calcDayOfWeek(thisDate.getDay());
+        }
+
+        this.day.text(dayOfWeek);
+        this.date.text((thisDate.getMonth() + 1) + "." + thisDate.getDate());
+
+        this.icon.empty();
+        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[datas['icon']]).clone();
+        this.icon.append(iconDOM);
+
+        this.highTemp.text(datas['maxTempC']);
+        this.lowTemp.text(datas['minTempC']);
+    };
+
+    return _DayItemView;
+})();
+
+
+module.exports = _DayItemView;
+},{"../../constants/CodedWeather":21,"../../constants/Localize":23,"../../utils/LanguageSelector":28,"../../utils/WeatherIcons":30,"underscore":10}],21:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -4845,7 +5019,7 @@ var CodedWeather = {
 };
 
 module.exports = CodedWeather;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 var APIroot = 'http://api.aerisapi.com';
@@ -4860,7 +5034,11 @@ module.exports = {
 
     FlowID: keyMirror({
         GET_FORECAST_DATA: null,
-        GET_SUN_MOON_DATA: null
+        GET_14_FORECAST_DATA: null,
+        GET_SUN_MOON_DATA: null,
+
+        ACTIVE_APP: null,
+        DISABLE_APP: null
     }),
 
     CountryCode: {
@@ -4875,17 +5053,87 @@ module.exports = {
         BACKSPACE: 8
     }
 };
-},{"react/lib/keyMirror":6}],22:[function(require,module,exports){
+},{"react/lib/keyMirror":6}],23:[function(require,module,exports){
+module.exports = {
+    DayWeatherDetail: {
+        'feel-like': {
+            EN: "Feels Like",
+            KR: "체감온도"
+        },
+        'humanity': {
+            EN: "Humanity",
+            KR: "습도"
+        },
+        'dew-point': {
+            EN: "Dew Point",
+            KR: "이슬점"
+        },
+        'precipitation': {
+            EN: "Prob. of precip.",
+            KR: "강수확률"
+        },
+        'precipMM': {
+            EN: "Amount of precip.",
+            KR: "강수량"
+        },
+        'snowCM': {
+            EN: "Amount of Snow",
+            KR: "적설량"
+        }
+    },
+
+    SunAdnMoon: {
+        'helper-day': {
+            EN: "Day",
+            KR: "낮"
+        },
+        'helper-twilight': {
+            EN: "Twilight",
+            KR: "박명"
+        },
+        'helper-night': {
+            EN: "Night",
+            KR: "밤"
+        }
+    },
+
+    WindAndPressure: {
+        'anemometer': {
+            EN: "Anemometer",
+            KR: "풍속계"
+        },
+        'barometer': {
+            EN: "Barometer",
+            KR: "기압계"
+        }
+    },
+
+    DateSelector: {
+        'today': {
+            EN: "TODAY",
+            KR: "오늘"
+        },
+        'tomorrow': {
+            EN: "TOMORROW",
+            KR: "내일"
+        }
+    }
+};
+},{}],24:[function(require,module,exports){
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
 var AppFlowController = new FlowController();
 
 AppFlowController.addFlow(Constants.FlowID.GET_FORECAST_DATA);
+AppFlowController.addFlow(Constants.FlowID.GET_14_FORECAST_DATA);
 AppFlowController.addFlow(Constants.FlowID.GET_SUN_MOON_DATA);
 
+AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
+AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
+
 module.exports = AppFlowController;
-},{"../constants/Constants":21,"flowing-js":3}],23:[function(require,module,exports){
+},{"../constants/Constants":22,"flowing-js":3}],25:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4897,16 +5145,37 @@ var AppDispatcher = {
         );
     },
 
+    getTwoWeeksData: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.GET_14_FORECAST_DATA,
+            {}
+        );
+    },
+
     getSunMoonData: function() {
         AppFlowController.dispatch(
             Constants.FlowID.GET_SUN_MOON_DATA,
+            {}
+        );
+    },
+
+    activeApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.ACTIVE_APP,
+            {}
+        );
+    },
+
+    disableApp: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.DISABLE_APP,
             {}
         );
     }
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":21,"../controller/AppFlowController":22}],24:[function(require,module,exports){
+},{"../constants/Constants":22,"../controller/AppFlowController":24}],26:[function(require,module,exports){
 "use strict";
 var Loader = require('./components/Loader/Loader');
 var TodayWeather = require('./components/TodayWeather/TodayWeather');
@@ -4925,7 +5194,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":19,"./utils/TimeCalculator":26,"./utils/WeatherIcons":27}],25:[function(require,module,exports){
+},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":19,"./utils/TimeCalculator":29,"./utils/WeatherIcons":30}],27:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -4935,12 +5204,17 @@ var _ = require('underscore');
 
 
 var ForecastData;
+var TwoWeeksData;
 var SunMoonData;
 
 
 var WeatherStore = {
     getForecastData: function() {
         return ForecastData;
+    },
+
+    getTwoWeeksData: function() {
+        return TwoWeeksData;
     },
 
     getSunMoonData: function() {
@@ -4963,6 +5237,22 @@ var WeatherStore = {
         });
     }),
 
+    callbackTwoWeeksData: AppFlowController.addTarget(Constants.FlowID.GET_14_FORECAST_DATA, function(payload) {
+        return new Promise(function(resolve, reject) {
+            request
+                .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .end(function(err,res) {
+                    if (err) { console.log(err); }
+                    else {
+                        TwoWeeksData = res.body.response[0];
+                        console.log("14Day", res.body.response[0]);
+                        resolve();
+                    }
+                });
+        });
+    }),
+
     callbackSunMoonData: AppFlowController.addTarget(Constants.FlowID.GET_SUN_MOON_DATA, function(payload) {
         return new Promise(function(resolve, reject){
             request
@@ -4976,11 +5266,38 @@ var WeatherStore = {
                     }
                 });
         });
-    })
+    }),
+
+
+    callbackActiveApp: AppFlowController.addTarget(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    ),
+
+    callbackDisableApp: AppFlowController.addTarget(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    )
 };
 
 module.exports = WeatherStore;
-},{"../constants/Constants":21,"../controller/AppFlowController":22,"es6-promise":2,"superagent":7,"underscore":10}],26:[function(require,module,exports){
+},{"../constants/Constants":22,"../controller/AppFlowController":24,"es6-promise":2,"superagent":7,"underscore":10}],28:[function(require,module,exports){
+var LanguageSelector = {
+    getCurrentLanguage: function() {
+        return 'KR';
+    }
+};
+
+module.exports = LanguageSelector;
+},{}],29:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Loader = require('../components/Loader/Loader');
 
@@ -5004,20 +5321,22 @@ var TimeCalculator = {
     dispatchAction: function(dataAmount) {
         Loader.loadStart();
         AppDispatcher.getForecastData(dataAmount);
+        AppDispatcher.getTwoWeeksData();
         AppDispatcher.getSunMoonData();
     }
 };
 
 module.exports = TimeCalculator;
-},{"../components/Loader/Loader":11,"../dispatcher/AppDispatcher":23}],27:[function(require,module,exports){
+},{"../components/Loader/Loader":11,"../dispatcher/AppDispatcher":25}],30:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
+var $;
 var Icons = {};
 
 var WeatherIcons = {
-    initialize: function($) {
+    initialize: function(_$) {
+        $ = _$;
         for (var prop in CodedWeather.Icons) {
-            this.loadDOM($, CodedWeather.Icons[prop]);
             this.loadDOM($, CodedWeather.Icons[prop]);
         }
         $('#weather-animated-icons').remove();
@@ -5041,4 +5360,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":20}]},{},[24]);
+},{"../constants/CodedWeather":21}]},{},[26]);

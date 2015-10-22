@@ -12,7 +12,11 @@ module.exports = {
 
     FlowID: keyMirror({
         GET_FORECAST_DATA: null,
-        GET_SUN_MOON_DATA: null
+        GET_14_FORECAST_DATA: null,
+        GET_SUN_MOON_DATA: null,
+
+        ACTIVE_APP: null,
+        DISABLE_APP: null
     }),
 
     CountryCode: {

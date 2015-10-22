@@ -1,11 +1,12 @@
 var CodedWeather = require('../constants/CodedWeather');
 
+var $;
 var Icons = {};
 
 var WeatherIcons = {
-    initialize: function($) {
+    initialize: function(_$) {
+        $ = _$;
         for (var prop in CodedWeather.Icons) {
-            this.loadDOM($, CodedWeather.Icons[prop]);
             this.loadDOM($, CodedWeather.Icons[prop]);
         }
         $('#weather-animated-icons').remove();
