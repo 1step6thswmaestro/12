@@ -21,6 +21,7 @@ var TimeCalculator = {
     dispatchAction: function(dataAmount) {
         Loader.loadStart();
         AppDispatcher.getForecastData(dataAmount);
+        AppDispatcher.getTwoWeeksData();
         AppDispatcher.getSunMoonData();
     }
 };

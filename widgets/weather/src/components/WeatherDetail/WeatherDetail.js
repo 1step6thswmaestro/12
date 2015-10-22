@@ -19,15 +19,14 @@ function setDataOfIndex(index) {
 }
 
 function initializeDatas() {
-    if (countCallback == 0) {
+    if (countCallback == 0 || countCallback == 1) {
         countCallback++;
         return;
     }
-
     //TempGraph.initGraph();
-    //DateSelector.initItems();
+    DateSelector.initItems();
 
-    setDataOfIndex(0);
+    //setDataOfIndex(0);
 
     countCallback = 0;
 }
@@ -66,6 +65,13 @@ var WeatherDetail = {
 
     subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
         function() {
             initializeDatas();
         }

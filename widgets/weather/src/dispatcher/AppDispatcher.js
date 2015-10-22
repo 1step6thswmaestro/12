@@ -9,6 +9,13 @@ var AppDispatcher = {
         );
     },
 
+    getTwoWeeksData: function() {
+        AppFlowController.dispatch(
+            Constants.FlowID.GET_14_FORECAST_DATA,
+            {}
+        );
+    },
+
     getSunMoonData: function() {
         AppFlowController.dispatch(
             Constants.FlowID.GET_SUN_MOON_DATA,

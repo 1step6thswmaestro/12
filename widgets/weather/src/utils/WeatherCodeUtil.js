@@ -5,10 +5,6 @@ var icons = {};
 var formats = ['CloudCodes', 'CoverageCodes', 'IntensityCodes', 'WeatherCodes'];
 
 var WeatherCodeUtil = {
-    initialize: function($) {
-
-    },
-
     getForecastText: function(_primaryCode) {
         if (_primaryCode == null || _primaryCode == undefined) { return null; }
 

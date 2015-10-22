@@ -8,14 +8,14 @@ var loadedDataCount;
 var requestCount;
 
 function loadComplete() {
-    if (loadedDataCount == 0) {
+    if (loadedDataCount == 0 || loadedDataCount == 1) {
         loadedDataCount++;
         return;
     }
 
     LoaderDOM.animate({
         opacity: 0
-    }, '600', 'easeInCubic', function() {
+    }, '600', 'easeInCubic', function () {
         LoaderDOM.attr('style', 'display: none;');
     });
 
@@ -26,24 +26,6 @@ function loadComplete() {
     requestCount = 0;
 }
 
-function loadStart() {
-    if (requestCount >= 1) {
-        return;
-    }
-
-    loadedDataCount = 0;
-    LoaderDOM.removeAttr('style');
-
-    AppDOM.animate({
-        opacity: 0
-    }, '600', 'easeInCubic');
-
-    LoaderDOM.animate({
-        opacity: 1
-    }, '1000', 'easeInCubic');
-
-    requestCount++;
-}
 
 var Loader = {
     initialize: function($) {
@@ -55,13 +37,31 @@ var Loader = {
     },
 
     loadStart: function() {
-        loadStart();
+        loadedDataCount = 0;
+        LoaderDOM.removeAttr('style');
+
+        AppDOM.animate({
+            opacity: 0
+        }, '600', 'easeInCubic');
+
+        LoaderDOM.animate({
+            opacity: 1
+        }, '1000', 'easeInCubic');
+
+        requestCount++;
     },
 
     subscribeForecastData: AppFlowController.addSubscribe(
         Constants.FlowID.GET_FORECAST_DATA,
         function() {
             loadComplete(Constants.FlowID.GET_FORECAST_DATA);
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            loadComplete(Constants.FlowID.GET_14_FORECAST_DATA);
         }
     ),
 

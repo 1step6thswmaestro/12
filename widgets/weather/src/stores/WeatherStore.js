@@ -7,12 +7,17 @@ var _ = require('underscore');
 
 
 var ForecastData;
+var TwoWeeksData;
 var SunMoonData;
 
 
 var WeatherStore = {
     getForecastData: function() {
         return ForecastData;
+    },
+
+    getTwoWeeksData: function() {
+        return TwoWeeksData;
     },
 
     getSunMoonData: function() {
@@ -29,6 +34,22 @@ var WeatherStore = {
                     else {
                         ForecastData = res.body.response[0];
                         console.log("ForecastData", res.body.response[0]);
+                        resolve();
+                    }
+                });
+        });
+    }),
+
+    callbackTwoWeeksData: AppFlowController.addTarget(Constants.FlowID.GET_14_FORECAST_DATA, function(payload) {
+        return new Promise(function(resolve, reject) {
+            request
+                .get(Constants.API.GET_FORECAST_DATA + "/" + Constants.CountryCode.Seoul)
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .end(function(err,res) {
+                    if (err) { console.log(err); }
+                    else {
+                        TwoWeeksData = res.body.response[0];
+                        console.log("14Day", res.body.response[0]);
                         resolve();
                     }
                 });

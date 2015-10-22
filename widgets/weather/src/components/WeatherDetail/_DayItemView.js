@@ -1,5 +1,7 @@
 var Localize = require('../../constants/Localize');
 var LanguageSelector = require('../../utils/LanguageSelector');
+var CodedWeather = require('../../constants/CodedWeather');
+var WeatherIcons = require('../../utils/WeatherIcons');
 var _ = require('underscore');
 
 
@@ -22,7 +24,7 @@ function _calcDayOfWeek(day) {
 }
 
 var _DayItemView = (function() {
-    function _DayItemView(_DOM, $) {
+    function _DayItemView(_DOM) {
         this.DOM = _DOM;
 
         this.day = _DOM.find('[item-attr=day-of-week]');
@@ -52,6 +54,13 @@ var _DayItemView = (function() {
 
         this.day.text(dayOfWeek);
         this.date.text((thisDate.getMonth() + 1) + "." + thisDate.getDate());
+
+        this.icon.empty();
+        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[datas['icon']]).clone();
+        this.icon.append(iconDOM);
+
+        this.highTemp.text(datas['maxTempC']);
+        this.lowTemp.text(datas['minTempC']);
     };
 
     return _DayItemView;
