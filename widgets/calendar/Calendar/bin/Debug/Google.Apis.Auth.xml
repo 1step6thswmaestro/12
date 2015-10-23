@@ -176,8 +176,44 @@
             </para>
             </summary>
         </member>
+        <member name="T:Google.Apis.Auth.OAuth2.ICredential">
+            <summary>
+            The main interface to represent credential in the client library.
+            Service account, User account and Compute credential inherit from this interface
+            to provide access token functionality. In addition this interface inherits from
+            <see cref="T:Google.Apis.Http.IConfigurableHttpClientInitializer"/> to be able to hook to http requests.
+            More details are available in the specific implementations.
+            </summary>
+        </member>
+        <member name="T:Google.Apis.Auth.OAuth2.ITokenAccess">
+            <summary>
+            Allows direct retrieval of access tokens to authenticate requests.
+            This is necessary for workflows where you don't want to use 
+            <see cref="T:Google.Apis.Services.BaseClientService"/> to access the API.
+            (e.g. gRPC that implemenents the entire HTTP2 stack internally).
+            </summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.ITokenAccess.GetAccessTokenForRequestAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets an access token to authorize a request.
+            Implementations should handle automatic refreshes of the token
+            if they are supported.
+            The <paramref name="authUri"/> might be required by some credential types
+            (e.g. the JWT access token) while other credential types
+            migth just ignore it.
+            </summary>
+            <param name="authUri">The URI the returned token will grant access to.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The access token.</returns>
+        </member>
         <member name="M:Google.Apis.Auth.OAuth2.ServiceCredential.#ctor(Google.Apis.Auth.OAuth2.ServiceCredential.Initializer)">
             <summary>Constructs a new service account credential using the given initializer.</summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.ServiceCredential.GetAccessTokenForRequestAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets an access token to authorize a request. If the existing token has expired, try to refresh it first.
+            <seealso cref="M:Google.Apis.Auth.OAuth2.ITokenAccess.GetAccessTokenForRequestAsync(System.String,System.Threading.CancellationToken)"/>
+            </summary>
         </member>
         <member name="M:Google.Apis.Auth.OAuth2.ServiceCredential.RequestAccessTokenAsync(System.Threading.CancellationToken)">
             <summary>Requests a new token.</summary>
@@ -235,11 +271,36 @@
             implementation (using <see cref="T:Google.Apis.Http.BackOffHandler"/>).
             </summary>
         </member>
+        <member name="F:Google.Apis.Auth.OAuth2.ComputeCredential.MetadataServerUrl">
+            <summary>The metadata server url.</summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.ComputeCredential.MetadataServerPingTimeoutInMilliseconds">
+            <summary>
+            Experimentally, 200ms was found to be 99.9999% reliable. 
+            This is a conservative timeout to minimize hanging on some troublesome network. 
+            </summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.ComputeCredential.MetadataFlavor">
+            <summary>The Metadata flavor header name.</summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.ComputeCredential.GoogleMetadataHeader">
+            <summary>The Metadata header response indicating Google.</summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.ComputeCredential.isRunningOnComputeEngineCached">
+            <summary>Caches result from first call to <c>IsRunningOnComputeEngine</c> </summary>
+        </member>
         <member name="M:Google.Apis.Auth.OAuth2.ComputeCredential.#ctor">
             <summary>Constructs a new Compute credential instance.</summary>
         </member>
         <member name="M:Google.Apis.Auth.OAuth2.ComputeCredential.#ctor(Google.Apis.Auth.OAuth2.ComputeCredential.Initializer)">
             <summary>Constructs a new Compute credential instance.</summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.ComputeCredential.IsRunningOnComputeEngine">
+            <summary>
+            Detects if application is running on Google Compute Engine. This is achieved by attempting to contact
+            GCE metadata server, that is only available on GCE. The check is only performed the first time you
+            call this method, subsequent invocations used cached result of the first call.
+            </summary>
         </member>
         <member name="T:Google.Apis.Auth.OAuth2.ComputeCredential.Initializer">
             <summary>
@@ -252,6 +313,33 @@
         </member>
         <member name="M:Google.Apis.Auth.OAuth2.ComputeCredential.Initializer.#ctor(System.String)">
             <summary>Constructs a new initializer using the given token URL.</summary>
+        </member>
+        <member name="T:Google.Apis.Auth.OAuth2.JsonCredentialParameters">
+            <summary>Holder for credential parameters read from JSON credential file. Fields are union of parameters for all supported credential types.</summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.JsonCredentialParameters.AuthorizedUserCredentialType">
+            <summary>UserCredential is created by the gcloud sdk tool when the user runs <a href="https://cloud.google.com/sdk/gcloud/reference/auth/login">gcloud auth login</a>.</summary>
+        </member>
+        <member name="F:Google.Apis.Auth.OAuth2.JsonCredentialParameters.ServiceAccountCredentialType">
+            <summary>ServiceAccountCredential is downloaded by the user from <a href="https://console.developers.google.com">Google Developers Console</a>.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.Type">
+            <summary>Type of the credential.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.ClientId">
+            <summary>Cliend Id associated with UserCredential created by <a href="https://cloud.google.com/sdk/gcloud/reference/auth/login">gcloud auth login</a>.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.ClientSecret">
+            <summary>Client Secret associated with UserCredential created by <a href="https://cloud.google.com/sdk/gcloud/reference/auth/login">gcloud auth login</a>.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.ClientEmail">
+            <summary>Client Email associated with ServiceAccountCredential obtained from <a href="https://console.developers.google.com">Google Developers Console</a></summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.PrivateKey">
+            <summary>Private Key associated with ServiceAccountCredential obtained from <a href="https://console.developers.google.com">Google Developers Console</a>.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.JsonCredentialParameters.RefreshToken">
+            <summary>Refresh Token associated with UserCredential created by <a href="https://cloud.google.com/sdk/gcloud/reference/auth/login">gcloud auth login</a>.</summary>
         </member>
         <member name="T:Google.Apis.Auth.OAuth2.Requests.GoogleRevokeTokenRequest">
             <summary>
