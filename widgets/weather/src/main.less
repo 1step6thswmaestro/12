@@ -179,15 +179,15 @@ html, body {
 
         &-icon {
             flex: 1;
+            display: flex;
 
             svg {
+                flex: 1;
                 color: @color-white;
             }
         }
 
         &-summary {
-            margin-top: 1vw;
-
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -251,7 +251,7 @@ html, body {
 
             line-height: 1;
 
-            &.active { width: 90%; flex-grow: 2; background-color: @color-white; }
+            &.active { width: 90%; flex-grow: 2; background-color: @color-white;  }
 
             &:first-child { margin-top: 0; }
             &:last-child { margin-bottom: 0; }
@@ -923,6 +923,8 @@ html, body {
                     margin: 0 .5vw;
                     border: .22vh solid @color-white;
 
+                    cursor: pointer;
+
                     .title {
                         margin-top: .75vh;
                         font-size: 1.75vh;
@@ -978,7 +980,16 @@ html, body {
 
                     &.active {
                         background-color: @color-white;
-                        color: @color-grey-800;
+                        color: #000000;
+
+                        .title { font-weight: 700; }
+                        .date { font-weight: 500; }
+
+                        .icon {
+                            .climacon_component-stroke {
+                                fill: @color-grey-700;
+                            }
+                        }
                     }
                 }
             }

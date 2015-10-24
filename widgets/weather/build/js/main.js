@@ -1,4 +1,307 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      }
+      throw TypeError('Uncaught, unspecified "error" event.');
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        len = arguments.length;
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    len = arguments.length;
+    args = new Array(len - 1);
+    for (i = 1; i < len; i++)
+      args[i - 1] = arguments[i];
+
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    var m;
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  var ret;
+  if (!emitter._events || !emitter._events[type])
+    ret = 0;
+  else if (isFunction(emitter._events[type]))
+    ret = 1;
+  else
+    ret = emitter._events[type].length;
+  return ret;
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+},{}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -91,7 +394,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1062,7 +1365,7 @@ process.umask = function() { return 0; };
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":1}],3:[function(require,module,exports){
+},{"_process":2}],4:[function(require,module,exports){
 /*!
  * FlowController.js
  * Copyright(c) 2015 SeokJu Na <seokmaTD@gmail.com>
@@ -1073,7 +1376,7 @@ process.umask = function() { return 0; };
 
 module.exports.FlowController = require('./lib/Flowing');
 module.exports.Promise = require('es6-promise').Promise;
-},{"./lib/Flowing":4,"es6-promise":2}],4:[function(require,module,exports){
+},{"./lib/Flowing":5,"es6-promise":3}],5:[function(require,module,exports){
 var Promise = require('es6-promise').Promise;
 var _ = require('underscore');
 
@@ -1179,7 +1482,7 @@ var Flowing = (function() {
 })();
 
 module.exports = Flowing;
-},{"es6-promise":2,"underscore":10}],5:[function(require,module,exports){
+},{"es6-promise":3,"underscore":11}],6:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1236,7 +1539,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":1}],6:[function(require,module,exports){
+},{"_process":2}],7:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1291,7 +1594,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":5,"_process":1}],7:[function(require,module,exports){
+},{"./invariant":6,"_process":2}],8:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2450,7 +2753,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":8,"reduce":9}],8:[function(require,module,exports){
+},{"emitter":9,"reduce":10}],9:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -2616,7 +2919,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -2641,7 +2944,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -4191,7 +4494,7 @@ module.exports = function(arr, fn, initial){
   }
 }.call(this));
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
@@ -4268,7 +4571,7 @@ var Loader = {
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24}],12:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25}],13:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 
@@ -4339,14 +4642,18 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../dispatcher/AppDispatcher":25,"../../stores/WeatherStore":27,"../../utils/WeatherIcons":30}],13:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherIcons":31}],14:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var WeatherStore = require('../../stores/WeatherStore');
 var Constants = require('../../constants/Constants');
 
+var EventEmitter = require('events').EventEmitter;
+var _ = require('underscore');
+
 var _DayItemView = require('./_DayItemView');
 
 var DateSelectorDOM;
+var SelectorItemDOMs;
 var ArrowLeftDOM;
 var ArrowRightDOM;
 var ItemProtoDOM;
@@ -4355,13 +4662,18 @@ var ItemDatas = [];
 var currentIndex;
 
 
-var DateSelector = {
+var DateSelector = _.extend({}, EventEmitter.prototype, {
     initialize: function($) {
         DateSelectorDOM = $('#day-select-slider');
+        SelectorItemDOMs = $('.day-select-slider-item');
 
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
 
+        this.initSlider($);
+    },
+
+    initSlider: function($) {
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -4369,17 +4681,24 @@ var DateSelector = {
             arrows: false,
             dots: false
         });
-        DateSelectorDOM.slick('slickGoTo', 0);
+        //DateSelectorDOM.slick('setPosition');
+
+        currentIndex = 0;
 
         ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
 
-        /*
-        ItemProtoDOM = $('#day-item-PROTO').clone();
-        $('#day-item-PROTO').remove();
-        ItemProtoDOM.removeAttr('id');
-        ItemProtoDOM.removeAttr('style');
-        */
+
+        var _this = this;
+        SelectorItemDOMs.on('click tap', function() {
+            currentIndex = $(this).attr('idx');
+            console.log("currentIndex", currentIndex);
+            SelectorItemDOMs.removeClass('active');
+            $(this).addClass('active');
+            _this.emitSlideChange();
+        });
+
+        _this.emitSlideChange();
     },
 
     initItems: function() {
@@ -4389,7 +4708,6 @@ var DateSelector = {
             var ItemView = new _DayItemView(DateSelectorDOM.children().find('[idx=' + idx +']'));
             ItemView.initialize(ItemDatas[idx]);
         }
-        DateSelectorDOM.slick('slickGoTo', 0);
     },
 
     subscribeActiveApp: AppFlowController.addSubscribe(
@@ -4397,11 +4715,19 @@ var DateSelector = {
         function() {
             DateSelectorDOM.slick('slickGoTo', 0);
         }
-    )
-};
+    ),
+
+    getCurrentIndex: function() {
+        return currentIndex;
+    },
+
+    emitSlideChange: function() { this.emit('slideChange'); },
+    addSlideChangeListener: function(callback) { this.on('slideChange', callback); },
+    removeSlideChangeListener: function(callback) { this.removeListener('slideChange', callback); }
+});
 
 module.exports = DateSelector;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../stores/WeatherStore":27,"./_DayItemView":20}],14:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../stores/WeatherStore":28,"./_DayItemView":21,"events":1,"underscore":11}],15:[function(require,module,exports){
 
 var DayWeatherDetail = {
     initialize: function($) {
@@ -4412,15 +4738,54 @@ var DayWeatherDetail = {
 //TODO:
 
 module.exports = DayWeatherDetail;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+var WeatherIcons = require('../../../utils/WeatherIcons');
+var CodedWeather = require('../../../constants/CodedWeather');
+//var WeatherCodeUtil = require('../../utils/WeatherCodeUtil');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+var _ = require('underscore');
+
+
+var DOM;
+
 var DayWeatherHeader = {
     initialize: function($) {
+        DOM = $('#day-weather-header');
 
+        this.icon = DOM.find('[weather-attr=detail-icon]');
+        this.highTemp = DOM.find('[weather-attr=highTemp]');
+        this.lowTemp = DOM.find('[weather-attr=lowTemp]');
+        this.description = DOM.find('[weather-attr=description]');
+
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+
+        if (index == 0) { this._contextForToday(); }
+        else { this._contextForOtherDays(); }
+    },
+
+    _contextForToday: function() {
+        var data = (WeatherStore.getForecastData()).periods[0];
+
+        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone();
+        this.icon.empty().append(iconDOM);
+        this.highTemp.text(data['maxTempC']);
+        this.lowTemp.text(data['minTempC']);
+    },
+
+    _contextForOtherDays: function() {
+        
     }
 };
 
 module.exports = DayWeatherHeader;
-},{}],16:[function(require,module,exports){
+},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherIcons":31,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
 var SunAndMoon = {
     initialize: function($) {
 
@@ -4428,7 +4793,7 @@ var SunAndMoon = {
 };
 
 module.exports = SunAndMoon;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var WindAndPressure = {
     initialize: function($) {
 
@@ -4436,7 +4801,7 @@ var WindAndPressure = {
 };
 
 module.exports = WindAndPressure;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var TempGraphDOM;
 var WrapperDOM;
 
@@ -4498,7 +4863,7 @@ var TempGraph = {
 };
 
 module.exports = TempGraph;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
@@ -4515,9 +4880,6 @@ var DOM;
 
 var countCallback = 0;
 
-function setDataOfIndex(index) {
-
-}
 
 function initializeDatas() {
     if (countCallback == 0 || countCallback == 1) {
@@ -4527,7 +4889,6 @@ function initializeDatas() {
     //TempGraph.initGraph();
     DateSelector.initItems();
 
-    //setDataOfIndex(0);
 
     countCallback = 0;
 }
@@ -4594,7 +4955,7 @@ var WeatherDetail = {
 };
 
 module.exports = WeatherDetail;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"./DateSelector":13,"./MainDetail/DayWeatherDetail":14,"./MainDetail/DayWeatherHeader":15,"./MainDetail/SunAndMoon":16,"./MainDetail/WindAndPressure":17,"./TempGraph":18}],20:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"./DateSelector":14,"./MainDetail/DayWeatherDetail":15,"./MainDetail/DayWeatherHeader":16,"./MainDetail/SunAndMoon":17,"./MainDetail/WindAndPressure":18,"./TempGraph":19}],21:[function(require,module,exports){
 var Localize = require('../../constants/Localize');
 var LanguageSelector = require('../../utils/LanguageSelector');
 var CodedWeather = require('../../constants/CodedWeather');
@@ -4665,7 +5026,7 @@ var _DayItemView = (function() {
 
 
 module.exports = _DayItemView;
-},{"../../constants/CodedWeather":21,"../../constants/Localize":23,"../../utils/LanguageSelector":28,"../../utils/WeatherIcons":30,"underscore":10}],21:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":31,"underscore":11}],22:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -5019,7 +5380,7 @@ var CodedWeather = {
 };
 
 module.exports = CodedWeather;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 var APIroot = 'http://api.aerisapi.com';
@@ -5053,7 +5414,7 @@ module.exports = {
         BACKSPACE: 8
     }
 };
-},{"react/lib/keyMirror":6}],23:[function(require,module,exports){
+},{"react/lib/keyMirror":7}],24:[function(require,module,exports){
 module.exports = {
     DayWeatherDetail: {
         'feel-like': {
@@ -5119,7 +5480,7 @@ module.exports = {
         }
     }
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
@@ -5133,7 +5494,7 @@ AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
 AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
 
 module.exports = AppFlowController;
-},{"../constants/Constants":22,"flowing-js":3}],25:[function(require,module,exports){
+},{"../constants/Constants":23,"flowing-js":4}],26:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -5175,7 +5536,7 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":22,"../controller/AppFlowController":24}],26:[function(require,module,exports){
+},{"../constants/Constants":23,"../controller/AppFlowController":25}],27:[function(require,module,exports){
 "use strict";
 var Loader = require('./components/Loader/Loader');
 var TodayWeather = require('./components/TodayWeather/TodayWeather');
@@ -5194,7 +5555,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":19,"./utils/TimeCalculator":29,"./utils/WeatherIcons":30}],27:[function(require,module,exports){
+},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":30,"./utils/WeatherIcons":31}],28:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -5289,7 +5650,7 @@ var WeatherStore = {
 };
 
 module.exports = WeatherStore;
-},{"../constants/Constants":22,"../controller/AppFlowController":24,"es6-promise":2,"superagent":7,"underscore":10}],28:[function(require,module,exports){
+},{"../constants/Constants":23,"../controller/AppFlowController":25,"es6-promise":3,"superagent":8,"underscore":11}],29:[function(require,module,exports){
 var LanguageSelector = {
     getCurrentLanguage: function() {
         return 'KR';
@@ -5297,7 +5658,7 @@ var LanguageSelector = {
 };
 
 module.exports = LanguageSelector;
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Loader = require('../components/Loader/Loader');
 
@@ -5327,7 +5688,7 @@ var TimeCalculator = {
 };
 
 module.exports = TimeCalculator;
-},{"../components/Loader/Loader":11,"../dispatcher/AppDispatcher":25}],30:[function(require,module,exports){
+},{"../components/Loader/Loader":12,"../dispatcher/AppDispatcher":26}],31:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var $;
@@ -5360,4 +5721,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":21}]},{},[26]);
+},{"../constants/CodedWeather":22}]},{},[27]);

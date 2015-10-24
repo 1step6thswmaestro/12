@@ -14,9 +14,6 @@ var DOM;
 
 var countCallback = 0;
 
-function setDataOfIndex(index) {
-
-}
 
 function initializeDatas() {
     if (countCallback == 0 || countCallback == 1) {
@@ -26,7 +23,6 @@ function initializeDatas() {
     //TempGraph.initGraph();
     DateSelector.initItems();
 
-    //setDataOfIndex(0);
 
     countCallback = 0;
 }
