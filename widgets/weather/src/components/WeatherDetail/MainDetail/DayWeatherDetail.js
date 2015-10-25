@@ -55,7 +55,6 @@ var DayWeatherDetail = {
 
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
-
         var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
         for (var prop in texts) {

@@ -4794,7 +4794,6 @@ var DayWeatherDetail = {
 
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
-
         var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
         for (var prop in texts) {
@@ -4839,6 +4838,10 @@ var _ = require('underscore');
 
 
 var DOM;
+var texts = {
+    'detail-highTemp': 0,
+    'detail-lowTemp': 0
+};
 
 var DayWeatherHeader = {
     initialize: function($) {
@@ -4854,14 +4857,42 @@ var DayWeatherHeader = {
 
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
-
         var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
-        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone();
-        this.icon.empty().append(iconDOM);
-        this.highTemp.text(data['maxTempC']);
-        this.lowTemp.text(data['minTempC']);
+        this._displayIcon(data);
+        this._displayTemp(data);
+
         this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
+    },
+
+    _displayIcon: function(data) {
+        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone();
+
+        this.icon.animate({
+            opacity: 0
+        }, 250, 'easeInCubic', function() {
+            this.icon.empty().append(iconDOM);
+            this.icon.animate({opacity: 1}, 300, 'easeInCubic');
+        }.bind(this));
+    },
+
+    _displayTemp: function(data) {
+        var options = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : ''
+        };
+        var countHighTemp = new CountUp('detail-highTemp', texts['detail-highTemp']*=1, data['maxTempC']*=1, 0, 3.5, options);
+        var countLowTemp = new CountUp('detail-lowTemp', texts['detail-lowTemp']*=1, data['minTempC']*=1, 0, 3.5, options);
+
+        countHighTemp.start();
+        countLowTemp.start();
+
+        texts['detail-highTemp'] = data['maxTempC'];
+        texts['detail-lowTemp'] = data['minTempC'];
     }
 };
 
@@ -5020,6 +5051,11 @@ var WindAndPressure = {
         var index = DateSelector.getCurrentIndex();
         var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
+        this._displayAnemometer(data);
+        this._displayBarometer(data);
+    },
+
+    _displayAnemometer: function(data) {
         var optionsForAnemometer = {
             useEasing : true,
             useGrouping : true,
@@ -5028,6 +5064,19 @@ var WindAndPressure = {
             prefix : '',
             suffix : " km/h " + data['windDir']
         };
+
+        var countForAnemometer = new CountUp(
+            'anemometer',
+            texts['anemometer']*=1,
+            data['windSpeedKPH']*=1,
+            0, 2.5,
+            optionsForAnemometer);
+
+        countForAnemometer.start();
+        texts['anemometer'] = data['windSpeedKPH'];
+    },
+
+    _displayBarometer: function(data) {
         var optionsForBarometer = {
             useEasing : true,
             useGrouping : true,
@@ -5037,14 +5086,15 @@ var WindAndPressure = {
             suffix : " mBar"
         };
 
-        var countForAnemometer = new CountUp('anemometer', texts['anemometer']*=1, data['windSpeedKPH']*=1, 0, 2.5, optionsForAnemometer);
-        var countForBarometer = new CountUp('barometer', texts['barometer']*=1, data['pressureMB']*=1, 0, 2.5, optionsForBarometer);
+        var countForBarometer = new CountUp(
+            'barometer',
+            texts['barometer']*=1,
+            data['pressureMB']*=1,
+            0, 2.5,
+            optionsForBarometer);
 
-        texts['anemometer'] = data['windSpeedKPH'];
-        texts['barometer'] = data['pressureMB'];
-
-        countForAnemometer.start();
         countForBarometer.start();
+        texts['barometer'] = data['pressureMB'];
     }
 };
 

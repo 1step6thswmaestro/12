@@ -36,6 +36,11 @@ var WindAndPressure = {
         var index = DateSelector.getCurrentIndex();
         var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
+        this._displayAnemometer(data);
+        this._displayBarometer(data);
+    },
+
+    _displayAnemometer: function(data) {
         var optionsForAnemometer = {
             useEasing : true,
             useGrouping : true,
@@ -44,6 +49,19 @@ var WindAndPressure = {
             prefix : '',
             suffix : " km/h " + data['windDir']
         };
+
+        var countForAnemometer = new CountUp(
+            'anemometer',
+            texts['anemometer']*=1,
+            data['windSpeedKPH']*=1,
+            0, 2.5,
+            optionsForAnemometer);
+
+        countForAnemometer.start();
+        texts['anemometer'] = data['windSpeedKPH'];
+    },
+
+    _displayBarometer: function(data) {
         var optionsForBarometer = {
             useEasing : true,
             useGrouping : true,
@@ -53,14 +71,15 @@ var WindAndPressure = {
             suffix : " mBar"
         };
 
-        var countForAnemometer = new CountUp('anemometer', texts['anemometer']*=1, data['windSpeedKPH']*=1, 0, 2.5, optionsForAnemometer);
-        var countForBarometer = new CountUp('barometer', texts['barometer']*=1, data['pressureMB']*=1, 0, 2.5, optionsForBarometer);
+        var countForBarometer = new CountUp(
+            'barometer',
+            texts['barometer']*=1,
+            data['pressureMB']*=1,
+            0, 2.5,
+            optionsForBarometer);
 
-        texts['anemometer'] = data['windSpeedKPH'];
-        texts['barometer'] = data['pressureMB'];
-
-        countForAnemometer.start();
         countForBarometer.start();
+        texts['barometer'] = data['pressureMB'];
     }
 };
 
