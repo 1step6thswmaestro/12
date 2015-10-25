@@ -32,8 +32,9 @@ var DayWeatherHeader = {
 
         this._displayIcon(data);
         this._displayTemp(data);
+        this._displayDescription(data);
 
-        this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
+        //this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     },
 
     _displayIcon: function(data) {
@@ -64,6 +65,10 @@ var DayWeatherHeader = {
 
         texts['detail-highTemp'] = data['maxTempC'];
         texts['detail-lowTemp'] = data['minTempC'];
+    },
+
+    _displayDescription: function(data) {
+        this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     }
 };
 

@@ -20,7 +20,8 @@ function initializeDatas() {
         countCallback++;
         return;
     }
-    //TempGraph.initGraph();
+
+    TempGraph.initGraph();
     DateSelector.initItems();
 
 
