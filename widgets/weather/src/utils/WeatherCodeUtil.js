@@ -11,7 +11,7 @@ var WeatherCodeUtil = {
         var forecastText = "";
         var code;
 
-        if (_primaryCode.charAt(0) == ':') {
+        if (_primaryCode.charAt(0) == ':' && _primaryCode.charAt(1) == ':') {
             code = _primaryCode.slice(2,4);
             forecastText += this._getTextFromCode(code, formats[0]);
         }
@@ -34,11 +34,12 @@ var WeatherCodeUtil = {
                 return CodedWeather[format][code][LanguageSelector.getCurrentLanguage()];
             }
         }
+        return "";
     },
 
     __checkProperty: function(obj, property) {
         if (!obj.hasOwnProperty(property)) {
-            throw new Error("Error: Invalid Property", property);
+            return false;
         }
         return true;
     }

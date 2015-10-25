@@ -4896,11 +4896,11 @@ var SunAndMoon = {
             'helper-night': DOM.find('[text-attr=helper-night]')
         };
 
-        this.sunRise = TimeLine.find('[weather-attr=sun-rise]');
-        this.sunSet = TimeLine.find('[weather-attr=sun-set]');
+        this['sun-rise'] = TimeLine.find('[weather-attr=sun-rise]');
+        this['sun-set'] = TimeLine.find('[weather-attr=sun-set]');
 
-        this.twilightStart = TimeLine.find('[weather-attr=twilight-start]');
-        this.twilightEnd = TimeLine.find('[weather-attr=twilight-end]');
+        this['twilight-start'] = TimeLine.find('[weather-attr=twilight-start]');
+        this['twilight-end'] = TimeLine.find('[weather-attr=twilight-end]');
 
         this.dayLength = TimeLine.find('[weather-attr=day-length]');
 
@@ -4941,23 +4941,25 @@ var SunAndMoon = {
                     case 'twilight-end': return new Date(data.twilight['civilEndISO']);
                 }
             })();
-            var options = {
-                useEasing : true,
-                useGrouping : true,
-                separator : ',',
-                decimal : '.',
-                prefix : this.__convertHourToString(newTextDate.getHours()) + ":",
-                suffix : ''
-            };
+            //var options = {
+            //    useEasing : true,
+            //    useGrouping : true,
+            //    separator : ',',
+            //    decimal : '.',
+            //    prefix : this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":",
+            //    suffix : ''
+            //};
 
             if (prop == 'sun-rise') { sunRiseTime = newTextDate; }
             if (prop == 'sun-set') { sunSetTime = newTextDate; }
 
-            var countText = new CountUp(prop, texts[prop]*=1, newTextDate.getMinutes(), 0, 2.5, options);
-            countText.start();
+            //var countText = new CountUp(prop, texts[prop]*=1, newTextDate.getMinutes(), 0, 2.5, options);
+            //countText.start();
 
-            texts[prop] = newTextDate.getMinutes();
+            var text = this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":" + this.__convertLeadingZeros(newTextDate.getMinutes(), 2);
+            this[prop].text(text);
         }
+
 
         var length = (sunSetTime.getHours() - sunRiseTime.getHours()) * 60 * 60 + (sunSetTime.getMinutes() - sunRiseTime.getMinutes()) * 60;
         var flexGrowth = 6 * length / STANDARD_DAY_LENGTH;
@@ -4966,33 +4968,15 @@ var SunAndMoon = {
     },
 
 
-    __convertHourToString: function(hour) {
-        switch(hour) {
-            case 0: return "00";
-            case 1: return "01";
-            case 2: return "02";
-            case 3: return "03";
-            case 4: return "04";
-            case 5: return "05";
-            case 6: return "06";
-            case 7: return "07";
-            case 8: return "08";
-            case 9: return "09";
-            case 10: return "10";
-            case 11: return "11";
-            case 12: return "12";
-            case 13: return "13";
-            case 14: return "14";
-            case 15: return "15";
-            case 16: return "16";
-            case 17: return "17";
-            case 18: return "18";
-            case 19: return "19";
-            case 20: return "20";
-            case 21: return "21";
-            case 22: return "22";
-            case 23: return "23";
+    __convertLeadingZeros: function(number, digits) {
+        var zero = '';
+        number = number.toString();
+
+        if (number.length < digits) {
+            for (var i = 0; i < digits - number.length; i++)
+                zero += '0';
         }
+        return zero + number;
     }
 };
 
@@ -5971,7 +5955,7 @@ var WeatherCodeUtil = {
         var forecastText = "";
         var code;
 
-        if (_primaryCode.charAt(0) == ':') {
+        if (_primaryCode.charAt(0) == ':' && _primaryCode.charAt(1) == ':') {
             code = _primaryCode.slice(2,4);
             forecastText += this._getTextFromCode(code, formats[0]);
         }
@@ -5994,11 +5978,12 @@ var WeatherCodeUtil = {
                 return CodedWeather[format][code][LanguageSelector.getCurrentLanguage()];
             }
         }
+        return "";
     },
 
     __checkProperty: function(obj, property) {
         if (!obj.hasOwnProperty(property)) {
-            throw new Error("Error: Invalid Property", property);
+            return false;
         }
         return true;
     }
