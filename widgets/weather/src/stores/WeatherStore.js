@@ -60,11 +60,12 @@ var WeatherStore = {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
-                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, from: "today", to: "+2week", limit: 14})
                 .end(function(err,res) {
                     if (err) { console.log(err); }
                     else {
-                        SunMoonData = res.body.response[0];
+                        SunMoonData = res.body.response;
+                        console.log("SunMoonData", res.body.response);
                         resolve();
                     }
                 });

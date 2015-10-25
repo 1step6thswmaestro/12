@@ -16,19 +16,23 @@ var ItemProtoDOM;
 var ItemDatas = [];
 var currentIndex;
 
+var $;
+
 
 var DateSelector = _.extend({}, EventEmitter.prototype, {
-    initialize: function($) {
+    initialize: function(_$) {
+        $ = _$;
+
         DateSelectorDOM = $('#day-select-slider');
         SelectorItemDOMs = $('.day-select-slider-item');
 
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
 
-        this.initSlider($);
+        this.initSlider();
     },
 
-    initSlider: function($) {
+    initSlider: function() {
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -44,16 +48,10 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
 
 
-        var _this = this;
+        var that = this;
         SelectorItemDOMs.on('click tap', function() {
-            currentIndex = $(this).attr('idx');
-            console.log("currentIndex", currentIndex);
-            SelectorItemDOMs.removeClass('active');
-            $(this).addClass('active');
-            _this.emitSlideChange();
+            that.selectItem(this, that);
         });
-
-        _this.emitSlideChange();
     },
 
     initItems: function() {
@@ -63,6 +61,17 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
             var ItemView = new _DayItemView(DateSelectorDOM.children().find('[idx=' + idx +']'));
             ItemView.initialize(ItemDatas[idx]);
         }
+
+        this.selectItem(SelectorItemDOMs.eq(0), this);
+    },
+
+    selectItem: function(selectedItemDOM, _this) {
+        currentIndex = $(selectedItemDOM).attr('idx');
+
+        SelectorItemDOMs.removeClass('active');
+        $(selectedItemDOM).addClass('active');
+
+        _this.emitSlideChange();
     },
 
     subscribeActiveApp: AppFlowController.addSubscribe(

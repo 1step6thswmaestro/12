@@ -4642,7 +4642,7 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherIcons":31}],14:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherIcons":32}],14:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var WeatherStore = require('../../stores/WeatherStore');
 var Constants = require('../../constants/Constants');
@@ -4661,19 +4661,23 @@ var ItemProtoDOM;
 var ItemDatas = [];
 var currentIndex;
 
+var $;
+
 
 var DateSelector = _.extend({}, EventEmitter.prototype, {
-    initialize: function($) {
+    initialize: function(_$) {
+        $ = _$;
+
         DateSelectorDOM = $('#day-select-slider');
         SelectorItemDOMs = $('.day-select-slider-item');
 
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
 
-        this.initSlider($);
+        this.initSlider();
     },
 
-    initSlider: function($) {
+    initSlider: function() {
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -4689,16 +4693,10 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
 
 
-        var _this = this;
+        var that = this;
         SelectorItemDOMs.on('click tap', function() {
-            currentIndex = $(this).attr('idx');
-            console.log("currentIndex", currentIndex);
-            SelectorItemDOMs.removeClass('active');
-            $(this).addClass('active');
-            _this.emitSlideChange();
+            that.selectItem(this, that);
         });
-
-        _this.emitSlideChange();
     },
 
     initItems: function() {
@@ -4708,6 +4706,17 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
             var ItemView = new _DayItemView(DateSelectorDOM.children().find('[idx=' + idx +']'));
             ItemView.initialize(ItemDatas[idx]);
         }
+
+        this.selectItem(SelectorItemDOMs.eq(0), this);
+    },
+
+    selectItem: function(selectedItemDOM, _this) {
+        currentIndex = $(selectedItemDOM).attr('idx');
+
+        SelectorItemDOMs.removeClass('active');
+        $(selectedItemDOM).addClass('active');
+
+        _this.emitSlideChange();
     },
 
     subscribeActiveApp: AppFlowController.addSubscribe(
@@ -4728,20 +4737,100 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
 
 module.exports = DateSelector;
 },{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../stores/WeatherStore":28,"./_DayItemView":21,"events":1,"underscore":11}],15:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+var DOM;
+var texts = {
+    'feelLike': 0,
+    'humanity': 0,
+    'dewPoint': 0,
+    'precipitation': 0,
+    'precipMM': 0,
+    'snowCM': 0
+};
+var options = {
+    useEasing : true,
+    useGrouping : true,
+    separator : ',',
+    decimal : '.',
+    prefix : '',
+    suffix : ''
+};
 
 var DayWeatherDetail = {
     initialize: function($) {
+        DOM = $('#day-weather-detail');
+
+        this.descriptionDOMs = {
+            'feel-like': DOM.find('[text-attr=feel-like]'),
+            'humanity': DOM.find('[text-attr=humanity]'),
+            'dew-point': DOM.find('[text-attr=dew-point]'),
+            'precipitation': DOM.find('[text-attr=precipitation]'),
+            'precipMM': DOM.find('[text-attr=precipMM]'),
+            'snowCM': DOM.find('[text-attr=snowCM]')
+        };
+
+        this.feelLike = DOM.find('[weather-attr=feel-like]');
+        this.humanity = DOM.find('[weather-attr=humanity]');
+        this.dewPoint = DOM.find('[weather-attr=dew-point]');
+        this.precipitation = DOM.find('[weather-attr=precipitation]');
+        this.precipMM = DOM.find('[weather-attr=precipMM]');
+        this.snowCM = DOM.find('[weather-attr=snowCM]');
+
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.DayWeatherDetail[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
+
+        for (var prop in texts) {
+            var decimal = (prop == 'precipMM' || prop == 'snowCM') ? 2 : 0;
+            var newTextData = (function() {
+                switch(prop) {
+                    case 'feelLike': return data['feelslikeC'];
+                    case 'humanity': return data['humidity'];
+                    case 'dewPoint': return data['dewpointC'];
+                    case 'precipitation': return data['pop'];
+                    case 'precipMM': return data['precipMM'];
+                    case 'snowCM': return data['snowCM'];
+                }
+            })();
+
+            if (prop == 'precipMM' || prop == 'snowCM') {
+                if (newTextData == 0) {
+                    this[prop].text("--");
+                    continue;
+                }
+            }
+
+            var countText = new CountUp(prop, texts[prop]*=1, newTextData*=1, decimal, 2.5, options);
+            countText.start();
+
+            texts[prop] = newTextData;
+        }
     }
 };
 
 
-//TODO:
-
 module.exports = DayWeatherDetail;
-},{}],16:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],16:[function(require,module,exports){
 var WeatherIcons = require('../../../utils/WeatherIcons');
 var CodedWeather = require('../../../constants/CodedWeather');
-//var WeatherCodeUtil = require('../../utils/WeatherCodeUtil');
+var WeatherCodeUtil = require('../../../utils/WeatherCodeUtil');
 
 var DateSelector = require('../DateSelector');
 var WeatherStore = require('../../../stores/WeatherStore');
@@ -4756,9 +4845,9 @@ var DayWeatherHeader = {
         DOM = $('#day-weather-header');
 
         this.icon = DOM.find('[weather-attr=detail-icon]');
-        this.highTemp = DOM.find('[weather-attr=highTemp]');
-        this.lowTemp = DOM.find('[weather-attr=lowTemp]');
-        this.description = DOM.find('[weather-attr=description]');
+        this.highTemp = DOM.find('[weather-attr=detail-highTemp]');
+        this.lowTemp = DOM.find('[weather-attr=detail-lowTemp]');
+        this.description = DOM.find('[weather-attr=detail-description]');
 
         DateSelector.addSlideChangeListener(this.displayContext.bind(this));
     },
@@ -4766,42 +4855,217 @@ var DayWeatherHeader = {
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
 
-        if (index == 0) { this._contextForToday(); }
-        else { this._contextForOtherDays(); }
-    },
-
-    _contextForToday: function() {
-        var data = (WeatherStore.getForecastData()).periods[0];
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
 
         var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone();
         this.icon.empty().append(iconDOM);
         this.highTemp.text(data['maxTempC']);
         this.lowTemp.text(data['minTempC']);
-    },
-
-    _contextForOtherDays: function() {
-        
+        this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     }
 };
 
 module.exports = DayWeatherHeader;
-},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherIcons":31,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
+},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherCodeUtil":31,"../../../utils/WeatherIcons":32,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+
+var DOM;
+var TimeLine;
+var texts = {
+    'sun-rise': 0,
+    'sun-set': 0,
+    'twilight-start': 0,
+    'twilight-end': 0
+};
+var STANDARD_DAY_LENGTH = 12 * 60 * 60; //초 단위
+
+
 var SunAndMoon = {
     initialize: function($) {
+        DOM = $('#day-weather-sun-and-moon');
+        TimeLine = DOM.find('#time-line');
 
+        this.descriptionDOMs = {
+            'helper-day': DOM.find('[text-attr=helper-day]'),
+            'helper-twilight': DOM.find('[text-attr=helper-twilight]'),
+            'helper-night': DOM.find('[text-attr=helper-night]')
+        };
+
+        this.sunRise = TimeLine.find('[weather-attr=sun-rise]');
+        this.sunSet = TimeLine.find('[weather-attr=sun-set]');
+
+        this.twilightStart = TimeLine.find('[weather-attr=twilight-start]');
+        this.twilightEnd = TimeLine.find('[weather-attr=twilight-end]');
+
+        this.dayLength = TimeLine.find('[weather-attr=day-length]');
+
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.SunAdnMoon[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+
+        if (index == 0) { this._contextForToday(index); }
+        else { this._contextForOtherDays(index); }
+    },
+
+    _contextForToday: function() {
+
+    },
+
+    _contextForOtherDays: function(index) {
+        var data = (WeatherStore.getSunMoonData())[index].sun;
+
+        var sunRiseTime;
+        var sunSetTime;
+
+        for (var prop in texts) {
+            var newTextDate = (function() {
+                switch(prop) {
+                    case 'sun-rise': return new Date(data['riseISO']);
+                    case 'sun-set': return new Date(data['setISO']);
+                    case 'twilight-start': return new Date(data.twilight['civilBeginISO']);
+                    case 'twilight-end': return new Date(data.twilight['civilEndISO']);
+                }
+            })();
+            var options = {
+                useEasing : true,
+                useGrouping : true,
+                separator : ',',
+                decimal : '.',
+                prefix : this.__convertHourToString(newTextDate.getHours()) + ":",
+                suffix : ''
+            };
+
+            if (prop == 'sun-rise') { sunRiseTime = newTextDate; }
+            if (prop == 'sun-set') { sunSetTime = newTextDate; }
+
+            var countText = new CountUp(prop, texts[prop]*=1, newTextDate.getMinutes(), 0, 2.5, options);
+            countText.start();
+
+            texts[prop] = newTextDate.getMinutes();
+        }
+
+        var length = (sunSetTime.getHours() - sunRiseTime.getHours()) * 60 * 60 + (sunSetTime.getMinutes() - sunRiseTime.getMinutes()) * 60;
+        var flexGrowth = 6 * length / STANDARD_DAY_LENGTH;
+
+        this.dayLength.css('flex-grow', flexGrowth);
+    },
+
+
+    __convertHourToString: function(hour) {
+        switch(hour) {
+            case 0: return "00";
+            case 1: return "01";
+            case 2: return "02";
+            case 3: return "03";
+            case 4: return "04";
+            case 5: return "05";
+            case 6: return "06";
+            case 7: return "07";
+            case 8: return "08";
+            case 9: return "09";
+            case 10: return "10";
+            case 11: return "11";
+            case 12: return "12";
+            case 13: return "13";
+            case 14: return "14";
+            case 15: return "15";
+            case 16: return "16";
+            case 17: return "17";
+            case 18: return "18";
+            case 19: return "19";
+            case 20: return "20";
+            case 21: return "21";
+            case 22: return "22";
+            case 23: return "23";
+        }
     }
 };
 
 module.exports = SunAndMoon;
-},{}],18:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],18:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+
+var DOM;
+var texts = {
+    'anemometer': 0,
+    'barometer': 0
+};
+
 var WindAndPressure = {
     initialize: function($) {
+        DOM = $('#day-weather-wind-and-pressure');
 
+        this.descriptionDOMs = {
+            'anemometer': DOM.find('[text-attr=anemometer]'),
+            'barometer': DOM.find('[text-attr=barometer]')
+        };
+
+        this.windFan = DOM.find('[weather-attr=wind-fan]');
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.WindAndPressure[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
+
+        var optionsForAnemometer = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : " km/h " + data['windDir']
+        };
+        var optionsForBarometer = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : " mBar"
+        };
+
+        var countForAnemometer = new CountUp('anemometer', texts['anemometer']*=1, data['windSpeedKPH']*=1, 0, 2.5, optionsForAnemometer);
+        var countForBarometer = new CountUp('barometer', texts['barometer']*=1, data['pressureMB']*=1, 0, 2.5, optionsForBarometer);
+
+        texts['anemometer'] = data['windSpeedKPH'];
+        texts['barometer'] = data['pressureMB'];
+
+        countForAnemometer.start();
+        countForBarometer.start();
     }
 };
 
 module.exports = WindAndPressure;
-},{}],19:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],19:[function(require,module,exports){
 var TempGraphDOM;
 var WrapperDOM;
 
@@ -5026,7 +5290,7 @@ var _DayItemView = (function() {
 
 
 module.exports = _DayItemView;
-},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":31,"underscore":11}],22:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":32,"underscore":11}],22:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -5048,6 +5312,10 @@ var CodedWeather = {
         'OV': {
             EN: "Cloudy/Overcast",
             KR: "흐림"
+        },
+        'R': {
+            EN: "Rain",
+            KR: "비"
         }
     },
 
@@ -5555,7 +5823,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":30,"./utils/WeatherIcons":31}],28:[function(require,module,exports){
+},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":30,"./utils/WeatherIcons":32}],28:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -5618,11 +5886,12 @@ var WeatherStore = {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
-                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, from: "today", to: "+2week", limit: 14})
                 .end(function(err,res) {
                     if (err) { console.log(err); }
                     else {
-                        SunMoonData = res.body.response[0];
+                        SunMoonData = res.body.response;
+                        console.log("SunMoonData", res.body.response);
                         resolve();
                     }
                 });
@@ -5653,7 +5922,7 @@ module.exports = WeatherStore;
 },{"../constants/Constants":23,"../controller/AppFlowController":25,"es6-promise":3,"superagent":8,"underscore":11}],29:[function(require,module,exports){
 var LanguageSelector = {
     getCurrentLanguage: function() {
-        return 'KR';
+        return 'EN';
     }
 };
 
@@ -5689,6 +5958,54 @@ var TimeCalculator = {
 
 module.exports = TimeCalculator;
 },{"../components/Loader/Loader":12,"../dispatcher/AppDispatcher":26}],31:[function(require,module,exports){
+var CodedWeather = require('../constants/CodedWeather');
+var LanguageSelector = require('./LanguageSelector');
+
+var icons = {};
+var formats = ['CloudCodes', 'CoverageCodes', 'IntensityCodes', 'WeatherCodes'];
+
+var WeatherCodeUtil = {
+    getForecastText: function(_primaryCode) {
+        if (_primaryCode == null || _primaryCode == undefined) { return null; }
+
+        var forecastText = "";
+        var code;
+
+        if (_primaryCode.charAt(0) == ':') {
+            code = _primaryCode.slice(2,4);
+            forecastText += this._getTextFromCode(code, formats[0]);
+        }
+        else {
+            var codes = _primaryCode.split(":");
+            if (codes.length < 3 || codes == undefined || codes == null) { throw new Error("Error: Invalid Primary Code"); }
+
+            for(var idx=0; idx<3; idx++) {
+                code = codes[idx];
+                forecastText += (this._getTextFromCode(code, formats[idx+1]) + " ");
+            }
+        }
+
+        return forecastText;
+    },
+
+    _getTextFromCode: function(code, format) {
+        if (this.__checkProperty(CodedWeather[format], code)) {
+            if (this.__checkProperty(CodedWeather[format][code], LanguageSelector.getCurrentLanguage())) {
+                return CodedWeather[format][code][LanguageSelector.getCurrentLanguage()];
+            }
+        }
+    },
+
+    __checkProperty: function(obj, property) {
+        if (!obj.hasOwnProperty(property)) {
+            throw new Error("Error: Invalid Property", property);
+        }
+        return true;
+    }
+};
+
+module.exports = WeatherCodeUtil;
+},{"../constants/CodedWeather":22,"./LanguageSelector":29}],32:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var $;

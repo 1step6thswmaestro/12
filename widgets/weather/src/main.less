@@ -494,8 +494,11 @@ html, body {
 
                                 .item {
                                     font-size: 1.5vh;
+                                    line-height: 1;
                                     font-weight: 300;
+                                    text-align: center;
                                     opacity: .55;
+                                    margin: .3vh 0;
                                 }
                                 .value {
                                     font-size: 2vh;
@@ -698,7 +701,10 @@ html, body {
 
                                     &:nth-child(1) { flex: 2; }
                                     &:nth-child(2) { flex: 1; }
-                                    &:nth-child(3) { flex: 6; }
+                                    &:nth-child(3) {
+                                        flex: 6;
+                                        transition: all 2.5s cubic-bezier(0.6,0,0.4,1);
+                                    }
                                     &:nth-child(4) { flex: 1; }
                                     &:nth-child(5) { flex: 8; }
                                 }
@@ -761,7 +767,7 @@ html, body {
 
                                         bottom: 3.3vh;
 
-                                        animation:spin 4s linear infinite;
+                                        animation: spin 4s linear infinite;
 
                                         @keyframes spin { 100% { transform:rotate(360deg); } }
                                     }
@@ -786,7 +792,7 @@ html, body {
 
                                         bottom: 3.3vh;
 
-                                        animation:spin 4s linear infinite;
+                                        animation: spin 4s linear infinite;
 
                                         @keyframes spin { 100% { transform:rotate(360deg); } }
                                     }

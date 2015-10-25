@@ -19,6 +19,10 @@ var CodedWeather = {
         'OV': {
             EN: "Cloudy/Overcast",
             KR: "흐림"
+        },
+        'R': {
+            EN: "Rain",
+            KR: "비"
         }
     },
 

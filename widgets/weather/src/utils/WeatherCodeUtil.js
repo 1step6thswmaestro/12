@@ -9,9 +9,10 @@ var WeatherCodeUtil = {
         if (_primaryCode == null || _primaryCode == undefined) { return null; }
 
         var forecastText = "";
+        var code;
 
-        if (_primaryCode.indexOf(0) == ':') {
-            var code = _primaryCode.slice(2,4);
+        if (_primaryCode.charAt(0) == ':') {
+            code = _primaryCode.slice(2,4);
             forecastText += this._getTextFromCode(code, formats[0]);
         }
         else {
@@ -19,8 +20,8 @@ var WeatherCodeUtil = {
             if (codes.length < 3 || codes == undefined || codes == null) { throw new Error("Error: Invalid Primary Code"); }
 
             for(var idx=0; idx<3; idx++) {
-                var code = codes[idx];
-               forecastText += this._getTextFromCode(code, formats[idx]);
+                code = codes[idx];
+                forecastText += (this._getTextFromCode(code, formats[idx+1]) + " ");
             }
         }
 
