@@ -4576,18 +4576,25 @@ var AppFlowController = require('../../controller/AppFlowController');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 
 var WeatherStore = require('../../stores/WeatherStore');
+var WeatherCodeUtil = require('../../utils/WeatherCodeUtil');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
 var Constants = require('../../constants/Constants');
+var CodedWeather = require('../../constants/CodedWeather');
 
-var weatherData = null;
+
 var DOM;
-var AttrDOMs = {
-    Icon: null,
-    HighTemp: null,
-    LowTemp: null,
-    Description: null
-};
+var countCallback = 0;
+
+function initializeDatas() {
+    if (countCallback == 0 || countCallback == 1) {
+        countCallback++;
+        return;
+    }
+
+    TodayWeather.setWeatherData();
+    countCallback = 0;
+}
 
 function activeComponent() {
     DOM.removeAttr('style');
@@ -4604,26 +4611,32 @@ function disableComponent() {
     });
 }
 
+
 var TodayWeather = {
     initialize: function($) {
         DOM = $('section#today-weather-component');
 
-        AttrDOMs.Icon = DOM.find('[weather-attr = today-weather-icon]');
-        AttrDOMs.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
-        AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
-        AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
+        this.Icon = DOM.find('[weather-attr = today-weather-icon]');
+        this.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
+        this.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
+        this.Description = DOM.find('[weather-attr = today-weather-description]');
 
         DOM.on('click tap', function(event) {
             if (event.which == 1) { //Left Mouse Clicked
                 AppDispatcher.activeApp();
             }
         });
+
+
     },
 
     setWeatherData: function() {
-        weatherData = WeatherStore.getForecastData();
-        console.log(weatherData);
+        var data = (WeatherStore.getForecastData()).periods[0];
 
+        this.Icon.empty().append(WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone());
+        this.HighTemp.text(data['maxTempC']);
+        this.LowTemp.text(data['minTempC']);
+        this.Description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
         /*
         AttrDOMs.Icon.empty().append(WeatherIcons.getIconDOM(WeatherConditionConstants[weatherId][isDayOrNight]));
         AttrDOMs.HighTemp.text(parseInt(weatherData.temp['max'] - 273.15));
@@ -4631,6 +4644,27 @@ var TodayWeather = {
         AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
         */
     },
+
+    subscribeForecastData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeSunMoonData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_SUN_MOON_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
 
     subscribeActiveApp: AppFlowController.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
@@ -4642,7 +4676,7 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherIcons":32}],14:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherCodeUtil":31,"../../utils/WeatherIcons":32}],14:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var WeatherStore = require('../../stores/WeatherStore');
 var Constants = require('../../constants/Constants');
@@ -5109,7 +5143,6 @@ var DateSelector = require('./DateSelector');
 
 var WeatherStore = require('../../stores/WeatherStore');
 
-var _ = require('underscore');
 
 var TempGraphDOM;
 var WrapperDOM;
@@ -5135,15 +5168,16 @@ var TempGraph = {
 
             var _start = new Date(data[0]['dateTimeISO']);
             var _end = new Date(data[data.length - 1]['dateTimeISO']);;
-            var _noToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
+            var _isToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
             var _width = (function() {
-                if (_noToday) { return width * 13; }
+                if (!_isToday) { return width * 13; }
                 else {
                     return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + width * 13;
                 }
             })();
+            console.log(_isToday);
             var _leftMargin = (function() {
-                if (_noToday) { return 0; }
+                if (!_isToday) { return 0; }
                 else {
                     return 12.5 * (Math.floor(_start.getHours() / 3));
                 }
@@ -5169,9 +5203,9 @@ var TempGraph = {
         })(this);
 
         leftMargin = dataArrays.leftMargin;
-        TempGraphDOM.css({
-            transform: "translateX(" + "-" + leftMargin.toString() + "%" + ");"
-        });
+        console.log("leftMargin", leftMargin);
+        var translateX = "translateX(" + (leftMargin) + "%)"; //TODO: Not Working
+        TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
 
@@ -5236,14 +5270,13 @@ var TempGraph = {
         movedDistance += ((newIndex - currentSlideIndex) * 100);
         var translateX = "translateX(-" + (leftMargin + movedDistance) + "%)";
         TempGraphDOM.css('transform', translateX);
-        console.log("translateX", leftMargin + movedDistance);
 
         currentSlideIndex = newIndex;
     }
 };
 
 module.exports = TempGraph;
-},{"../../stores/WeatherStore":28,"./DateSelector":14,"underscore":11}],20:[function(require,module,exports){
+},{"../../stores/WeatherStore":28,"./DateSelector":14}],20:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 

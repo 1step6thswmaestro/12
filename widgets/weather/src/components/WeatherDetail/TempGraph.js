@@ -2,7 +2,6 @@ var DateSelector = require('./DateSelector');
 
 var WeatherStore = require('../../stores/WeatherStore');
 
-var _ = require('underscore');
 
 var TempGraphDOM;
 var WrapperDOM;
@@ -28,15 +27,16 @@ var TempGraph = {
 
             var _start = new Date(data[0]['dateTimeISO']);
             var _end = new Date(data[data.length - 1]['dateTimeISO']);;
-            var _noToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
+            var _isToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
             var _width = (function() {
-                if (_noToday) { return width * 13; }
+                if (!_isToday) { return width * 13; }
                 else {
                     return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + width * 13;
                 }
             })();
+            console.log(_isToday);
             var _leftMargin = (function() {
-                if (_noToday) { return 0; }
+                if (!_isToday) { return 0; }
                 else {
                     return 12.5 * (Math.floor(_start.getHours() / 3));
                 }
@@ -62,9 +62,9 @@ var TempGraph = {
         })(this);
 
         leftMargin = dataArrays.leftMargin;
-        TempGraphDOM.css({
-            transform: "translateX(" + "-" + leftMargin.toString() + "%" + ");"
-        });
+        console.log("leftMargin", leftMargin);
+        var translateX = "translateX(" + (leftMargin) + "%)"; //TODO: Not Working
+        TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
 
@@ -129,7 +129,6 @@ var TempGraph = {
         movedDistance += ((newIndex - currentSlideIndex) * 100);
         var translateX = "translateX(-" + (leftMargin + movedDistance) + "%)";
         TempGraphDOM.css('transform', translateX);
-        console.log("translateX", leftMargin + movedDistance);
 
         currentSlideIndex = newIndex;
     }

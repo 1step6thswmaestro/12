@@ -2,18 +2,25 @@ var AppFlowController = require('../../controller/AppFlowController');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 
 var WeatherStore = require('../../stores/WeatherStore');
+var WeatherCodeUtil = require('../../utils/WeatherCodeUtil');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
 var Constants = require('../../constants/Constants');
+var CodedWeather = require('../../constants/CodedWeather');
 
-var weatherData = null;
+
 var DOM;
-var AttrDOMs = {
-    Icon: null,
-    HighTemp: null,
-    LowTemp: null,
-    Description: null
-};
+var countCallback = 0;
+
+function initializeDatas() {
+    if (countCallback == 0 || countCallback == 1) {
+        countCallback++;
+        return;
+    }
+
+    TodayWeather.setWeatherData();
+    countCallback = 0;
+}
 
 function activeComponent() {
     DOM.removeAttr('style');
@@ -30,26 +37,32 @@ function disableComponent() {
     });
 }
 
+
 var TodayWeather = {
     initialize: function($) {
         DOM = $('section#today-weather-component');
 
-        AttrDOMs.Icon = DOM.find('[weather-attr = today-weather-icon]');
-        AttrDOMs.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
-        AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
-        AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
+        this.Icon = DOM.find('[weather-attr = today-weather-icon]');
+        this.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
+        this.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
+        this.Description = DOM.find('[weather-attr = today-weather-description]');
 
         DOM.on('click tap', function(event) {
             if (event.which == 1) { //Left Mouse Clicked
                 AppDispatcher.activeApp();
             }
         });
+
+
     },
 
     setWeatherData: function() {
-        weatherData = WeatherStore.getForecastData();
-        console.log(weatherData);
+        var data = (WeatherStore.getForecastData()).periods[0];
 
+        this.Icon.empty().append(WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone());
+        this.HighTemp.text(data['maxTempC']);
+        this.LowTemp.text(data['minTempC']);
+        this.Description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
         /*
         AttrDOMs.Icon.empty().append(WeatherIcons.getIconDOM(WeatherConditionConstants[weatherId][isDayOrNight]));
         AttrDOMs.HighTemp.text(parseInt(weatherData.temp['max'] - 273.15));
@@ -57,6 +70,27 @@ var TodayWeather = {
         AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
         */
     },
+
+    subscribeForecastData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeSunMoonData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_SUN_MOON_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
 
     subscribeActiveApp: AppFlowController.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
