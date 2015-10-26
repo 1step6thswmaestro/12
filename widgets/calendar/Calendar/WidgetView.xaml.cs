@@ -67,6 +67,8 @@ namespace Calendar
             return (TextBlock)first(Grid_Number, row, col, "TextBlock");
         }
 
+
+        #region Refactored Methods
         // Refactored methods to access inner UIElements of grids
         private IEnumerable<UIElement> cast(Grid grid)
         {
@@ -93,6 +95,7 @@ namespace Calendar
         {
             return where(grid, row, col).Count();
         }
+        #endregion
 
         // Methods for highlight of today
         private bool is_highlighted_today (int row, int col)

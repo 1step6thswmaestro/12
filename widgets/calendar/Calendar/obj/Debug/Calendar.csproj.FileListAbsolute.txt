@@ -17,8 +17,6 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\Cale
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Calendar.exe
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Calendar.pdb
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\Calendar.csprojResolveAssemblyReference.cache
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\MainWindow.baml
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\MainWindow.g.cs
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\App.g.cs
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\Calendar_MarkupCompile.cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\Calendar.g.resources
@@ -59,3 +57,7 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Syst
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\System.Net.Http.Primitives.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\Zlib.Portable.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\bin\Debug\client_secret.json
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\DetailView.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\DetailView.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\WidgetView.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar\obj\Debug\WidgetView.g.cs
