@@ -36,7 +36,6 @@ var TempGraph = {
                     return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + 1300;
                 }
             })();
-             console.log("width", _width);
              var _windowWidth = width;
             var _leftMargin = (function() {
                 if (!_isToday) { return 0; }
@@ -65,10 +64,8 @@ var TempGraph = {
             };
         })(this);
 
-        console.log("dfsfsdf", dataArrays.windowWidth * (dataArrays.width / 100));
 
         leftMargin = dataArrays.leftMargin;
-        //console.log("leftMargin", leftMargin);
         var translateX = "translateX(" + leftMargin + "%)"; //TODO: Not Working
         TempGraphDOM.css('transform', translateX);
 
@@ -81,20 +78,17 @@ var TempGraph = {
                 [['Time', 'highTemp', 'lowTemp']].concat(dataArrays.datas)
             );
 
-
-
             var height = WrapperDOM.actual('height');
-
             var options = {
                 width: (dataArrays.width / 100) * dataArrays.windowWidth,
                 height: height,
                 areaOpacity: 0.25,
                 colors: ['#faca4e', '#63b4cf'],
-                annotationText: true,
+                annotationText: false,
                 fontSize: "1vw",
                 chartArea: {width: "100%", height: '60%'},
                 hAxis: {
-                    textStyle: {color: '#616161', fontSize: "2vw", minTextSpacing: 15}
+                    textStyle: {color: '#616161', fontSize: 20}
                 },
                 pointsVisible: false,
                 vAxis: {baselineColor: 'black', gridlines: {color: 'black'}, textStyle: { color: 'black'}},
@@ -123,7 +117,6 @@ var TempGraph = {
         var newIndex = DateSelector.getCurrentIndex();
 
         movedDistance += ((newIndex - currentSlideIndex) * 100);
-        console.log("moveDistance", movedDistance);
         var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
         TempGraphDOM.css('transform', translateX);
 
