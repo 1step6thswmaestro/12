@@ -5139,6 +5139,8 @@ var WeatherStore = require('../../stores/WeatherStore');
 var TempGraphDOM;
 var WrapperDOM;
 
+var dataArrays
+
 var leftMargin = 0;
 var movedDistance = 0;
 
@@ -5153,20 +5155,22 @@ var TempGraph = {
     },
 
     initGraph: function() {
-        var dataArrays = (function(_this) {
+         dataArrays = (function(_this) {
             var that = _this;
             var data = (WeatherStore.getForecastData()).periods;
             var width = $(window).width();
 
             var _start = new Date(data[0]['dateTimeISO']);
-            var _end = new Date(data[data.length - 1]['dateTimeISO']);;
+            var _end = new Date(data[data.length - 1]['dateTimeISO']);
             var _isToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
             var _width = (function() {
-                if (!_isToday) { return width * 13; }
+                if (!_isToday) { return 1300; }
                 else {
-                    return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + width * 13;
+                    return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + 1300;
                 }
             })();
+             console.log("width", _width);
+             var _windowWidth = width;
             var _leftMargin = (function() {
                 if (!_isToday) { return 0; }
                 else {
@@ -5188,13 +5192,17 @@ var TempGraph = {
                 startTime: _start,
                 endTime: _end,
                 width: _width,
+                windowWidth: _windowWidth,
                 leftMargin: _leftMargin,
                 datas: _datas
             };
         })(this);
 
+        console.log("dfsfsdf", dataArrays.windowWidth * (dataArrays.width / 100));
+
         leftMargin = dataArrays.leftMargin;
-        var translateX = "translateX(" + (leftMargin) + "%)"; //TODO: Not Working
+        //console.log("leftMargin", leftMargin);
+        var translateX = "translateX(" + leftMargin + "%)"; //TODO: Not Working
         TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
@@ -5203,7 +5211,7 @@ var TempGraph = {
 
         function drawChart() {
             var data = new google.visualization.arrayToDataTable(
-                [['Time', 'hhhh', 'hhoho']].concat(dataArrays.datas)
+                [['Time', 'highTemp', 'lowTemp']].concat(dataArrays.datas)
             );
 
 
@@ -5211,16 +5219,18 @@ var TempGraph = {
             var height = WrapperDOM.actual('height');
 
             var options = {
-                width: dataArrays.width,
+                width: (dataArrays.width / 100) * dataArrays.windowWidth,
                 height: height,
                 areaOpacity: 0.25,
                 colors: ['#faca4e', '#63b4cf'],
                 annotationText: true,
-                chartArea: {width: dataArrays.width, height: '80%'},
+                fontSize: "1vw",
+                chartArea: {width: "100%", height: '60%'},
                 hAxis: {
-                    textStyle: {color: '#616161'}
+                    textStyle: {color: '#616161', fontSize: "2vw", minTextSpacing: 15}
                 },
-                vAxis: {baselineColor: 'black', gridlines: {color: 'black'}},
+                pointsVisible: false,
+                vAxis: {baselineColor: 'black', gridlines: {color: 'black'}, textStyle: { color: 'black'}},
                 backgroundColor: 'black'
             };
 
@@ -5246,7 +5256,8 @@ var TempGraph = {
         var newIndex = DateSelector.getCurrentIndex();
 
         movedDistance += ((newIndex - currentSlideIndex) * 100);
-        var translateX = "translateX(-" + (leftMargin + movedDistance) + "%)";
+        console.log("moveDistance", movedDistance);
+        var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
         TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = newIndex;
@@ -6064,12 +6075,12 @@ var DATA_AMOUNT_OF_2WEEKS = 104; //2주치 데이터 (8 x 14)
 
 var TimeCalculator = {
     initialize: function() {
-        this.dispatchAction(7 - Math.floor((new Date).getHours() / 3) + DATA_AMOUNT_OF_2WEEKS);
+        this.dispatchAction(8 - Math.floor((new Date).getHours() / 3) + DATA_AMOUNT_OF_2WEEKS);
         this.setTimer();
     },
 
     setTimer: function() {
-        var dataAmount = (7 - Math.floor((new Date).getHours() / 3)) + DATA_AMOUNT_OF_2WEEKS;
+        var dataAmount = (8 - Math.floor((new Date).getHours() / 3)) + DATA_AMOUNT_OF_2WEEKS;
         setTimeout(function() {
             this.dispatchAction(dataAmount);
             this.setTimer();
