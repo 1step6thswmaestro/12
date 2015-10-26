@@ -5,7 +5,7 @@ Team. **JARVIS**
 * **멘티**
 	* 박인범 (팀장, [nulledge@naver.com](mailTo:nulledge@naver.com), [Facebook](https://www.facebook.com/inbum.park.58))
 	* 소현섭 ([iodesme@gmail.com](mailTo:iodesme@gmail.com), [Facebook](https://www.facebook.com/profile.php?id=100009172387549))
-	* 나석주 ([seokmaTD@gmail.com](matilTo:seokmaTD@gmail.com), [Facebook](https://www.facebook.com/seokma))
+	* 나석주 ([seokmaTD@gmail.com](mailTo:seokmaTD@gmail.com), [Facebook](https://www.facebook.com/seokma))
 
 
 ## 소개
