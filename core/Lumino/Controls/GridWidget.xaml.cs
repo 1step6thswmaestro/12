@@ -58,9 +58,18 @@ namespace Lumino
                         OriginalWidth = ActualWidth;
                         OriginalHeight = ActualHeight;
 
-                        if (!AssemblyEntry.Equals("local"))
+                        if (!AssemblyFile.Equals("local"))
                         {
                             CallMethod("IsExpand", true);
+                        }
+                        else
+                        {
+                            switch (AssemblyEntry)
+                            {
+                                case "WebView":
+                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand('True');");
+                                    break;
+                            }
                         }
 
                         ParentDock.GripDrawer.Visibility = Visibility.Collapsed;
@@ -69,9 +78,18 @@ namespace Lumino
                     }
                     else
                     {
-                        if (!AssemblyEntry.Equals("local"))
+                        if (!AssemblyFile.Equals("local"))
                         {
                             CallMethod("IsExpand", false);
+                        }
+                        else
+                        {
+                            switch (AssemblyEntry)
+                            {
+                                case "WebView":
+                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand('False');");
+                                    break;
+                            }
                         }
 
                         ParentDock.GripDrawer.Visibility = Visibility.Visible;
