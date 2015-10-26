@@ -37,12 +37,12 @@ var TempGraph = {
                 }
             })();
              var _windowWidth = width;
-            var _leftMargin = (function() {
+             var _leftMargin = (function() {
                 if (!_isToday) { return 0; }
                 else {
                     return 12.5 * (Math.floor(_start.getHours() / 3));
                 }
-            })();
+             })();
 
             var _datas = [];
             for (var idx= 0, len=data.length; idx<len; idx++) {
