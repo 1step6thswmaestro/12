@@ -63,12 +63,6 @@ var TodayWeather = {
         this.HighTemp.text(data['maxTempC']);
         this.LowTemp.text(data['minTempC']);
         this.Description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
-        /*
-        AttrDOMs.Icon.empty().append(WeatherIcons.getIconDOM(WeatherConditionConstants[weatherId][isDayOrNight]));
-        AttrDOMs.HighTemp.text(parseInt(weatherData.temp['max'] - 273.15));
-        AttrDOMs.LowTemp.text(parseInt(weatherData.temp['min'] - 273.15));
-        AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
-        */
     },
 
     subscribeForecastData: AppFlowController.addSubscribe(

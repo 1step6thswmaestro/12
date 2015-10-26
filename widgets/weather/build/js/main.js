@@ -4637,12 +4637,6 @@ var TodayWeather = {
         this.HighTemp.text(data['maxTempC']);
         this.LowTemp.text(data['minTempC']);
         this.Description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
-        /*
-        AttrDOMs.Icon.empty().append(WeatherIcons.getIconDOM(WeatherConditionConstants[weatherId][isDayOrNight]));
-        AttrDOMs.HighTemp.text(parseInt(weatherData.temp['max'] - 273.15));
-        AttrDOMs.LowTemp.text(parseInt(weatherData.temp['min'] - 273.15));
-        AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
-        */
     },
 
     subscribeForecastData: AppFlowController.addSubscribe(
@@ -4896,8 +4890,6 @@ var DayWeatherHeader = {
         this._displayIcon(data);
         this._displayTemp(data);
         this._displayDescription(data);
-
-        //this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     },
 
     _displayIcon: function(data) {
@@ -5175,7 +5167,6 @@ var TempGraph = {
                     return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + width * 13;
                 }
             })();
-            console.log(_isToday);
             var _leftMargin = (function() {
                 if (!_isToday) { return 0; }
                 else {
@@ -5203,7 +5194,6 @@ var TempGraph = {
         })(this);
 
         leftMargin = dataArrays.leftMargin;
-        console.log("leftMargin", leftMargin);
         var translateX = "translateX(" + (leftMargin) + "%)"; //TODO: Not Working
         TempGraphDOM.css('transform', translateX);
 
@@ -5212,18 +5202,6 @@ var TempGraph = {
         google.setOnLoadCallback(drawChart());
 
         function drawChart() {
-            /*
-             var data = google.visualization.arrayToDataTable([
-             ['Year', 'Sales', 'Expenses'],
-             ['2013', 1000, 400],
-             ['2014', 1170, 460],
-             ['2015', 660, 1120],
-             ['2016', 1030, 540]
-             ]);
-             */
-
-            console.log(dataArrays);
-
             var data = new google.visualization.arrayToDataTable(
                 [['Time', 'hhhh', 'hhoho']].concat(dataArrays.datas)
             );

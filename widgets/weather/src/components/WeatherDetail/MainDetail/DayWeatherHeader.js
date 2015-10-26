@@ -33,8 +33,6 @@ var DayWeatherHeader = {
         this._displayIcon(data);
         this._displayTemp(data);
         this._displayDescription(data);
-
-        //this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     },
 
     _displayIcon: function(data) {
