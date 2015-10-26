@@ -1,2 +1,6 @@
-# 12
+# Mirror TV
 Kim Jonggwang
+
+
+## 소개
+* 

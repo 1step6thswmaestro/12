@@ -102,17 +102,18 @@
                     </div>
                     <div class="weather-detail-selectedDate-head-right">
                         <div class="weather-detail-selectedDate-head-right-temp">
-                            <span weather-attr="detail-highTemp" class="weather-detail-selectedDate-head-right-temp-highTemp">
-                                28
-                            </span>
+                                <span id="detail-highTemp" weather-attr="detail-highTemp" class="weather-detail-selectedDate-head-right-temp-highTemp">
+                                    28
+                                </span>
                             <span class="weather-detail-selectedDate-head-right-temp-division">&#47;</span>
-                            <span weather-attr="detail-lowTemp" class="weather-detail-selectedDate-head-right-temp-lowTemp">
-                                12
-                            </span>
+                                <span id="detail-lowTemp" weather-attr="detail-lowTemp" class="weather-detail-selectedDate-head-right-temp-lowTemp">
+                                    12
+                                </span>
                         </div>
-                        <span weather-attr="detail-description" class="weather-detail-selectedDate-head-right-description">
-                            맑으나 때때로 구름
-                        </span>
+                            <span class="weather-detail-selectedDate-head-right-description cd-headline letters rotate-2" style="position: relative;">
+                                <span weather-attr="detail-description">
+                                </span>
+                            </span>
                     </div>
                 </div>
 
@@ -124,34 +125,34 @@
                                 <div class="col">
                                     <i class="climacon celsius"></i>
                                     <span text-attr="feel-like" class="item">체감온도</span>
-                                    <span weather-attr="detail-feel-like" class="value unit-celsius">22</span>
+                                    <span id="feelLike" weather-attr="feel-like" class="value unit-celsius">22</span>
                                 </div>
                                 <div class="col">
                                     <i class="climacon drizzle"></i>
                                     <span text-attr="humanity" class="item">습도</span>
-                                    <span weather-attr="humanity" class="value unit-percent">32</span>
+                                    <span id="humanity" weather-attr="humanity" class="value unit-percent">32</span>
                                 </div>
                                 <div class="col">
                                     <i class="climacon thermometer medium-low"></i>
                                     <span text-attr="dew-point" class="item">이슬점</span>
-                                    <span weather-attr="dew-point" class="value unit-celsius">8</span>
+                                    <span id="dewPoint" weather-attr="dew-point" class="value unit-celsius">8</span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                     <i class="climacon umbrella"></i>
                                     <span text-attr="precipitation" class="item">강수확률</span>
-                                    <span weather-attr="precipitation" class="value unit-percent">12</span>
+                                    <span id="precipitation" weather-attr="precipitation" class="value unit-percent">12</span>
                                 </div>
                                 <div class="col">
-                                    <i class="climacon drizzle"></i>
+                                    <i class="climacon rain"></i>
                                     <span text-attr="precipMM" class="item">강수량</span>
-                                    <span weather-attr="precipMM" class="value unit-mm">--</span>
+                                    <span id="precipMM" weather-attr="precipMM" class="value unit-mm">--</span>
                                 </div>
                                 <div class="col">
                                     <i class="climacon snow"></i>
                                     <span text-attr="snowCM" class="item">적설량</span>
-                                    <span weather-attr="snowCM" class="value unit-cm">--</span>
+                                    <span id="snowCM" weather-attr="snowCM" class="value unit-cm">--</span>
                                 </div>
                             </div>
                         </div>
@@ -167,24 +168,24 @@
                                 <div class="sun-symbol-path"><span class="symbol">☀</span></div>
                             </div>
 
-                            <div class="time-line" >
+                            <div id="time-line" class="time-line" >
                                 <div class="line">
                                     <span class="night"></span>
-                                    <span class="twilight">
-                                        <div class="border-left"></div>
-                                        <div weather-attr="twilight-start" class="left-time">06:03</div>
-                                    </span>
-                                    <span weather-attr="day-length" class="day">
-                                        <div class="border-left"></div>
-                                        <div weather-attr="sun-rise" class="left-time">06:34</div>
+                                        <span weather-attr="morning-twilight-length" class="twilight">
+                                            <div class="border-left"></div>
+                                            <div id="twilight-start" weather-attr="twilight-start" class="left-time">06:00</div>
+                                        </span>
+                                        <span weather-attr="day-length" class="day">
+                                            <div class="border-left"></div>
+                                            <div id="sun-rise" weather-attr="sun-rise" class="left-time">06:30</div>
 
-                                        <div class="border-right"></div>
-                                        <div weather-attr="sun-set" class="right-time">18:06</div>
-                                    </span>
-                                    <span class="twilight">
-                                        <div class="border-right"></div>
-                                        <div weather-attr="twilight-end" class="right-time">18:38</div>
-                                    </span>
+                                            <div class="border-right"></div>
+                                            <div id="sun-set" weather-attr="sun-set" class="right-time">18:00</div>
+                                        </span>
+                                        <span weather-attr="night-twilight-length" class="twilight">
+                                            <div class="border-right"></div>
+                                            <div id="twilight-end" weather-attr="twilight-end" class="right-time">18:30</div>
+                                        </span>
                                     <span class="night"></span>
                                 </div>
                                 <div class="helper">
@@ -204,18 +205,17 @@
                             <div class="wind-miller">
                                 <div class="mill">
                                     <div class="big">
-                                        <img weather-attr="fan-big" class="wind-mill-fan" src="./assets/WindMill_fan.svg" />
+                                        <img weather-attr="wind-fan" class="wind-mill-fan" src="./assets/WindMill_fan.svg" />
                                         <img class="wind-mill-body" src="./assets/WindMill_body.svg" />
                                     </div>
                                     <div class="small">
-                                        <img weather-attr="fan-small" class="wind-mill-small-fan" src="./assets/WindMill_fan.svg" />
+                                        <img weather-attr="wind-fan" class="wind-mill-small-fan" src="./assets/WindMill_fan.svg" />
                                         <img class="wind-mill-small-body" src="./assets/WindMill_small-body.svg" />
                                     </div>
                                 </div>
                                 <div class="descrip">
                                     <div class="wind">
                                         <svg version="1.1"
-                                             id="wind"
                                              class="climacon climacon_wind"
                                              viewBox="15 15 70 70">
                                             <g class="climacon_iconWrap climacon_iconWrap-wind">
@@ -231,17 +231,16 @@
                                         </svg>
                                         <div class="text">
                                             <span text-attr="anemometer">풍속계</span>
-                                            <span weather-attr="anemometer">9.7 km/h SW</span>
+                                            <span id="anemometer" weather-attr="anemometer">0</span>
                                         </div>
                                     </div>
                                     <div class="pressure">
                                         <div class="dash"></div>
                                         <span text-attr="barometer">기압계</span>
-                                        <span weather-attr="barometer">1021.0 mBar</span>
+                                        <span id="barometer" weather-attr="barometer">0</span>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -255,18 +254,18 @@
             <div id="detail-date-selector" class="weather-detail-dateSelector">
                 <div class="arrow arrow-left"><button id="arrow-left"><i class="material-icons">&#xE314;</i></button></div>
                 <div id="day-select-slider" class="day-select-slider">
-                    <div class="day-select-slider-item" idx="0">
-                    <span item-attr="day-of-week" class="title">오늘</span>
-                    <span item-attr="date" class="date">10.13</span>
-                    <div item-attr="icon" class="icon">
-                        <i class="climacon cloud sun"></i>
+                    <div class="day-select-slider-item active" idx="0">
+                        <span item-attr="day-of-week" class="title">오늘</span>
+                        <span item-attr="date" class="date">10.13</span>
+                        <div item-attr="icon" class="icon">
+                            <i class="climacon cloud sun"></i>
+                        </div>
+                        <div class="temp">
+                            <span item-attr="high-temp" class="highTemp">22</span>
+                            <span class="division">&#47;</span>
+                            <span item-attr="low-temp" class="lowTemp">13</span>
+                        </div>
                     </div>
-                    <div class="temp">
-                        <span item-attr="high-temp" class="highTemp">22</span>
-                        <span class="division">&#47;</span>
-                        <span item-attr="low-temp" class="lowTemp">13</span>
-                    </div>
-                </div>
                     <div class="day-select-slider-item" idx="1">
                         <span item-attr="day-of-week" class="title">오늘</span>
                         <span item-attr="date" class="date">10.13</span>
@@ -2334,12 +2333,13 @@
 
 
     <script type="text/javascript" src="https://www.google.com/jsapi?autoload=
-{'modules':[{'name':'visualization','version':'1.1','packages':
-['corechart']}]}"></script>
+    {'modules':[{'name':'visualization','version':'1.1','packages':
+    ['corechart']}]}"></script>
     <script type="text/javascript" src="./libs/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="./libs/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="./libs/slick.min.js"></script>
     <script type="text/javascript" src="./libs/jquery.actual.min.js"></script>
+    <script type="text/javascript" src="./libs/countUp.min.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,307 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      }
+      throw TypeError('Uncaught, unspecified "error" event.');
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        len = arguments.length;
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    len = arguments.length;
+    args = new Array(len - 1);
+    for (i = 1; i < len; i++)
+      args[i - 1] = arguments[i];
+
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    var m;
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  var ret;
+  if (!emitter._events || !emitter._events[type])
+    ret = 0;
+  else if (isFunction(emitter._events[type]))
+    ret = 1;
+  else
+    ret = emitter._events[type].length;
+  return ret;
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+},{}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -91,7 +394,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1062,7 +1365,7 @@ process.umask = function() { return 0; };
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":1}],3:[function(require,module,exports){
+},{"_process":2}],4:[function(require,module,exports){
 /*!
  * FlowController.js
  * Copyright(c) 2015 SeokJu Na <seokmaTD@gmail.com>
@@ -1073,7 +1376,7 @@ process.umask = function() { return 0; };
 
 module.exports.FlowController = require('./lib/Flowing');
 module.exports.Promise = require('es6-promise').Promise;
-},{"./lib/Flowing":4,"es6-promise":2}],4:[function(require,module,exports){
+},{"./lib/Flowing":5,"es6-promise":3}],5:[function(require,module,exports){
 var Promise = require('es6-promise').Promise;
 var _ = require('underscore');
 
@@ -1179,7 +1482,7 @@ var Flowing = (function() {
 })();
 
 module.exports = Flowing;
-},{"es6-promise":2,"underscore":10}],5:[function(require,module,exports){
+},{"es6-promise":3,"underscore":11}],6:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1236,7 +1539,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":1}],6:[function(require,module,exports){
+},{"_process":2}],7:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1291,7 +1594,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":5,"_process":1}],7:[function(require,module,exports){
+},{"./invariant":6,"_process":2}],8:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2450,7 +2753,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":8,"reduce":9}],8:[function(require,module,exports){
+},{"emitter":9,"reduce":10}],9:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -2616,7 +2919,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -2641,7 +2944,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -4191,7 +4494,7 @@ module.exports = function(arr, fn, initial){
   }
 }.call(this));
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
@@ -4268,23 +4571,30 @@ var Loader = {
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24}],12:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25}],13:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 
 var WeatherStore = require('../../stores/WeatherStore');
+var WeatherCodeUtil = require('../../utils/WeatherCodeUtil');
 var WeatherIcons = require('../../utils/WeatherIcons');
 
 var Constants = require('../../constants/Constants');
+var CodedWeather = require('../../constants/CodedWeather');
 
-var weatherData = null;
+
 var DOM;
-var AttrDOMs = {
-    Icon: null,
-    HighTemp: null,
-    LowTemp: null,
-    Description: null
-};
+var countCallback = 0;
+
+function initializeDatas() {
+    if (countCallback == 0 || countCallback == 1) {
+        countCallback++;
+        return;
+    }
+
+    TodayWeather.setWeatherData();
+    countCallback = 0;
+}
 
 function activeComponent() {
     DOM.removeAttr('style');
@@ -4301,33 +4611,54 @@ function disableComponent() {
     });
 }
 
+
 var TodayWeather = {
     initialize: function($) {
         DOM = $('section#today-weather-component');
 
-        AttrDOMs.Icon = DOM.find('[weather-attr = today-weather-icon]');
-        AttrDOMs.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
-        AttrDOMs.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
-        AttrDOMs.Description = DOM.find('[weather-attr = today-weather-description]');
+        this.Icon = DOM.find('[weather-attr = today-weather-icon]');
+        this.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
+        this.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
+        this.Description = DOM.find('[weather-attr = today-weather-description]');
 
         DOM.on('click tap', function(event) {
             if (event.which == 1) { //Left Mouse Clicked
                 AppDispatcher.activeApp();
             }
         });
+
+
     },
 
     setWeatherData: function() {
-        weatherData = WeatherStore.getForecastData();
-        console.log(weatherData);
+        var data = (WeatherStore.getForecastData()).periods[0];
 
-        /*
-        AttrDOMs.Icon.empty().append(WeatherIcons.getIconDOM(WeatherConditionConstants[weatherId][isDayOrNight]));
-        AttrDOMs.HighTemp.text(parseInt(weatherData.temp['max'] - 273.15));
-        AttrDOMs.LowTemp.text(parseInt(weatherData.temp['min'] - 273.15));
-        AttrDOMs.Description.text(WeatherConditionConstants[weatherId]['description']);
-        */
+        this.Icon.empty().append(WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone());
+        this.HighTemp.text(data['maxTempC']);
+        this.LowTemp.text(data['minTempC']);
+        this.Description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     },
+
+    subscribeForecastData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeTwoWeeksData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_14_FORECAST_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
+
+    subscribeSunMoonData: AppFlowController.addSubscribe(
+        Constants.FlowID.GET_SUN_MOON_DATA,
+        function() {
+            initializeDatas();
+        }
+    ),
 
     subscribeActiveApp: AppFlowController.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
@@ -4339,14 +4670,18 @@ var TodayWeather = {
 
 
 module.exports = TodayWeather;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../dispatcher/AppDispatcher":25,"../../stores/WeatherStore":27,"../../utils/WeatherIcons":30}],13:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherCodeUtil":31,"../../utils/WeatherIcons":32}],14:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var WeatherStore = require('../../stores/WeatherStore');
 var Constants = require('../../constants/Constants');
 
+var EventEmitter = require('events').EventEmitter;
+var _ = require('underscore');
+
 var _DayItemView = require('./_DayItemView');
 
 var DateSelectorDOM;
+var SelectorItemDOMs;
 var ArrowLeftDOM;
 var ArrowRightDOM;
 var ItemProtoDOM;
@@ -4354,14 +4689,23 @@ var ItemProtoDOM;
 var ItemDatas = [];
 var currentIndex;
 
+var $;
 
-var DateSelector = {
-    initialize: function($) {
+
+var DateSelector = _.extend({}, EventEmitter.prototype, {
+    initialize: function(_$) {
+        $ = _$;
+
         DateSelectorDOM = $('#day-select-slider');
+        SelectorItemDOMs = $('.day-select-slider-item');
 
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
 
+        this.initSlider();
+    },
+
+    initSlider: function() {
         DateSelectorDOM.slick({
             infinite: false,
             slidesToShow: 5,
@@ -4369,17 +4713,18 @@ var DateSelector = {
             arrows: false,
             dots: false
         });
-        DateSelectorDOM.slick('slickGoTo', 0);
+        //DateSelectorDOM.slick('setPosition');
+
+        currentIndex = 0;
 
         ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
         ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
 
-        /*
-        ItemProtoDOM = $('#day-item-PROTO').clone();
-        $('#day-item-PROTO').remove();
-        ItemProtoDOM.removeAttr('id');
-        ItemProtoDOM.removeAttr('style');
-        */
+
+        var that = this;
+        SelectorItemDOMs.on('click tap', function() {
+            that.selectItem(this, that);
+        });
     },
 
     initItems: function() {
@@ -4389,7 +4734,17 @@ var DateSelector = {
             var ItemView = new _DayItemView(DateSelectorDOM.children().find('[idx=' + idx +']'));
             ItemView.initialize(ItemDatas[idx]);
         }
-        DateSelectorDOM.slick('slickGoTo', 0);
+
+        this.selectItem(SelectorItemDOMs.eq(0), this);
+    },
+
+    selectItem: function(selectedItemDOM, _this) {
+        currentIndex = $(selectedItemDOM).attr('idx');
+
+        SelectorItemDOMs.removeClass('active');
+        $(selectedItemDOM).addClass('active');
+
+        _this.emitSlideChange();
     },
 
     subscribeActiveApp: AppFlowController.addSubscribe(
@@ -4397,108 +4752,520 @@ var DateSelector = {
         function() {
             DateSelectorDOM.slick('slickGoTo', 0);
         }
-    )
-};
+    ),
+
+    getCurrentIndex: function() {
+        return currentIndex;
+    },
+
+    emitSlideChange: function() { this.emit('slideChange'); },
+    addSlideChangeListener: function(callback) { this.on('slideChange', callback); },
+    removeSlideChangeListener: function(callback) { this.removeListener('slideChange', callback); }
+});
 
 module.exports = DateSelector;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"../../stores/WeatherStore":27,"./_DayItemView":20}],14:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../stores/WeatherStore":28,"./_DayItemView":21,"events":1,"underscore":11}],15:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+var DOM;
+var texts = {
+    'feelLike': 0,
+    'humanity': 0,
+    'dewPoint': 0,
+    'precipitation': 0,
+    'precipMM': 0,
+    'snowCM': 0
+};
+var options = {
+    useEasing : true,
+    useGrouping : true,
+    separator : ',',
+    decimal : '.',
+    prefix : '',
+    suffix : ''
+};
 
 var DayWeatherDetail = {
     initialize: function($) {
+        DOM = $('#day-weather-detail');
+
+        this.descriptionDOMs = {
+            'feel-like': DOM.find('[text-attr=feel-like]'),
+            'humanity': DOM.find('[text-attr=humanity]'),
+            'dew-point': DOM.find('[text-attr=dew-point]'),
+            'precipitation': DOM.find('[text-attr=precipitation]'),
+            'precipMM': DOM.find('[text-attr=precipMM]'),
+            'snowCM': DOM.find('[text-attr=snowCM]')
+        };
+
+        this.feelLike = DOM.find('[weather-attr=feel-like]');
+        this.humanity = DOM.find('[weather-attr=humanity]');
+        this.dewPoint = DOM.find('[weather-attr=dew-point]');
+        this.precipitation = DOM.find('[weather-attr=precipitation]');
+        this.precipMM = DOM.find('[weather-attr=precipMM]');
+        this.snowCM = DOM.find('[weather-attr=snowCM]');
+
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.DayWeatherDetail[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
+
+        for (var prop in texts) {
+            var decimal = (prop == 'precipMM' || prop == 'snowCM') ? 2 : 0;
+            var newTextData = (function() {
+                switch(prop) {
+                    case 'feelLike': return data['feelslikeC'];
+                    case 'humanity': return data['humidity'];
+                    case 'dewPoint': return data['dewpointC'];
+                    case 'precipitation': return data['pop'];
+                    case 'precipMM': return data['precipMM'];
+                    case 'snowCM': return data['snowCM'];
+                }
+            })();
+
+            if (prop == 'precipMM' || prop == 'snowCM') {
+                if (newTextData == 0) {
+                    this[prop].text("--");
+                    continue;
+                }
+            }
+
+            var countText = new CountUp(prop, texts[prop]*=1, newTextData*=1, decimal, 2.5, options);
+            countText.start();
+
+            texts[prop] = newTextData;
+        }
     }
 };
 
 
-//TODO:
-
 module.exports = DayWeatherDetail;
-},{}],15:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],16:[function(require,module,exports){
+var WeatherIcons = require('../../../utils/WeatherIcons');
+var CodedWeather = require('../../../constants/CodedWeather');
+var WeatherCodeUtil = require('../../../utils/WeatherCodeUtil');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+var _ = require('underscore');
+
+
+var DOM;
+var texts = {
+    'detail-highTemp': 0,
+    'detail-lowTemp': 0
+};
+
 var DayWeatherHeader = {
     initialize: function($) {
+        DOM = $('#day-weather-header');
 
+        this.icon = DOM.find('[weather-attr=detail-icon]');
+        this.highTemp = DOM.find('[weather-attr=detail-highTemp]');
+        this.lowTemp = DOM.find('[weather-attr=detail-lowTemp]');
+        this.description = DOM.find('[weather-attr=detail-description]');
+
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
+
+        this._displayIcon(data);
+        this._displayTemp(data);
+        this._displayDescription(data);
+    },
+
+    _displayIcon: function(data) {
+        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone();
+
+        this.icon.animate({
+            opacity: 0
+        }, 250, 'easeInCubic', function() {
+            this.icon.empty().append(iconDOM);
+            this.icon.animate({opacity: 1}, 300, 'easeInCubic');
+        }.bind(this));
+    },
+
+    _displayTemp: function(data) {
+        var options = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : ''
+        };
+        var countHighTemp = new CountUp('detail-highTemp', texts['detail-highTemp']*=1, data['maxTempC']*=1, 0, 3.5, options);
+        var countLowTemp = new CountUp('detail-lowTemp', texts['detail-lowTemp']*=1, data['minTempC']*=1, 0, 3.5, options);
+
+        countHighTemp.start();
+        countLowTemp.start();
+
+        texts['detail-highTemp'] = data['maxTempC'];
+        texts['detail-lowTemp'] = data['minTempC'];
+    },
+
+    _displayDescription: function(data) {
+        this.description.text(WeatherCodeUtil.getForecastText(data['weatherPrimaryCoded']));
     }
 };
 
 module.exports = DayWeatherHeader;
-},{}],16:[function(require,module,exports){
+},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherCodeUtil":31,"../../../utils/WeatherIcons":32,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+
+var DOM;
+var TimeLine;
+var texts = {
+    'sun-rise': 0,
+    'sun-set': 0,
+    'twilight-start': 0,
+    'twilight-end': 0
+};
+var STANDARD_DAY_LENGTH = 12 * 60 * 60; //초 단위
+
+
 var SunAndMoon = {
     initialize: function($) {
+        DOM = $('#day-weather-sun-and-moon');
+        TimeLine = DOM.find('#time-line');
 
+        this.descriptionDOMs = {
+            'helper-day': DOM.find('[text-attr=helper-day]'),
+            'helper-twilight': DOM.find('[text-attr=helper-twilight]'),
+            'helper-night': DOM.find('[text-attr=helper-night]')
+        };
+
+        this['sun-rise'] = TimeLine.find('[weather-attr=sun-rise]');
+        this['sun-set'] = TimeLine.find('[weather-attr=sun-set]');
+
+        this['twilight-start'] = TimeLine.find('[weather-attr=twilight-start]');
+        this['twilight-end'] = TimeLine.find('[weather-attr=twilight-end]');
+
+        this.dayLength = TimeLine.find('[weather-attr=day-length]');
+
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.SunAdnMoon[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+
+        if (index == 0) { this._contextForToday(index); }
+        else { this._contextForOtherDays(index); }
+    },
+
+    _contextForToday: function() {
+
+    },
+
+    _contextForOtherDays: function(index) {
+        var data = (WeatherStore.getSunMoonData())[index].sun;
+
+        var sunRiseTime;
+        var sunSetTime;
+
+        for (var prop in texts) {
+            var newTextDate = (function() {
+                switch(prop) {
+                    case 'sun-rise': return new Date(data['riseISO']);
+                    case 'sun-set': return new Date(data['setISO']);
+                    case 'twilight-start': return new Date(data.twilight['civilBeginISO']);
+                    case 'twilight-end': return new Date(data.twilight['civilEndISO']);
+                }
+            })();
+            //var options = {
+            //    useEasing : true,
+            //    useGrouping : true,
+            //    separator : ',',
+            //    decimal : '.',
+            //    prefix : this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":",
+            //    suffix : ''
+            //};
+
+            if (prop == 'sun-rise') { sunRiseTime = newTextDate; }
+            if (prop == 'sun-set') { sunSetTime = newTextDate; }
+
+            //var countText = new CountUp(prop, texts[prop]*=1, newTextDate.getMinutes(), 0, 2.5, options);
+            //countText.start();
+
+            var text = this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":" + this.__convertLeadingZeros(newTextDate.getMinutes(), 2);
+            this[prop].text(text);
+        }
+
+
+        var length = (sunSetTime.getHours() - sunRiseTime.getHours()) * 60 * 60 + (sunSetTime.getMinutes() - sunRiseTime.getMinutes()) * 60;
+        var flexGrowth = 6 * length / STANDARD_DAY_LENGTH;
+
+        this.dayLength.css('flex-grow', flexGrowth);
+    },
+
+
+    __convertLeadingZeros: function(number, digits) {
+        var zero = '';
+        number = number.toString();
+
+        if (number.length < digits) {
+            for (var i = 0; i < digits - number.length; i++)
+                zero += '0';
+        }
+        return zero + number;
     }
 };
 
 module.exports = SunAndMoon;
-},{}],17:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],18:[function(require,module,exports){
+var LanguageSelector = require('../../../utils/LanguageSelector');
+var Loacalize = require('../../../constants/Localize');
+
+var DateSelector = require('../DateSelector');
+var WeatherStore = require('../../../stores/WeatherStore');
+
+
+var DOM;
+var texts = {
+    'anemometer': 0,
+    'barometer': 0
+};
+
 var WindAndPressure = {
     initialize: function($) {
+        DOM = $('#day-weather-wind-and-pressure');
 
+        this.descriptionDOMs = {
+            'anemometer': DOM.find('[text-attr=anemometer]'),
+            'barometer': DOM.find('[text-attr=barometer]')
+        };
+
+        this.windFan = DOM.find('[weather-attr=wind-fan]');
+
+        this.initDescriptionText(LanguageSelector.getCurrentLanguage());
+        DateSelector.addSlideChangeListener(this.displayContext.bind(this));
+    },
+
+    initDescriptionText: function(lang) {
+        for (var prop in this.descriptionDOMs) {
+            this.descriptionDOMs[prop].text(Loacalize.WindAndPressure[prop][lang]);
+        }
+    },
+
+    displayContext: function() {
+        var index = DateSelector.getCurrentIndex();
+        var data = (WeatherStore.getTwoWeeksData()).periods[index];
+
+        this._displayAnemometer(data);
+        this._displayBarometer(data);
+    },
+
+    _displayAnemometer: function(data) {
+        var optionsForAnemometer = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : " km/h " + data['windDir']
+        };
+
+        var countForAnemometer = new CountUp(
+            'anemometer',
+            texts['anemometer']*=1,
+            data['windSpeedKPH']*=1,
+            0, 2.5,
+            optionsForAnemometer);
+
+        countForAnemometer.start();
+        texts['anemometer'] = data['windSpeedKPH'];
+    },
+
+    _displayBarometer: function(data) {
+        var optionsForBarometer = {
+            useEasing : true,
+            useGrouping : true,
+            separator : ',',
+            decimal : '.',
+            prefix : '',
+            suffix : " mBar"
+        };
+
+        var countForBarometer = new CountUp(
+            'barometer',
+            texts['barometer']*=1,
+            data['pressureMB']*=1,
+            0, 2.5,
+            optionsForBarometer);
+
+        countForBarometer.start();
+        texts['barometer'] = data['pressureMB'];
     }
 };
 
 module.exports = WindAndPressure;
-},{}],18:[function(require,module,exports){
+},{"../../../constants/Localize":24,"../../../stores/WeatherStore":28,"../../../utils/LanguageSelector":29,"../DateSelector":14}],19:[function(require,module,exports){
+var DateSelector = require('./DateSelector');
+
+var WeatherStore = require('../../stores/WeatherStore');
+
+
 var TempGraphDOM;
 var WrapperDOM;
+
+var dataArrays
+
+var leftMargin = 0;
+var movedDistance = 0;
+
+var currentSlideIndex = 0;
 
 var TempGraph = {
     initialize: function($) {
         TempGraphDOM = $("#detail-tempGraph");
         WrapperDOM = $('#tempGraph-wrapper');
 
+        DateSelector.addSlideChangeListener(this.moveGraph.bind(this));
+    },
+
+    initGraph: function() {
+         dataArrays = (function(_this) {
+            var that = _this;
+            var data = (WeatherStore.getForecastData()).periods;
+            var width = $(window).width();
+
+            var _start = new Date(data[0]['dateTimeISO']);
+            var _end = new Date(data[data.length - 1]['dateTimeISO']);
+            var _isToday = ((_start.getDate() == (new Date()).getDate()) && (_start.getMonth() == (new Date()).getMonth() )) ? true : false;
+            var _width = (function() {
+                if (!_isToday) { return 1300; }
+                else {
+                    return 12.5 * (8 - Math.floor(_start.getHours() / 3)) + 1300;
+                }
+            })();
+             console.log("width", _width);
+             var _windowWidth = width;
+            var _leftMargin = (function() {
+                if (!_isToday) { return 0; }
+                else {
+                    return 12.5 * (Math.floor(_start.getHours() / 3));
+                }
+            })();
+
+            var _datas = [];
+            for (var idx= 0, len=data.length; idx<len; idx++) {
+                var __arr = [];
+                __arr.push(that._convertTime((new Date(data[idx]['dateTimeISO'])).getHours()));
+                __arr.push(data[idx]['maxTempC']);
+                __arr.push(data[idx]['minTempC']);
+
+                _datas.push(__arr);
+            }
+
+            return {
+                startTime: _start,
+                endTime: _end,
+                width: _width,
+                windowWidth: _windowWidth,
+                leftMargin: _leftMargin,
+                datas: _datas
+            };
+        })(this);
+
+        console.log("dfsfsdf", dataArrays.windowWidth * (dataArrays.width / 100));
+
+        leftMargin = dataArrays.leftMargin;
+        //console.log("leftMargin", leftMargin);
+        var translateX = "translateX(" + leftMargin + "%)"; //TODO: Not Working
+        TempGraphDOM.css('transform', translateX);
+
+        currentSlideIndex = DateSelector.getCurrentIndex();
 
         google.setOnLoadCallback(drawChart());
 
         function drawChart() {
-            /*
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Sales', 'Expenses'],
-                ['2013', 1000, 400],
-                ['2014', 1170, 460],
-                ['2015', 660, 1120],
-                ['2016', 1030, 540]
-            ]);
-            */
-
-            var data = new google.visualization.arrayToDataTable([
-                ['Time', 'hhhh', 'hhoho'],
-                ['00', 23, 12],
-                ['03', 24, 15],
-                ['06', 25, 16],
-                ['09', 26, 13],
-                ['12', 25, 15],
-                ['15', 23, 11],
-                ['18', 22, 13],
-                ['21', 24, 11],
-                ['24', 20, 12]
-            ]);
+            var data = new google.visualization.arrayToDataTable(
+                [['Time', 'highTemp', 'lowTemp']].concat(dataArrays.datas)
+            );
 
 
 
             var height = WrapperDOM.actual('height');
-            var width = $(window).width();
 
             var options = {
-                width: width,
+                width: (dataArrays.width / 100) * dataArrays.windowWidth,
                 height: height,
-                areaOpacity: 0.15,
+                areaOpacity: 0.25,
                 colors: ['#faca4e', '#63b4cf'],
                 annotationText: true,
-                chartArea: {width: '100%', height: '80%'},
+                fontSize: "1vw",
+                chartArea: {width: "100%", height: '60%'},
                 hAxis: {
-                    textStyle: {color: '#616161'}
+                    textStyle: {color: '#616161', fontSize: "2vw", minTextSpacing: 15}
                 },
-                vAxis: {baselineColor: 'black', gridlines: {color: 'black'}},
+                pointsVisible: false,
+                vAxis: {baselineColor: 'black', gridlines: {color: 'black'}, textStyle: { color: 'black'}},
                 backgroundColor: 'black'
             };
 
             var chart = new google.visualization.AreaChart(document.getElementById('detail-tempGraph'));
             chart.draw(data, options);
         }
+    },
+
+    _convertTime: function(hour) {
+        switch(hour) {
+            case 0: return "00";
+            case 3: return "03";
+            case 6: return "06";
+            case 9: return "09";
+            case 12: return "12";
+            case 15: return "15";
+            case 18: return "18";
+            case 21: return "21";
+        }
+    },
+
+    moveGraph: function() {
+        var newIndex = DateSelector.getCurrentIndex();
+
+        movedDistance += ((newIndex - currentSlideIndex) * 100);
+        console.log("moveDistance", movedDistance);
+        var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
+        TempGraphDOM.css('transform', translateX);
+
+        currentSlideIndex = newIndex;
     }
 };
 
 module.exports = TempGraph;
-},{}],19:[function(require,module,exports){
+},{"../../stores/WeatherStore":28,"./DateSelector":14}],20:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
@@ -4515,19 +5282,16 @@ var DOM;
 
 var countCallback = 0;
 
-function setDataOfIndex(index) {
-
-}
 
 function initializeDatas() {
     if (countCallback == 0 || countCallback == 1) {
         countCallback++;
         return;
     }
-    //TempGraph.initGraph();
+
+    TempGraph.initGraph();
     DateSelector.initItems();
 
-    //setDataOfIndex(0);
 
     countCallback = 0;
 }
@@ -4594,7 +5358,7 @@ var WeatherDetail = {
 };
 
 module.exports = WeatherDetail;
-},{"../../constants/Constants":22,"../../controller/AppFlowController":24,"./DateSelector":13,"./MainDetail/DayWeatherDetail":14,"./MainDetail/DayWeatherHeader":15,"./MainDetail/SunAndMoon":16,"./MainDetail/WindAndPressure":17,"./TempGraph":18}],20:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"./DateSelector":14,"./MainDetail/DayWeatherDetail":15,"./MainDetail/DayWeatherHeader":16,"./MainDetail/SunAndMoon":17,"./MainDetail/WindAndPressure":18,"./TempGraph":19}],21:[function(require,module,exports){
 var Localize = require('../../constants/Localize');
 var LanguageSelector = require('../../utils/LanguageSelector');
 var CodedWeather = require('../../constants/CodedWeather');
@@ -4665,7 +5429,7 @@ var _DayItemView = (function() {
 
 
 module.exports = _DayItemView;
-},{"../../constants/CodedWeather":21,"../../constants/Localize":23,"../../utils/LanguageSelector":28,"../../utils/WeatherIcons":30,"underscore":10}],21:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":32,"underscore":11}],22:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -4687,6 +5451,10 @@ var CodedWeather = {
         'OV': {
             EN: "Cloudy/Overcast",
             KR: "흐림"
+        },
+        'R': {
+            EN: "Rain",
+            KR: "비"
         }
     },
 
@@ -5019,7 +5787,7 @@ var CodedWeather = {
 };
 
 module.exports = CodedWeather;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 var APIroot = 'http://api.aerisapi.com';
@@ -5053,7 +5821,7 @@ module.exports = {
         BACKSPACE: 8
     }
 };
-},{"react/lib/keyMirror":6}],23:[function(require,module,exports){
+},{"react/lib/keyMirror":7}],24:[function(require,module,exports){
 module.exports = {
     DayWeatherDetail: {
         'feel-like': {
@@ -5119,7 +5887,7 @@ module.exports = {
         }
     }
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
@@ -5133,7 +5901,7 @@ AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
 AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
 
 module.exports = AppFlowController;
-},{"../constants/Constants":22,"flowing-js":3}],25:[function(require,module,exports){
+},{"../constants/Constants":23,"flowing-js":4}],26:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -5175,7 +5943,7 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":22,"../controller/AppFlowController":24}],26:[function(require,module,exports){
+},{"../constants/Constants":23,"../controller/AppFlowController":25}],27:[function(require,module,exports){
 "use strict";
 var Loader = require('./components/Loader/Loader');
 var TodayWeather = require('./components/TodayWeather/TodayWeather');
@@ -5194,7 +5962,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":11,"./components/TodayWeather/TodayWeather":12,"./components/WeatherDetail/WeatherDetail":19,"./utils/TimeCalculator":29,"./utils/WeatherIcons":30}],27:[function(require,module,exports){
+},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":30,"./utils/WeatherIcons":32}],28:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -5257,11 +6025,12 @@ var WeatherStore = {
         return new Promise(function(resolve, reject){
             request
                 .get(Constants.API.GET_SUN_MOON_DATA + "/" + Constants.CountryCode.Seoul)
-                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, limit: 14})
+                .query({client_id: Constants.API.CLIENT_ID, client_secret: Constants.API.CLIENT_SECRET, from: "today", to: "+2week", limit: 14})
                 .end(function(err,res) {
                     if (err) { console.log(err); }
                     else {
-                        SunMoonData = res.body.response[0];
+                        SunMoonData = res.body.response;
+                        console.log("SunMoonData", res.body.response);
                         resolve();
                     }
                 });
@@ -5289,15 +6058,15 @@ var WeatherStore = {
 };
 
 module.exports = WeatherStore;
-},{"../constants/Constants":22,"../controller/AppFlowController":24,"es6-promise":2,"superagent":7,"underscore":10}],28:[function(require,module,exports){
+},{"../constants/Constants":23,"../controller/AppFlowController":25,"es6-promise":3,"superagent":8,"underscore":11}],29:[function(require,module,exports){
 var LanguageSelector = {
     getCurrentLanguage: function() {
-        return 'KR';
+        return 'EN';
     }
 };
 
 module.exports = LanguageSelector;
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Loader = require('../components/Loader/Loader');
 
@@ -5306,12 +6075,12 @@ var DATA_AMOUNT_OF_2WEEKS = 104; //2주치 데이터 (8 x 14)
 
 var TimeCalculator = {
     initialize: function() {
-        this.dispatchAction(7 - Math.floor((new Date).getHours() / 3) + DATA_AMOUNT_OF_2WEEKS);
+        this.dispatchAction(8 - Math.floor((new Date).getHours() / 3) + DATA_AMOUNT_OF_2WEEKS);
         this.setTimer();
     },
 
     setTimer: function() {
-        var dataAmount = (7 - Math.floor((new Date).getHours() / 3)) + DATA_AMOUNT_OF_2WEEKS;
+        var dataAmount = (8 - Math.floor((new Date).getHours() / 3)) + DATA_AMOUNT_OF_2WEEKS;
         setTimeout(function() {
             this.dispatchAction(dataAmount);
             this.setTimer();
@@ -5327,7 +6096,56 @@ var TimeCalculator = {
 };
 
 module.exports = TimeCalculator;
-},{"../components/Loader/Loader":11,"../dispatcher/AppDispatcher":25}],30:[function(require,module,exports){
+},{"../components/Loader/Loader":12,"../dispatcher/AppDispatcher":26}],31:[function(require,module,exports){
+var CodedWeather = require('../constants/CodedWeather');
+var LanguageSelector = require('./LanguageSelector');
+
+var icons = {};
+var formats = ['CloudCodes', 'CoverageCodes', 'IntensityCodes', 'WeatherCodes'];
+
+var WeatherCodeUtil = {
+    getForecastText: function(_primaryCode) {
+        if (_primaryCode == null || _primaryCode == undefined) { return null; }
+
+        var forecastText = "";
+        var code;
+
+        if (_primaryCode.charAt(0) == ':' && _primaryCode.charAt(1) == ':') {
+            code = _primaryCode.slice(2,4);
+            forecastText += this._getTextFromCode(code, formats[0]);
+        }
+        else {
+            var codes = _primaryCode.split(":");
+            if (codes.length < 3 || codes == undefined || codes == null) { throw new Error("Error: Invalid Primary Code"); }
+
+            for(var idx=0; idx<3; idx++) {
+                code = codes[idx];
+                forecastText += (this._getTextFromCode(code, formats[idx+1]) + " ");
+            }
+        }
+
+        return forecastText;
+    },
+
+    _getTextFromCode: function(code, format) {
+        if (this.__checkProperty(CodedWeather[format], code)) {
+            if (this.__checkProperty(CodedWeather[format][code], LanguageSelector.getCurrentLanguage())) {
+                return CodedWeather[format][code][LanguageSelector.getCurrentLanguage()];
+            }
+        }
+        return "";
+    },
+
+    __checkProperty: function(obj, property) {
+        if (!obj.hasOwnProperty(property)) {
+            return false;
+        }
+        return true;
+    }
+};
+
+module.exports = WeatherCodeUtil;
+},{"../constants/CodedWeather":22,"./LanguageSelector":29}],32:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var $;
@@ -5360,4 +6178,4 @@ var WeatherIcons = {
 
 
 module.exports = WeatherIcons;
-},{"../constants/CodedWeather":21}]},{},[26]);
+},{"../constants/CodedWeather":22}]},{},[27]);
