@@ -72,9 +72,10 @@ namespace Lumino
                             }
                         }
 
+                        ParentDock.TextTitle.Text = Title;
                         ParentDock.GripDrawer.Visibility = Visibility.Collapsed;
                         ParentDock.StackDrawerContent.Visibility = Visibility.Collapsed;
-                        Resize(ExpandMargin, ExpandMargin, ParentDock.ActualWidth - ExpandMargin * 2, ParentDock.ActualHeight - ExpandMargin * 2);
+                        ExpandAnimation(true);
                     }
                     else
                     {
@@ -94,7 +95,7 @@ namespace Lumino
 
                         ParentDock.GripDrawer.Visibility = Visibility.Visible;
                         ParentDock.StackDrawerContent.Visibility = Visibility.Visible;
-                        Resize(OriginalX, OriginalY, OriginalWidth, OriginalHeight);
+                        ExpandAnimation(false);
                     }
                 }
             }
@@ -215,17 +216,35 @@ namespace Lumino
         #endregion
 
         #region 제어 함수
-        private void Resize(double X, double Y, double Width, double Height)
+        private void ExpandAnimation(bool Value)
         {
             if (!Resizing)
             {
                 Resizing = true;
+                double X; double Y; double Width; double Height;
 
-                Storyboard ResizeAnimation = new Storyboard();
+                if (Value)
+                {
+                    X = ExpandMargin;
+                    Y = ExpandMargin;
+                    Width = ParentDock.ActualWidth - ExpandMargin * 2;
+                    Height = ParentDock.ActualHeight - ExpandMargin * 2;
+                    ParentDock.GridTopMenu.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    X = OriginalX;
+                    Y = OriginalY;
+                    Width = OriginalWidth;
+                    Height = OriginalHeight;
+                }
+
+                Storyboard ExpandAnimation = new Storyboard();
                 DoubleAnimation AnimationX = new DoubleAnimation();
                 DoubleAnimation AnimationY = new DoubleAnimation();
                 DoubleAnimation AnimationWidth = new DoubleAnimation();
                 DoubleAnimation AnimationHeight = new DoubleAnimation();
+                DoubleAnimation AnimationOpacity = new DoubleAnimation();
                 CubicEase AnimationEasing = new CubicEase();
                 TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(500);
 
@@ -249,33 +268,43 @@ namespace Lumino
                 AnimationHeight.Duration = AnimationDuration;
                 AnimationHeight.EasingFunction = AnimationEasing;
 
-                ResizeAnimation.Children.Add(AnimationX);
-                ResizeAnimation.Children.Add(AnimationY);
-                ResizeAnimation.Children.Add(AnimationWidth);
-                ResizeAnimation.Children.Add(AnimationHeight);
+                AnimationOpacity.From = ParentDock.GridTopMenu.Opacity;
+                AnimationOpacity.To = Value ? 1 : 0;
+                AnimationOpacity.Duration = AnimationDuration;
+                AnimationOpacity.EasingFunction = AnimationEasing;
+
+                ExpandAnimation.Children.Add(AnimationX);
+                ExpandAnimation.Children.Add(AnimationY);
+                ExpandAnimation.Children.Add(AnimationWidth);
+                ExpandAnimation.Children.Add(AnimationHeight);
+                ExpandAnimation.Children.Add(AnimationOpacity);
 
                 Storyboard.SetTargetProperty(AnimationX, new PropertyPath(Canvas.LeftProperty));
                 Storyboard.SetTargetProperty(AnimationY, new PropertyPath(Canvas.TopProperty));
                 Storyboard.SetTargetProperty(AnimationWidth, new PropertyPath(WidthProperty));
                 Storyboard.SetTargetProperty(AnimationHeight, new PropertyPath(HeightProperty));
+                Storyboard.SetTargetProperty(AnimationOpacity, new PropertyPath(OpacityProperty));
 
                 Storyboard.SetTarget(AnimationX, this);
                 Storyboard.SetTarget(AnimationY, this);
                 Storyboard.SetTarget(AnimationWidth, this);
                 Storyboard.SetTarget(AnimationHeight, this);
+                Storyboard.SetTarget(AnimationOpacity, ParentDock.GridTopMenu);
 
-                ResizeAnimation.Completed += (o, i) =>
+                ExpandAnimation.Completed += (o, i) =>
                 {
-                    Canvas.SetLeft(this, X);
-                    Canvas.SetTop(this, Y);
                     this.Width = Width;
                     this.Height = Height;
+                    Canvas.SetLeft(this, X);
+                    Canvas.SetTop(this, Y);
+                    ParentDock.GridTopMenu.Opacity = Value ? 1 : 0;
+                    ParentDock.GridTopMenu.Visibility = Value ? Visibility.Visible : Visibility.Collapsed;
 
                     Resizing = false;
                 };
 
-                ResizeAnimation.FillBehavior = FillBehavior.Stop;
-                ResizeAnimation.Begin();
+                ExpandAnimation.FillBehavior = FillBehavior.Stop;
+                ExpandAnimation.Begin();
             }
         }
 
@@ -499,7 +528,7 @@ namespace Lumino
             {
                 if (!NowLoading)
                 {
-                    Expand = !Expand;
+                    Expand = true;
                 }
                 else
                 {
