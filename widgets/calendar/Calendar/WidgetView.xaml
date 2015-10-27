@@ -111,7 +111,6 @@
                            Name="Date" />
             </StackPanel>
 
-
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Sun"
                        Style="{StaticResource ResourceKey=Days}"
@@ -164,7 +163,6 @@
                        Text="3"
                        Style="{StaticResource ThisMonth}" />
 
-
             <TextBlock Grid.Row="3" Grid.Column="0"
                        Text="4"
                        Style="{StaticResource ThisMonth}" />
@@ -186,7 +184,6 @@
             <TextBlock Grid.Row="3" Grid.Column="6"
                        Text="10"
                        Style="{StaticResource ThisMonth}" />
-
 
             <TextBlock Grid.Row="4" Grid.Column="0"
                        Text="11"
@@ -275,7 +272,6 @@
             <TextBlock Grid.Row="7" Grid.Column="6"
                        Text="7"
                        Style="{StaticResource NotThisMonth}" />
-
         </Grid>
     </Viewbox>
 </Window>

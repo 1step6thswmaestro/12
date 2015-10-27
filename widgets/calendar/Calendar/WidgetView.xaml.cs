@@ -30,20 +30,19 @@ namespace Calendar
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        /* Dictionary for matching DateTime to <row, column> in Grid_Calendar
-         * Key = DateTime
-         * Value = row * 100 + column */
-        private Dictionary<DateTime, int> date_to_grid;
-
         public MainWindow()
         {
             InitializeComponent();
 
-            date_to_grid = new Dictionary<DateTime, int>();
+            HIGHLIGHT_TODAY     = Resources["HighlightToday"] as Style;
+            HIGHLIGHT_SCHEDULE  = Resources["HighlightSchedule"] as Style;
 
             reset();
+            refresh();
+        }
 
+        private void refresh()
+        {
             set_date();
             set_days();
             set_schedule_highlight();
@@ -51,6 +50,40 @@ namespace Calendar
 
         static private int NUMBER_OF_GRID_ROW = 6;
         static private int NUMBER_OF_GRID_COL = 7;
+
+        #region Control type of highlight mark
+        enum Highlight { TODAY, SCHEDULE }
+        private Style HIGHLIGHT_TODAY, HIGHLIGHT_SCHEDULE;
+        private Style highlight_style(Highlight type) {
+            switch (type) {
+                case Highlight.TODAY :
+                    return HIGHLIGHT_TODAY;
+                case Highlight.SCHEDULE :
+                    return HIGHLIGHT_SCHEDULE;
+                default:
+                    return null;
+            }
+        }
+        #endregion
+
+        // Reset all UIElements
+        private void reset()
+        {
+            Year.Text = "9999년";
+            Date.Text = "99월 99일";
+            for (int row = 0; row < NUMBER_OF_GRID_ROW; row++)
+            {
+                for (int col = 0; col < NUMBER_OF_GRID_COL; col++)
+                {
+                    TextBlock text = get<TextBlock>(row, col);
+                    text.Text = "99";
+                    text.Style = Resources["ThisMonth"] as Style;
+
+                    if (is_highlighted(row, col, Highlight.TODAY)) unhighlight(row, col, Highlight.TODAY);
+                    if (is_highlighted(row, col, Highlight.SCHEDULE)) unhighlight(row, col, Highlight.SCHEDULE);
+                }
+            }
+        }
 
         // Check if it's out of Grid_Calendar's range
         static private bool is_out_of_grid(int row, int col) {
@@ -60,6 +93,7 @@ namespace Calendar
                 || col >= NUMBER_OF_GRID_COL);
         }
 
+        #region Methods for get UI elements in Grid. Access using row and column.
         private T get<T> (int row, int col) where T : UIElement
         {
             if (is_out_of_grid(row, col)) return default(T);
@@ -83,73 +117,40 @@ namespace Calendar
                     _return.Add(element as T);
             return _return;
         }
+        #endregion
 
-        // Methods for highlight of today
-        private bool is_highlighted_today (int row, int col)
+        #region Methods for highlight mark.
+        private bool is_highlighted (int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return false;
             IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
             foreach (Ellipse ellipse in ellipses)
-            {
-                if (ellipse.Style.Equals(Resources["HighlightToday"] as Style)) return true;
-            }
+                if (ellipse.Style.Equals(highlight_style(highlight))) return true;
             return false;
         }
-        private void unhighlight_today(int row, int col)
+        private void unhighlight (int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
             IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
             foreach (Ellipse ellipse in ellipses)
-                if (ellipse.Style.Equals(Resources["HighlightToday"] as Style))
+                if (ellipse.Style.Equals(highlight_style(highlight)))
                 {
                     Grid_Calendar.Children.Remove(ellipse as UIElement);
                     return;
                 }
-            return;
         }
-        private void highlight_today(int row, int col)
+        private void highlight (int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
-            Ellipse highlight = new Ellipse { Style = Resources["HighlightToday"] as Style };
-            Grid.SetRow(highlight, row + 2);
-            Grid.SetColumn(highlight, col);
-            Grid_Calendar.Children.Add(highlight);
+            Ellipse ellipse = new Ellipse { Style = highlight_style(highlight) };
+            Grid.SetRow(ellipse, row + 2);
+            Grid.SetColumn(ellipse, col);
+            Grid_Calendar.Children.Add(ellipse);
         }
+        #endregion
 
-        // Methods for highlights of schedules
-        private bool is_highlighted_schedule(int row, int col)
-        {
-            if (is_out_of_grid(row, col)) return false;
-            IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
-            foreach (Ellipse ellipse in ellipses)
-            {
-                if (ellipse.Style.Equals(Resources["HighlightSchedule"] as Style)) return true;
-            }
-            return false;
-        }
-        private void unhighlight_schedule(int row, int col)
-        {
-            if (is_out_of_grid(row, col)) return;
-            IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
-            foreach (Ellipse ellipse in ellipses)
-                if (ellipse.Style.Equals(Resources["HighlightSchedule"] as Style))
-                {
-                    Grid_Calendar.Children.Remove(ellipse as UIElement);
-                    return;
-                }
-            return;
-        }
-        private void highlight_schedule(int row, int col)
-        {
-            if (is_out_of_grid(row, col)) return;
-            Ellipse highlight = new Ellipse { Style = Resources["HighlightSchedule"] as Style };
-            Grid.SetRow(highlight, row + 2);
-            Grid.SetColumn(highlight, col);
-            Grid_Calendar.Children.Add(highlight);
-        }
-
-        /* Set date and days
-         * date is text at the top, in "YYYY년 MM월 DD일" format
+        #region Set date and days.
+        /* date is text at the top, in "YYYY년 MM월 DD일" format
          * days are numbers in grid.
          */
         private void set_date()
@@ -161,74 +162,49 @@ namespace Calendar
         private void set_days()
         {
             DateTime today = DateTime.Today;
-            int year = today.Year;
-            int month = today.Month;
-            int days = DateTime.DaysInMonth(year, month);
-            int start_day_of_month = (int)DateTime.Today.AddDays(-today.Day + 1).DayOfWeek;
-            int days_in_month = DateTime.DaysInMonth(year, month);
+            int days = DateTime.DaysInMonth(today.Year, today.Month);
+            int start_day_of_month = (int)today.AddDays(-today.Day + 1).DayOfWeek;
+            int days_in_month = DateTime.DaysInMonth(today.Year, today.Month);
 
             int day = 1;
-            Brush font_color = Brushes.White;
 
-            DateTime dateTime_for_dictionay = DateTime.Today.AddDays(-today.Day + 1);
+            Style fontstyle = Resources["ThisMonth"] as Style;
 
             for (int row = 0; row < 6; row++)
             {
                 for (int col = (row == 0 ? start_day_of_month : 0); col < 7; col++)
                 {
                     TextBlock text = get<TextBlock>(row, col);
-                    text.Foreground = font_color;
+                    text.Style = fontstyle;
                     text.Text = day.ToString();
 
-                    date_to_grid.Add(dateTime_for_dictionay, row * 100 + col);
-                    dateTime_for_dictionay = dateTime_for_dictionay.AddDays(1);
-
-                    if (day == today.Day) highlight_today(row, col);
+                    if (day == DateTime.Today.Day) highlight(row, col, Highlight.TODAY);
 
                     day++;
                     if (day > days_in_month)
                     {
                         day = 1;
-                        font_color = Brushes.Gray;
+                        fontstyle = Resources["NotThisMonth"] as Style;
                     }
                 }
             }
-            dateTime_for_dictionay = DateTime.Today.AddDays(-today.Day);
 
-            day = DateTime.DaysInMonth((month == 1 ? year - 1 : year), (month == 1 ? 12 : month - 1));
+            {
+                DateTime day_in_last_month = DateTime.Today.AddDays(-DateTime.Today.Day);
+                day = DateTime.DaysInMonth(day_in_last_month.Year, day_in_last_month.Month);
+            }
             for (int row = 0, col = start_day_of_month - 1; col >= 0; col--)
             {
                 TextBlock text = get<TextBlock>(row, col);
-                text.Foreground = font_color;
+                text.Style = fontstyle;
                 text.Text = day.ToString();
-
-                date_to_grid.Add(dateTime_for_dictionay, col);
-                dateTime_for_dictionay = dateTime_for_dictionay.AddDays(-1);
 
                 day --;
             }
         }
-        
-        // Reset all UIElements
-        private void reset()
-        {
-            Year.Text = "9999년";
-            Date.Text = "99월 99일";
-            for (int row = 0; row < 6; row++)
-            {
-                for (int col = 0; col < 7; col++)
-                {
-                    TextBlock text = get<TextBlock>(row, col);
-                    text.Text = "99";
-                    text.Style = Resources["ThisMonth"] as Style;
+        #endregion
 
-                    if (is_highlighted_today(row, col)) unhighlight_today(row, col);
-                    if (is_highlighted_schedule(row, col)) unhighlight_schedule(row, col);
-                }
-            }
-        }
-
-        // Get and highlight schedules from Google Calendar
+        #region Get and highlight schedules from Google Calendar
         static private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static private string ApplicationName = "Google Calendar API .NET Quickstart";
         private void set_schedule_highlight()
@@ -259,16 +235,14 @@ namespace Calendar
             });
 
             DateTime today = DateTime.Today;
-            int year = today.Year;
-            int month = today.Month;
-            int days = DateTime.DaysInMonth(year, month);
-            int start_day_of_month = (int)DateTime.Today.AddDays(-today.Day + 1).DayOfWeek;
-            int days_in_month = DateTime.DaysInMonth(year, month);
+            int days = DateTime.DaysInMonth(today.Year, today.Month);
+            int start_day_of_month = (int)today.AddDays(-today.Day + 1).DayOfWeek;
+            int days_in_month = DateTime.DaysInMonth(today.Year, today.Month);
 
             // Define parameters of request.
             EventsResource.ListRequest request = service.Events.List("primary");
-            request.TimeMin = DateTime.Today.AddDays(-today.Day + 1);
-            request.TimeMax = DateTime.Today.AddDays(-today.Day + 1 + days_in_month);
+            request.TimeMin = today.AddDays(-today.Day + 1);
+            request.TimeMax = today.AddDays(-today.Day + 1 + days_in_month);
             request.ShowDeleted = false;
             request.SingleEvents = true;
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
@@ -283,14 +257,18 @@ namespace Calendar
 
                     try
                     {
-                        DateTime start_date = DateTime.ParseExact(eventItem.Start.Date, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-                        DateTime end_date = DateTime.ParseExact(eventItem.End.Date, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture); ;
+                        DateTime start_date = DateTime.ParseExact(
+                            eventItem.Start.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime end_date = DateTime.ParseExact(
+                            eventItem.End.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture); ;
 
                         while (start_date != end_date)
                         {
-                            int row_and_col = date_to_grid[start_date];
-                            int row = row_and_col / 100, col = row_and_col % 100;
-                            highlight_schedule(row, col);
+                            int row = (start_date.Day+start_day_of_month-1)/7,
+                                col = (int)start_date.DayOfWeek;
+                            highlight (row, col, Highlight.SCHEDULE);
                             start_date = start_date.AddDays(1);
                         }
                     }
@@ -305,5 +283,6 @@ namespace Calendar
                 Console.WriteLine("No upcoming events found.");
             }
         }
+        #endregion
     }
 }
