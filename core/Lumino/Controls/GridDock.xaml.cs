@@ -1,4 +1,5 @@
-﻿using Lumino.Functions;
+﻿using Lumino.Controls;
+using Lumino.Functions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -154,6 +155,23 @@ namespace Lumino
         {
             get { return _IsDrawerOpening; }
         }
+
+        private GridWidget _ExpandedWidget;
+        public GridWidget ExpandedWidget
+        {
+            get
+            {
+                foreach (GridWidget Widget in WidgetList)
+                {
+                    if (Widget.Expand)
+                    {
+                        return Widget;
+                    }
+                }
+
+                return null;
+            }
+        }
         #endregion
 
         #region 객체
@@ -231,7 +249,8 @@ namespace Lumino
             {
                 if (Target != Widget)
                 {
-                    Max = Math.Max(Panel.GetZIndex(Target), Panel.GetZIndex(Widget));
+                    Max = Math.Max(Math.Max(Panel.GetZIndex(Target), Panel.GetZIndex(Widget)), Max);
+                    Console.WriteLine(Panel.GetZIndex(Target));
                 }
             }
 
@@ -333,8 +352,27 @@ namespace Lumino
             Loaded += GridDock_Loaded;
             SizeChanged += GridDock_SizeChanged;
             GripDrawer.MouseLeftButtonDown += GripDrawer_MouseLeftButtonDown;
+            BtnBack.MouseLeftButtonUp += BtnBack_MouseLeftButtonUp;
+            BtnAbout.MouseLeftButtonUp += BtnAbout_MouseLeftButtonUp;
             Config.Initialize(this);
             Config.LoadWidgets();
+        }
+
+        private void BtnBack_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ExpandedWidget.Expand = false;
+        }
+
+        private void BtnAbout_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
+                "정보",
+                "이름: " + ExpandedWidget.Title + "\n" +
+                "제작: " + ExpandedWidget.Author + "\n" +
+                "설명: " + ExpandedWidget.Summary,
+                false);
+
+            Dialog.ShowDialog();
         }
 
         private void GridDock_Loaded(object sender, RoutedEventArgs e)
