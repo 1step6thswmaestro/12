@@ -66,6 +66,40 @@
     ; 전체 화면 모드를 포함한 경우 『True』, 그렇지 않은 경우 『False』입니다.
     Expandable=
 
+### 구성 파일 예시
+**네이티브 음악 위젯**
+
+    [General]
+    Title=음악
+    Author=소현섭
+    Summary=심플한 음악 위젯입니다.
+    
+    [Assembly]
+    File=<%LOCAL%>\Music.dll
+    Entry=Widget
+    
+    [Appearance]
+    Width=5
+    Height=5
+    Expandable=True
+
+**웹 엔진을 사용한 날씨 위젯**
+
+    [General]
+    Title=날씨
+    Author=나석주
+    Summary=웹 엔진을 활용한 날씨 위젯입니다.
+    
+    [Assembly]
+    File=local
+    Entry=WebView
+    Argument=<%LOCAL%>\index.html
+    
+    [Appearance]
+    Width=5
+    Height=5
+    Expandable=True
+
 ### 기본 엔트리 포인트 목록
 위젯 구성 파일에서는 다음의 기본 엔트리 포인트를 사용할 수 있습니다.
 * **WebView**
