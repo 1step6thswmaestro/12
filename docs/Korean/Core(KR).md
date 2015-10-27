@@ -1,6 +1,6 @@
 # Core
 * Team. JARVIS : **소현섭** (iodes, [iodesme@gmail.com](mailTo:iodesme@gmail.com), [Facebook](https://www.facebook.com/profile.php?id=100009172387549))
-* 해당 문서는 [Lumino](https://github.com/1step6thswmaestro/12) 플랫폼의 [코어(core)](https://github.com/1step6thswmaestro/12/tree/master/core) 부분에 대하여 기술합니다.
+* 해당 문서는 [Lumino](https://github.com/1step6thswmaestro/12) 플랫폼의 [코어(Core)](https://github.com/1step6thswmaestro/12/tree/master/core) 부분에 대하여 기술합니다.
 
 ## 위젯 구성
 코어에서는 다음의 형식으로 작성한 위젯 파일을 자동으로 불러옵니다.
@@ -40,8 +40,8 @@
     File=
     
     ; 위젯의 엔트리 포인트 이름을 입력합니다.
-    ; 플랫폼에 포함된 기능을 사용하기 위해 『local』을 입력한 경우,
-    ; 기본 엔트리 포인트 목록을 참고하여 원하는 기본 기능을 접근할 수 있습니다.
+    ; 만약 플랫폼에 포함된 기능을 사용하기 위해 『File』항목을 『local』로 입력한 경우,
+    ; 하단의 기본 엔트리 포인트 목록을 참고하여 원하는 기본 기능에 접근할 수 있습니다.
     ; 특수문자와 숫자를 제외한 영문으로 입력할 수 있습니다.
     Entry=
     
