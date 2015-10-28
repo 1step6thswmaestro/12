@@ -36,6 +36,8 @@ TV 디스플레이에 알맞게 거울을 재단한 후, 거울을 TV 디스플�
 
 
 ## 문서
+주요 문서
+
 * [코어 (core)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/Core(KR).md)
 * [캘린더 위젯 (Calendar Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/CalendarWidget(KR).md)
 * [시계 위젯 (Clock Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/ClockWidget(KR).md)
@@ -44,6 +46,10 @@ TV 디스플레이에 알맞게 거울을 재단한 후, 거울을 TV 디스플�
 * [음악 위젯 (Music Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/MusicWidget(KR).md)
 * [하드웨어 관련 (Hardwares)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/Hardware(KR).md)
 * 참조 API (API Reference)
+
+기타 문서
+
+* [FlowingJS Document](https://github.com/1step6thswmaestro/12/tree/master/widgets/weather/libs)
 
 
 ## 라이선스
