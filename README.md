@@ -20,7 +20,7 @@ Team. **JARVIS**
 
 ## 가이드
 #### 1. Mirror TV 제작
-TV 디스플레이와 반투명 거울(half-mirror)을 준비합니다.
+TV 디스플레이와 반투명 거울(half-mirror)을 준비합니다.  
 반투명 거울은 다음 링크에서 구매가 가능합니다.
 
 * [http://www.atoptronics.com/](http://www.atoptronics.com/)
@@ -40,7 +40,7 @@ TV 디스플레이에 알맞게 거울을 재단한 후, 거울을 TV 디스플�
 ## 문서
 주요 문서
 
-* [코어 (core)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/Core(KR).md)
+* [코어 (Core)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/Core(KR).md)
 * [캘린더 위젯 (Calendar Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/CalendarWidget(KR).md)
 * [시계 위젯 (Clock Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/ClockWidget(KR).md)
 * [갤러리 위젯 (Gallery Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/Korean/GalleryWidget(KR).md)
