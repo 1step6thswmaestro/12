@@ -18,8 +18,7 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-
-using System.Collections.Generic;
+ 
 using System.IO;
 using System.Threading;
 
@@ -33,7 +32,6 @@ namespace Calendar
         public DetailView()
         {
             InitializeComponent();
-
             Awake();
         }
 
