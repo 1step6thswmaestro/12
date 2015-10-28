@@ -518,27 +518,30 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (LongClickTimer != null)
+            if (!Expand)
             {
-                LongClickTimer.Stop();
-                LongClickTimer = null;
-            }
-
-            if (!LongClick)
-            {
-                if (!NowLoading)
+                if (LongClickTimer != null)
                 {
-                    Expand = true;
+                    LongClickTimer.Stop();
+                    LongClickTimer = null;
+                }
+
+                if (!LongClick)
+                {
+                    if (!NowLoading)
+                    {
+                        Expand = true;
+                    }
+                    else
+                    {
+                        StopMouseDown();
+                        NowLoading = false;
+                    }
                 }
                 else
                 {
-                    StopMouseDown();
-                    NowLoading = false;
+                    LongClick = false;
                 }
-            }
-            else
-            {
-                LongClick = false;
             }
         }
 
