@@ -86,6 +86,13 @@ var WeatherDetail = {
         function() {
             activeComponent();
         }
+    ),
+
+    subscribeDisableApp: AppFlowController.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            disableComponent();
+        }
     )
 };
 

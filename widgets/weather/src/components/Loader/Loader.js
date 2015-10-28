@@ -1,6 +1,8 @@
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
+var PlatformCommands = require('../../utils/PlatformCommands');
+
 var AppDOM;
 var LoaderDOM;
 
@@ -24,6 +26,7 @@ function loadComplete() {
     }, '1200', 'easeInCubic');
 
     requestCount = 0;
+    PlatformCommands();
 }
 
 

@@ -91,6 +91,13 @@ var TodayWeather = {
         function() {
             disableComponent();
         }
+    ),
+
+    subscribeDisableApp: AppFlowController.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            activeComponent();
+        }
     )
 };
 

@@ -4498,6 +4498,8 @@ module.exports = function(arr, fn, initial){
 var AppFlowController = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
 
+var PlatformCommands = require('../../utils/PlatformCommands');
+
 var AppDOM;
 var LoaderDOM;
 
@@ -4521,6 +4523,7 @@ function loadComplete() {
     }, '1200', 'easeInCubic');
 
     requestCount = 0;
+    PlatformCommands();
 }
 
 
@@ -4571,7 +4574,7 @@ var Loader = {
 };
 
 module.exports = Loader;
-},{"../../constants/Constants":23,"../../controller/AppFlowController":25}],13:[function(require,module,exports){
+},{"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../utils/PlatformCommands":30}],13:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 
@@ -4665,12 +4668,19 @@ var TodayWeather = {
         function() {
             disableComponent();
         }
+    ),
+
+    subscribeDisableApp: AppFlowController.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            activeComponent();
+        }
     )
 };
 
 
 module.exports = TodayWeather;
-},{"../../constants/CodedWeather":22,"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherCodeUtil":31,"../../utils/WeatherIcons":32}],14:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Constants":23,"../../controller/AppFlowController":25,"../../dispatcher/AppDispatcher":26,"../../stores/WeatherStore":28,"../../utils/WeatherCodeUtil":32,"../../utils/WeatherIcons":33}],14:[function(require,module,exports){
 var AppFlowController = require('../../controller/AppFlowController');
 var WeatherStore = require('../../stores/WeatherStore');
 var Constants = require('../../constants/Constants');
@@ -4928,7 +4938,7 @@ var DayWeatherHeader = {
 };
 
 module.exports = DayWeatherHeader;
-},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherCodeUtil":31,"../../../utils/WeatherIcons":32,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
+},{"../../../constants/CodedWeather":22,"../../../stores/WeatherStore":28,"../../../utils/WeatherCodeUtil":32,"../../../utils/WeatherIcons":33,"../DateSelector":14,"underscore":11}],17:[function(require,module,exports){
 var LanguageSelector = require('../../../utils/LanguageSelector');
 var Loacalize = require('../../../constants/Localize');
 
@@ -5347,6 +5357,13 @@ var WeatherDetail = {
         function() {
             activeComponent();
         }
+    ),
+
+    subscribeDisableApp: AppFlowController.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            disableComponent();
+        }
     )
 };
 
@@ -5422,7 +5439,7 @@ var _DayItemView = (function() {
 
 
 module.exports = _DayItemView;
-},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":32,"underscore":11}],22:[function(require,module,exports){
+},{"../../constants/CodedWeather":22,"../../constants/Localize":24,"../../utils/LanguageSelector":29,"../../utils/WeatherIcons":33,"underscore":11}],22:[function(require,module,exports){
 var CodedWeather = {
     CloudCodes: {
         'CL': {
@@ -5955,7 +5972,7 @@ $(document).ready(function() {
 
     TimeCalculator.initialize();
 });
-},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":30,"./utils/WeatherIcons":32}],28:[function(require,module,exports){
+},{"./components/Loader/Loader":12,"./components/TodayWeather/TodayWeather":13,"./components/WeatherDetail/WeatherDetail":20,"./utils/TimeCalculator":31,"./utils/WeatherIcons":33}],28:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -6061,6 +6078,28 @@ var LanguageSelector = {
 module.exports = LanguageSelector;
 },{}],30:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
+
+var initWidget = (function (window) {
+    function addExpendMethod() {
+        if (window.hasOwnProperty('isExpend')) { return; }
+        window.isExpend = function(state) {
+            if (state) {
+                AppDispatcher.activeApp();
+            }
+            else {
+                AppDispatcher.disableApp();
+            }
+        }
+    }
+
+    return (function() {
+        addExpendMethod();
+    });
+})(window);
+
+module.exports = initWidget;
+},{"../dispatcher/AppDispatcher":26}],31:[function(require,module,exports){
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Loader = require('../components/Loader/Loader');
 
 var SECONDS_OF_3HOUR = 3 * 60 * 60;
@@ -6089,7 +6128,7 @@ var TimeCalculator = {
 };
 
 module.exports = TimeCalculator;
-},{"../components/Loader/Loader":12,"../dispatcher/AppDispatcher":26}],31:[function(require,module,exports){
+},{"../components/Loader/Loader":12,"../dispatcher/AppDispatcher":26}],32:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 var LanguageSelector = require('./LanguageSelector');
 
@@ -6138,7 +6177,7 @@ var WeatherCodeUtil = {
 };
 
 module.exports = WeatherCodeUtil;
-},{"../constants/CodedWeather":22,"./LanguageSelector":29}],32:[function(require,module,exports){
+},{"../constants/CodedWeather":22,"./LanguageSelector":29}],33:[function(require,module,exports){
 var CodedWeather = require('../constants/CodedWeather');
 
 var $;
