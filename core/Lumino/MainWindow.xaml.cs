@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Lumino
@@ -13,16 +14,25 @@ namespace Lumino
             InitializeComponent();
 
             // 초기화
-            /*
-            Top = 0;
-            Left = 0;
-            Width = System.Windows.SystemParameters.PrimaryScreenWidth;
-            Height = System.Windows.SystemParameters.PrimaryScreenHeight;
-            WindowStyle = WindowStyle.None;
-            ResizeMode = ResizeMode.NoResize;
-            Topmost = true;
-            */
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            bool IsFullscreen = false;
+            foreach(string arg in Environment.GetCommandLineArgs())
+            {
+                if (arg.Equals("-Fullscreen"))
+                {
+                    Top = 0;
+                    Left = 0;
+                    Width = SystemParameters.PrimaryScreenWidth;
+                    Height = SystemParameters.PrimaryScreenHeight;
+                    WindowStyle = WindowStyle.None;
+                    ResizeMode = ResizeMode.NoResize;
+                    Topmost = true;
+                    IsFullscreen = true;
+                }
+            }
+            if (!IsFullscreen)
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
 
             // 이미지 품질
             RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.HighQuality);
