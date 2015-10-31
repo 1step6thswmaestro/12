@@ -12,10 +12,7 @@
         <Canvas x:Name="CanvasRoot"/>
         <Grid x:Name="GridTopMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Black" Height="100" Visibility="Collapsed" Opacity="0">
             <Grid.OpacityMask>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Offset="1"/>
-                </LinearGradientBrush>
+                <ImageBrush ImageSource="/Lumino;component/Images/Mask.png"/>
             </Grid.OpacityMask>
             <StackPanel x:Name="BtnBack" Orientation="Horizontal" HorizontalAlignment="Left">
                 <Image Width="45" Height="45" Source="/Lumino;component/Images/BtnBack.png" Margin="10,0,0,0"/>
