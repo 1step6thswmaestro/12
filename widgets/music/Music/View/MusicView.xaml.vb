@@ -44,7 +44,7 @@ Public Class MusicView
         SpectrumTimer = New DispatcherTimer
         SpectrumTimer.Interval = TimeSpan.FromMilliseconds(30)
         AddHandler SpectrumTimer.Tick, Sub()
-                                           If SetPath IsNot Nothing Then
+                                           If SetPath IsNot Nothing AndAlso Not Expand Then
                                                ' 스펙트럼 불러오기
                                                ' 2의 배수만 가능. 256 권장.
                                                Dim Spectrum As Single() = GetSpectrum(1024)
@@ -102,7 +102,7 @@ Public Class MusicView
             PlayerTimer = New DispatcherTimer
             PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
             AddHandler PlayerTimer.Tick, Sub()
-                                             If SetPath IsNot Nothing Then
+                                             If SetPath IsNot Nothing AndAlso Not Expand Then
                                                  TextTime.Text = Milli2HMS(mplaytime) + " / " + Milli2HMS(mplaytimelen)
                                              End If
                                          End Sub

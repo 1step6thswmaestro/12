@@ -22,6 +22,8 @@ Public Class Widget
     End Sub
 
     Private Sub IsExpand(ByVal Value As Boolean)
+        Expand = Value
+
         Dim ExpandAnimation As New Storyboard
         Dim OpacityAnimation As New DoubleAnimation
 
@@ -48,7 +50,6 @@ Public Class Widget
         ExpandAnimation.Begin()
     End Sub
 
-    Dim Expand = False
     Private Sub Widget_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseDoubleClick
         Expand = Not Expand
         IsExpand(Expand)

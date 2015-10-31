@@ -116,6 +116,7 @@
     <Compile Include="Engine\FMOD_ERRORS.vb" />
     <Compile Include="Engine\FMOD_MEMORYINFO.vb" />
     <Compile Include="Engine\ModFmodControl.vb" />
+    <Compile Include="Functions\GlobalDefine.vb" />
     <Compile Include="Functions\ImageHelper.vb" />
     <Compile Include="Functions\MediaManager.vb" />
     <Compile Include="Functions\MusicItem.vb" />
