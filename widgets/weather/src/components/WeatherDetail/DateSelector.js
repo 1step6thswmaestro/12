@@ -11,7 +11,6 @@ var DateSelectorDOM;
 var SelectorItemDOMs;
 var ArrowLeftDOM;
 var ArrowRightDOM;
-var ItemProtoDOM;
 
 var ItemDatas = [];
 var currentIndex;

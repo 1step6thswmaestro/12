@@ -2,8 +2,8 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 
 var initWidget = (function (window) {
     function addExpendMethod() {
-        if (window.hasOwnProperty('isExpend')) { return; }
-        window.isExpend = function(state) {
+        if (window.hasOwnProperty('IsExpend')) { return; }
+        window.IsExpend = function(state) {
             if (state) {
                 AppDispatcher.activeApp();
             }

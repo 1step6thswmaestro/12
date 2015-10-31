@@ -9,6 +9,7 @@
   "author": "soma-JARVIS",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "flowing-js": "^1.1.0",

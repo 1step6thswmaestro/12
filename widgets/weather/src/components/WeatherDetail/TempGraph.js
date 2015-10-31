@@ -1,12 +1,11 @@
 var DateSelector = require('./DateSelector');
-
 var WeatherStore = require('../../stores/WeatherStore');
 
 
 var TempGraphDOM;
 var WrapperDOM;
 
-var dataArrays
+var dataArrays;
 
 var leftMargin = 0;
 var movedDistance = 0;
@@ -97,6 +96,8 @@ var TempGraph = {
 
             var chart = new google.visualization.AreaChart(document.getElementById('detail-tempGraph'));
             chart.draw(data, options);
+
+            dataArrays = {};
         }
     },
 

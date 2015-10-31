@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
+var concat = require('gulp-concat');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var buffer = require('vinyl-buffer');
@@ -12,7 +13,7 @@ var browserSync = require('browser-sync').create();
 
 var paths = {
     js: ['./src/**/**/*.js', './src/**/*.js', './src/*.js'],
-    styles: './src/main.less',
+    styles: './src/styles/*.less',
     views: './src/index.html'
 };
 
@@ -22,7 +23,7 @@ gulp.task('build-js', function() {
         .bundle()
         .pipe(source('main.js'))
         .pipe(buffer())
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('./build/js'))
         .pipe(browserSync.stream());
 });
@@ -30,6 +31,7 @@ gulp.task('build-js', function() {
 gulp.task('build-less', function() {
     return gulp.src(paths.styles)
         .pipe(less())
+        .pipe(concat('main.css'))
         .pipe(minifyCss())
         .pipe(gulp.dest('./build/css'))
         .pipe(browserSync.stream());

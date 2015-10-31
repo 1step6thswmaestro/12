@@ -1,0 +1,100 @@
+@font-main: notokr, 'Helvetica Neue', Helvetica, sans-serif;
+
+@arc-diameter: 170px;
+
+@color-blue-grey-50: #ECEFF1;
+@color-blue-grey-100: #CFD8DC;
+@color-blue-grey-200: #B0BEC5;
+@color-blue-grey-300: #90A4AE;
+@color-blue-grey-400: #78909C;
+@color-blue-grey-500: #607D8B;
+@color-blue-grey-600: #546E7A;
+@color-blue-grey-700: #455A64;
+@color-blue-grey-800: #37474F;
+@color-blue-grey-900: #263238;
+
+@color-grey-50: #FAFAFA;
+@color-grey-100: #F5F5F5;
+@color-grey-200: #EEEEEE;
+@color-grey-300: #E0E0E0;
+@color-grey-400: #BDBDBD;
+@color-grey-500: #9E9E9E;
+@color-grey-600: #757575;
+@color-grey-700: #616161;
+@color-grey-800: #424242;
+@color-grey-900: #212121;
+
+@color-white: #FFF;
+@color-black: #000;
+@color-blue: #2196F3;
+@color-red: #F44336;
+@color-green: #4CAF50;
+
+
+.today-weather {
+    position: absolute;
+
+    width: 50%;
+    height: 50%;
+
+    left: 25%;
+    top: 25%;
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    color: @color-white;
+
+    &-icon {
+        flex: 1;
+        display: flex;
+
+        svg {
+            flex: 1;
+            color: @color-white;
+        }
+    }
+
+    &-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        &-temp {
+            display: flex;
+            align-items: center;
+
+            &-high {
+                padding-bottom: .5vw;
+                font-size: 6vw;
+                font-weight: 500;
+                &:after { margin-left: .33vw; font-weight: 300; content: "º";  }
+            }
+
+            &-division {
+                margin-left: .5vw;
+                margin-right: 1.5vw;
+                font-size: 2.5vw;
+                font-weight: 500;
+                color: @color-grey-500;
+            }
+
+            &-low {
+                font-size: 3vw;
+                font-weight: 100;
+                line-height: 1;
+                margin-top: .25vh;
+                &:after { margin-left: .33vw; font-weight: 300; content: "º";  }
+            }
+        }
+
+        &-description {
+            max-width: 40%;
+            font-size: 3vw;
+            font-weight: 300;
+            line-height: 1.3;
+            text-align: right;
+        }
+    }
+}
