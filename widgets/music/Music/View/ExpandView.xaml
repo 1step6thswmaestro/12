@@ -20,7 +20,7 @@
         <Grid Grid.RowSpan="2" Background="#4C000000"/>
 
         <Grid Grid.Row="0">
-            <ListBox x:Name="ListMusic" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="50,120,50,20" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemContainerStyle="{StaticResource ListBoxItemStyle}">
+            <ListBox x:Name="ListMusic" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="50,120,50,20" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemContainerStyle="{StaticResource ListBoxItemStyle}" Style="{DynamicResource ListBoxStyle}">
                 <ListBox.Effect>
                     <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                 </ListBox.Effect>
