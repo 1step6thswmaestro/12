@@ -1,5 +1,7 @@
 'use strict';
 
+require('./utils/PlatformCommands')();
+
 $(document).ready(function() {
     var liveTiles = $('#component-live-tiles');
 
