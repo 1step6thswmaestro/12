@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Media.Effects
+﻿Imports System.IO
+Imports System.Windows.Media.Effects
 
 Public Class ImageHelper
 
@@ -10,6 +11,39 @@ Public Class ImageHelper
         Image.EndInit()
 
         Return Image
+    End Function
+
+    Public Shared Function AverageColor(ByVal Target As BitmapSource) As Color
+        Dim Bitmap As System.Drawing.Bitmap
+        Using Stream As New MemoryStream()
+            Dim Encoder As BitmapEncoder = New BmpBitmapEncoder()
+            Encoder.Frames.Add(BitmapFrame.Create(Target))
+            Encoder.Save(Stream)
+            Bitmap = New System.Drawing.Bitmap(Stream)
+        End Using
+
+        Dim TotalR As Integer = 0
+        Dim TotalG As Integer = 0
+        Dim TotalB As Integer = 0
+        Dim TotalPX As Integer = 0
+        Dim ScanStep As Integer = 50
+
+        For i As Integer = 0 To Bitmap.Width - 1 Step ScanStep
+            For j As Integer = 0 To Bitmap.Height - 1 Step ScanStep
+                Dim RGB As System.Drawing.Color = Bitmap.GetPixel(i, j)
+                TotalR += RGB.R
+                TotalG += RGB.G
+                TotalB += RGB.B
+                TotalPX += 1
+            Next
+        Next
+
+        Dim Light As Double = 1.2
+        Dim AverageR As Integer = Math.Min(255, (TotalR \ TotalPX) * Light)
+        Dim AverageG As Integer = Math.Min(255, (TotalG \ TotalPX) * Light)
+        Dim AverageB As Integer = Math.Min(255, (TotalB \ TotalPX) * Light)
+
+        Return Color.FromArgb(255, AverageR, AverageG, AverageB)
     End Function
 
     Public Shared Function SetBlurEffect(ByVal Target As BitmapSource) As RenderTargetBitmap

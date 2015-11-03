@@ -20,16 +20,16 @@
         <Grid Grid.RowSpan="2" Background="#4C000000"/>
 
         <Grid Grid.Row="0">
-            <ListBox x:Name="ListMusic" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="50,120,50,20" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemContainerStyle="{StaticResource ListBoxItemStyle}" Style="{DynamicResource ListBoxStyle}">
+            <ListBox x:Name="ListMusic" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="50,120,50,20" ItemContainerStyle="{StaticResource ListBoxItemStyle}" Style="{DynamicResource ListBoxStyle}">
                 <ListBox.Effect>
                     <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                 </ListBox.Effect>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,0,0,5">
-                            <Image Width="70" Height="70" Source="{Binding Path=AlbumArt}"/>
+                            <Image Width="70" Height="70" Source="{Binding AlbumArt}"/>
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                <TextBlock Text="{Binding Path=Title}" Foreground="White" FontWeight="Bold" FontSize="20">
+                                <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="Bold" FontSize="20">
                                     <TextBlock.OpacityMask>
                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                             <GradientStop Color="Black" Offset="0"/>
@@ -37,7 +37,7 @@
                                         </LinearGradientBrush>
                                     </TextBlock.OpacityMask>
                                 </TextBlock>
-                                <TextBlock Text="{Binding Path=Artist}" Foreground="White" FontWeight="Normal" FontSize="14">
+                                <TextBlock Text="{Binding Artist}" Foreground="White" FontWeight="Normal" FontSize="14">
                                     <TextBlock.OpacityMask>
                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                             <GradientStop Color="Black" Offset="0"/>
@@ -62,12 +62,12 @@
                 <StackPanel.Effect>
                     <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                 </StackPanel.Effect>
-                <Image Width="30" Source="/Music;component/Images/BtnPrev.png" Margin="0,0,10,0"/>
-                <Image Width="50" Source="/Music;component/Images/BtnPlay.png"/>
-                <Image Width="30" Source="/Music;component/Images/BtnNext.png" Margin="10,0,0,0"/>
+                <Image x:Name="BtnPrevious" Width="30" Source="/Music;component/Images/BtnPrev.png" Margin="0,0,10,0"/>
+                <Image x:Name="BtnPlay" Width="50" Source="/Music;component/Images/BtnPlay.png"/>
+                <Image x:Name="BtnNext" Width="30" Source="/Music;component/Images/BtnNext.png" Margin="10,0,0,0"/>
             </StackPanel>
 
-            <StackPanel VerticalAlignment="Center" Margin="170,0">
+            <StackPanel VerticalAlignment="Center" Margin="180,0">
                 <StackPanel.Effect>
                     <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                 </StackPanel.Effect>
@@ -100,7 +100,7 @@
                     <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                 </StackPanel.Effect>
                 <Image Width="18" Source="/Music;component/Images/ImgVolume.png" Margin="0,0,10,0"/>
-                <local:VertexSlider Opacity="0.8" Width="100" Height="15" Value="50" Maximum="100" Style="{StaticResource VertexSliderStyle}" AutoMove="True" Foreground="Silver" Background="White"/>
+                <local:VertexSlider x:Name="SliderVolume" Opacity="0.8" Width="100" Height="15" Value="50" Maximum="100" Style="{StaticResource VertexSliderStyle}" AutoMove="True" Foreground="Silver" Background="White"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -260,7 +260,7 @@ Module ModFmodControl
         ERRCHECK(result)
     End Sub
 
-    Public Sub SetVolume(ByVal value As String)
+    Public Sub SetVolume(ByVal value As Single)
         On Error Resume Next
         If Not SetPath Is Nothing Then
             Dim result As FMOD.RESULT
@@ -270,10 +270,10 @@ Module ModFmodControl
         End If
     End Sub
 
-    Public Function GetVolume()
+    Public Function GetVolume() As Single
         On Error Resume Next
         Dim result As FMOD.RESULT
-        Dim NowVol As Integer
+        Dim NowVol As Single
         result = channel.getVolume(NowVol)
         ERRCHECK(result)
 
