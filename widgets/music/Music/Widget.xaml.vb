@@ -92,7 +92,7 @@ Public Class Widget
 
         OpacityAnimation.From = PagePresenterExpand.Opacity
         OpacityAnimation.To = If(Value, 1, 0)
-        OpacityAnimation.Duration = TimeSpan.FromMilliseconds(350)
+        OpacityAnimation.Duration = TimeSpan.FromMilliseconds(450)
         OpacityAnimation.EasingFunction = New CubicEase()
 
         Storyboard.SetTargetProperty(OpacityAnimation, New PropertyPath(OpacityProperty))
@@ -100,14 +100,19 @@ Public Class Widget
 
         If Value Then
             PagePresenterExpand.Visibility = Visibility.Visible
+        Else
+            ExpandView.GridRoot.Visibility = Visibility.Collapsed
         End If
 
-        If Not Value Then
-            AddHandler ExpandAnimation.Completed,
+        AddHandler ExpandAnimation.Completed,
                 Sub()
-                    PagePresenterExpand.Visibility = Visibility.Collapsed
+                    If Value Then
+                        ExpandView.GridRoot.Visibility = Visibility.Visible
+                    Else
+                        ExpandView.GridRoot.Visibility = Visibility.Collapsed
+                        PagePresenterExpand.Visibility = Visibility.Collapsed
+                    End If
                 End Sub
-        End If
 
         ExpandAnimation.Children.Add(OpacityAnimation)
         ExpandAnimation.Begin()
