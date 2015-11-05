@@ -21,7 +21,7 @@ function initializeDatas() {
         return;
     }
 
-    DateSelector.initItems();
+
     //DateSelector.refresh();
 
     countCallback = 0;
@@ -36,6 +36,7 @@ function activeComponent() {
 
     setTimeout(function() {
         TempGraph.initGraph();
+        DateSelector.initItems();
         DateSelector.refresh();
     }, 750);
 }
