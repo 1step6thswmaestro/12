@@ -1,0 +1,10 @@
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\bin\Debug\clock_for_jarvis.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\bin\Debug\clock_for_jarvis.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\UserControl1.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\UserControl1.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis_MarkupCompile.cache
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.g.resources
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.Properties.Resources.resources
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.csproj.GenerateResource.Cache
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.pdb
