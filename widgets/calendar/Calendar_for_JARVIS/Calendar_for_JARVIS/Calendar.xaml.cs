@@ -29,12 +29,11 @@ namespace Calendar_for_JARVIS
     /// <summary>
     /// Interaction logic for Calendar.xaml
     /// </summary>
-    public partial class Calendar : UserControl
+    public partial class calendar_for_jarvis : UserControl
     {
-        static private bool is_expanded = false;
         Events events;
 
-        public Calendar()
+        public calendar_for_jarvis()
         {
             InitializeComponent();
 
@@ -43,172 +42,6 @@ namespace Calendar_for_JARVIS
 
             reset();
             refresh();
-
-            foreach (UIElement element in Grid_Calendar.Children)
-            {
-                if (element is TextBlock)
-                {
-                    TextBlock text = element as TextBlock;
-                    text.MouseLeftButtonDown += new MouseButtonEventHandler(on_click);
-                }
-            }
-#if DEBUG
-            IsExpand(true);
-#endif
-        }
-
-        public void on_click(object sender, MouseButtonEventArgs args)
-        {
-            if (is_expanded == false) return;
-        }
-
-        private void show_schedule_list(DateTime dateTime)
-        {
-            ListView schedule_list = get<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
-
-            schedule_list.Items.Add(new ListViewItem { Foreground = Brushes.White, FontSize = 4,
-            Content = "Test Item"});
-
-            int selected_row, selected_col;
-
-            int days = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
-            int start_day_of_month = (int)dateTime.AddDays(-dateTime.Day + 1).DayOfWeek;
-            int days_in_month = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
-
-            selected_row = (dateTime.Day + start_day_of_month - 1) / 7;
-            selected_col = (int)dateTime.DayOfWeek;
-
-            if (events.Items != null && events.Items.Count > 0)
-            {
-                foreach (var eventItem in events.Items)
-                {
-
-                    try
-                    {
-                        DateTime start_date = DateTime.ParseExact(
-                            eventItem.Start.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture);
-                        DateTime end_date = DateTime.ParseExact(
-                            eventItem.End.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture); ;
-
-                        if (DateTime.Compare(start_date, dateTime) <= 0 && DateTime.Compare(dateTime, end_date) <= 0)
-                        {
-
-                            schedule_list.Items.Add(new ListViewItem
-                            {
-                                Foreground = Brushes.White,
-                                FontSize = 4,
-                                Content = (eventItem.Summary == null ? "제목 없는 일정" : eventItem.Summary)
-                            });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No upcoming events found.");
-            }
-        }
-
-        private void attatch_schedule_list()
-        {
-            // Make last row longer.
-            RowDefinition last_row
-                = Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW + 2);
-            last_row.Height = new GridLength(40);
-
-            ListView schedule_list = get<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
-            if (schedule_list != null)
-            {
-                schedule_list.Visibility = System.Windows.Visibility.Visible;
-                return;
-            }
-
-            schedule_list = new ListView { Background = Brushes.Black, BorderThickness = new Thickness(0) };
-            ScrollViewer.SetHorizontalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
-            ScrollViewer.SetVerticalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
-            Grid.SetRow(schedule_list, NUMBER_OF_GRID_ROW + 2);
-            Grid.SetColumnSpan(schedule_list, NUMBER_OF_GRID_COL);
-            Grid_Calendar.Children.Add(schedule_list);
-            
-            //show_schedule_list(DateTime.Today);
-
-            int selected_row, selected_col;
-
-            DateTime dateTime = DateTime.Today;
-
-            int days = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
-            int start_day_of_month = (int)dateTime.AddDays(-dateTime.Day + 1).DayOfWeek;
-            int days_in_month = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
-
-            selected_row = (dateTime.Day + start_day_of_month - 1) / 7;
-            selected_col = (int)dateTime.DayOfWeek;
-
-            if (events.Items != null && events.Items.Count > 0)
-            {
-                foreach (var eventItem in events.Items)
-                {
-
-                    try
-                    {
-                        DateTime start_date = DateTime.ParseExact(
-                            eventItem.Start.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture);
-                        DateTime end_date = DateTime.ParseExact(
-                            eventItem.End.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture); ;
-
-                        if (DateTime.Compare(start_date, dateTime) <= 0 && DateTime.Compare(dateTime, end_date) <= 0)
-                        {
-
-                            schedule_list.Items.Add(new ListViewItem
-                            {
-                                Foreground = Brushes.White,
-                                FontSize = 4,
-                                Content = (eventItem.Summary == null ? "제목 없는 일정" : eventItem.Summary)
-                            });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No upcoming events found.");
-            }
-        }
-        private void detach_schedule_list()
-        {
-        }
-
-        /// <summary>
-        /// Called when widget is expanded or contracted.
-        /// </summary>
-        /// <param name="type">
-        /// If type is true then widget is expaned. Else widget is contracted.
-        /// </param>
-        public void IsExpand(bool type)
-        {
-            is_expanded = type;
-            switch (type)
-            {
-                    // get smaller
-                case false:
-                    detach_schedule_list();
-                    break;
-                    // get larger
-                case true:
-                    attatch_schedule_list();
-                    break;
-            }
         }
 
         /// <summary>
@@ -221,8 +54,8 @@ namespace Calendar_for_JARVIS
             set_schedule_highlight();
         }
 
-        static private int NUMBER_OF_GRID_ROW = 6;
-        static private int NUMBER_OF_GRID_COL = 7;
+        private int NUMBER_OF_GRID_ROW = 6;
+        private int NUMBER_OF_GRID_COL = 7;
 
         #region Control type of highlight mark
         enum Highlight { TODAY, SCHEDULE }
@@ -266,7 +99,7 @@ namespace Calendar_for_JARVIS
         /// <param name="row">Row of Grid_Calendar.</param>
         /// <param name="col">Column of Grid_Calendar.</param>
         /// <returns>True if row and column is out of Grid_Calendar.</returns>
-        static private bool is_out_of_grid(int row, int col) {
+        private bool is_out_of_grid(int row, int col) {
             return (row >= NUMBER_OF_GRID_ROW 
                 || row < 0 
                 || col < 0 
@@ -414,8 +247,8 @@ namespace Calendar_for_JARVIS
         #endregion
 
         #region Get and highlight schedules from Google Calendar
-        static private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
-        static private string ApplicationName = "Google Calendar API .NET Quickstart";
+        private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
+        private string ApplicationName = "Google Calendar API .NET Quickstart";
         private void set_schedule_highlight()
         {
             UserCredential credential;
