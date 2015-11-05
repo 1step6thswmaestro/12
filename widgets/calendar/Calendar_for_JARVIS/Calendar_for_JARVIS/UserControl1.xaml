@@ -1,0 +1,281 @@
+﻿<UserControl x:Class="Calendar_for_JARVIS.UserControl1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+
+    <UserControl.Resources>
+        <Style x:Key="YearAndDate" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="8" />
+            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="Days" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="3" />
+            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="NotThisMonth" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="5" />
+            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0, 1, 0, 0" />
+        </Style>
+
+        <Style x:Key="ThisMonth" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="5" />
+            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0, 1, 0, 0" />
+        </Style>
+
+        <Style x:Key="HighlightToday" TargetType="Ellipse">
+            <Setter Property="Fill" Value="Red" />
+            <Setter Property="Margin" Value="0, 0.5, 0, 0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="6.5" />
+            <Setter Property="Height" Value="6.5" />
+            <Setter Property="Panel.ZIndex" Value="-1" />
+        </Style>
+
+        <Style x:Key="HighlightSchedule" TargetType="Ellipse">
+            <Setter Property="Fill" Value="White" />
+            <Setter Property="Margin" Value="0, 0, 0, 0.5" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="2" />
+            <Setter Property="Height" Value="2" />
+            <Setter Property="Panel.ZIndex" Value="-1" />
+        </Style>
+
+        <Style x:Key="Line" TargetType="Line">
+            <Setter Property="Grid.RowSpan" Value="2" />
+            <Setter Property="Grid.ColumnSpan" Value="7" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="StrokeThickness" Value="0.3" />
+            <Setter Property="X2" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}" />
+        </Style>
+    </UserControl.Resources>
+
+    <Viewbox>
+        <Grid Background="Black" Name="Grid_Calendar">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+
+            <Ellipse Grid.Row="4" Grid.Column="2"
+                     Style="{StaticResource HighlightToday}" />
+            <Ellipse Grid.Row="4" Grid.Column="2"
+                     Style="{StaticResource HighlightSchedule}" />
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0, 6, 0, 0" >
+                <TextBlock Text="2015년"
+                           Style="{StaticResource ResourceKey=YearAndDate}"
+                           Name="Year" />
+                <TextBlock Text="10월 13일"
+                           Style="{StaticResource ResourceKey=YearAndDate}"
+                           Name="Date" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Sun"
+                       Style="{StaticResource ResourceKey=Days}"
+                       Foreground="Red" />
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="Mon"
+                       Style="{StaticResource ResourceKey=Days}" />
+            <TextBlock Grid.Row="1" Grid.Column="2"
+                       Text="Tue"
+                       Style="{StaticResource ResourceKey=Days}" />
+            <TextBlock Grid.Row="1" Grid.Column="3"
+                       Text="Wed"
+                       Style="{StaticResource ResourceKey=Days}" />
+            <TextBlock Grid.Row="1" Grid.Column="4"
+                       Text="Thu"
+                       Style="{StaticResource ResourceKey=Days}" />
+            <TextBlock Grid.Row="1" Grid.Column="5"
+                       Text="Fri"
+                       Style="{StaticResource ResourceKey=Days}" />
+            <TextBlock Grid.Row="1" Grid.Column="6"
+                       Text="Sat"
+                       Style="{StaticResource ResourceKey=Days}" />
+
+            <Line Grid.Row="0" Grid.Column="0" Style="{StaticResource Line}"/>
+            <Line Grid.Row="1" Grid.Column="0" Style="{StaticResource Line}"/>
+            <Line Grid.Row="2" Grid.Column="0" Style="{StaticResource Line}"/>
+            <Line Grid.Row="3" Grid.Column="0" Style="{StaticResource Line}"/>
+            <Line Grid.Row="4" Grid.Column="0" Style="{StaticResource Line}"/>
+            <Line Grid.Row="5" Grid.Column="0" Style="{StaticResource Line}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="27"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Text="28"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="2"
+                       Text="29"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="3"
+                       Text="30"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="4"
+                       Text="1"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="5"
+                       Text="2"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="2" Grid.Column="6"
+                       Text="3"
+                       Style="{StaticResource ThisMonth}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="4"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Text="5"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="2"
+                       Text="6"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="3"
+                       Text="7"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="4"
+                       Text="8"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="5"
+                       Text="9"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="3" Grid.Column="6"
+                       Text="10"
+                       Style="{StaticResource ThisMonth}" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0"
+                       Text="11"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="1"
+                       Text="12"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="2"
+                       Text="13"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="3"
+                       Text="14"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="4"
+                       Text="15"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="5"
+                       Text="16"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="4" Grid.Column="6"
+                       Text="17"
+                       Style="{StaticResource ThisMonth}" />
+
+            <TextBlock Grid.Row="5" Grid.Column="0"
+                       Text="18"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="1"
+                       Text="19"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="2"
+                       Text="20"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="3"
+                       Text="21"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="4"
+                       Text="22"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="5"
+                       Text="23"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="5" Grid.Column="6"
+                       Text="24"
+                       Style="{StaticResource ThisMonth}" />
+
+            <TextBlock Grid.Row="6" Grid.Column="0"
+                       Text="25"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="1"
+                       Text="26"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="2"
+                       Text="27"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="3"
+                       Text="28"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="4"
+                       Text="29"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="5"
+                       Text="30"
+                       Style="{StaticResource ThisMonth}" />
+            <TextBlock Grid.Row="6" Grid.Column="6"
+                       Text="31"
+                       Style="{StaticResource ThisMonth}" />
+
+            <TextBlock Grid.Row="7" Grid.Column="0"
+                       Text="1"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="1"
+                       Text="2"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="2"
+                       Text="3"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="3"
+                       Text="4"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="4"
+                       Text="5"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="5"
+                       Text="6"
+                       Style="{StaticResource NotThisMonth}" />
+            <TextBlock Grid.Row="7" Grid.Column="6"
+                       Text="7"
+                       Style="{StaticResource NotThisMonth}" />
+        </Grid>
+    </Viewbox>
+</UserControl>
