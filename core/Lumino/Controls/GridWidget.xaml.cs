@@ -7,7 +7,8 @@ using System.Windows.Media.Animation;
 using Lumino.Functions;
 using CefSharp.Wpf;
 using System.Windows.Threading;
-using Lumino.Controls;
+using System.Windows.Media.Imaging;
+using System.IO;
 using System.Windows.Media;
 
 namespace Lumino
@@ -58,44 +59,50 @@ namespace Lumino
                         OriginalWidth = ActualWidth;
                         OriginalHeight = ActualHeight;
 
-                        if (!AssemblyFile.Equals("local"))
-                        {
-                            CallMethod("IsExpand", true);
-                        }
-                        else
-                        {
-                            switch (AssemblyEntry)
+                        ExpandAnimation(true, new Action(() =>
                             {
-                                case "WebView":
-                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand('True');");
-                                    break;
+                                if (!AssemblyFile.Equals("local"))
+                                {
+                                    CallMethod("IsExpand", true);
+                                }
+                                else
+                                {
+                                    switch (AssemblyEntry)
+                                    {
+                                        case "WebView":
+                                            ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(true);");
+                                            break;
+                                    }
+                                }
                             }
-                        }
+                        ));
 
                         ParentDock.TextTitle.Text = Title;
                         ParentDock.GripDrawer.Visibility = Visibility.Collapsed;
                         ParentDock.StackDrawerContent.Visibility = Visibility.Collapsed;
-                        ExpandAnimation(true);
                     }
                     else
                     {
-                        if (!AssemblyFile.Equals("local"))
-                        {
-                            CallMethod("IsExpand", false);
-                        }
-                        else
-                        {
-                            switch (AssemblyEntry)
+                        ExpandAnimation(false, new Action(() =>
                             {
-                                case "WebView":
-                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand('False');");
-                                    break;
+                                if (!AssemblyFile.Equals("local"))
+                                {
+                                    CallMethod("IsExpand", false);
+                                }
+                                else
+                                {
+                                    switch (AssemblyEntry)
+                                    {
+                                        case "WebView":
+                                            ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(false);");
+                                            break;
+                                    }
+                                }
                             }
-                        }
+                        ));
 
                         ParentDock.GripDrawer.Visibility = Visibility.Visible;
                         ParentDock.StackDrawerContent.Visibility = Visibility.Visible;
-                        ExpandAnimation(false);
                     }
                 }
             }
@@ -212,18 +219,53 @@ namespace Lumino
         private bool GuidelineOriginal;
         private bool Resizing = false;
         private bool LongClick = false;
-        DispatcherTimer LongClickTimer;
+        private DispatcherTimer LongClickTimer;
         private Point LocalPosition;
+        private BitmapImage SwapThumb;
+        private BitmapImage SwapThumbExpand;
         #endregion
 
         #region 제어 함수
-        private void ExpandAnimation(bool Value)
+        private BitmapImage GetImageFromVisual(Visual visual)
+        {
+            Thickness margin = (Thickness)visual.GetValue(MarginProperty);
+            if (margin == null | margin.Equals(new Thickness(0)))
+            {
+                visual.SetValue(MarginProperty, new Thickness(0));
+            }
+
+            MemoryStream memory = new MemoryStream();
+            RenderTargetBitmap bitmap = new RenderTargetBitmap(
+                Convert.ToInt32(visual.GetValue(ActualWidthProperty)),
+                Convert.ToInt32(visual.GetValue(ActualHeightProperty)),
+                96,
+                96,
+                PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            encoder.Save(memory);
+
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.StreamSource = new MemoryStream(memory.ToArray());
+            img.EndInit();
+
+            memory.Dispose();
+            visual.SetValue(MarginProperty, margin);
+
+            return img;
+        }
+
+        private void ExpandAnimation(bool Value, Action Completed = null)
         {
             if (!Resizing)
             {
                 Resizing = true;
                 double X; double Y; double Width; double Height;
 
+                // 값 계산
                 if (Value)
                 {
                     X = ExpandMargin;
@@ -231,6 +273,7 @@ namespace Lumino
                     Width = ParentDock.ActualWidth - ExpandMargin * 2;
                     Height = ParentDock.ActualHeight - ExpandMargin * 2;
                     ParentDock.GridTopMenu.Visibility = Visibility.Visible;
+                    SwapThumb = GetImageFromVisual(BorderContent);
                 }
                 else
                 {
@@ -238,14 +281,38 @@ namespace Lumino
                     Y = OriginalY;
                     Width = OriginalWidth;
                     Height = OriginalHeight;
+                    SwapThumbExpand = GetImageFromVisual(BorderContent);
                 }
 
+                // 전환 섬네일 생성
+                Grid SwapGrid = new Grid();
+                Image SwapImage = new Image
+                {
+                    Stretch = Stretch.Uniform,
+                    Source = SwapThumb,
+                    Opacity = Value ? 1 : 0
+                };
+                Image SwapImageExpand = new Image
+                {
+                    Stretch = Stretch.Uniform,
+                    Source = SwapThumbExpand,
+                    Opacity = Value ? 0 : 1
+                };
+                SwapGrid.Children.Add(SwapImageExpand);
+                SwapGrid.Children.Add(SwapImage);
+                BorderContentSwap.Child = SwapGrid;
+                BorderContentSwap.Visibility = Visibility.Visible;
+                BorderContent.Visibility = Visibility.Collapsed;
+
+                // 애니메이션 설정
                 Storyboard ExpandAnimation = new Storyboard();
                 DoubleAnimation AnimationX = new DoubleAnimation();
                 DoubleAnimation AnimationY = new DoubleAnimation();
                 DoubleAnimation AnimationWidth = new DoubleAnimation();
                 DoubleAnimation AnimationHeight = new DoubleAnimation();
                 DoubleAnimation AnimationOpacity = new DoubleAnimation();
+                DoubleAnimation AnimationSwapOpacity = new DoubleAnimation();
+                DoubleAnimation AnimationSwapExpandOpacity = new DoubleAnimation();
                 CubicEase AnimationEasing = new CubicEase();
                 TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(500);
 
@@ -274,42 +341,68 @@ namespace Lumino
                 AnimationOpacity.Duration = AnimationDuration;
                 AnimationOpacity.EasingFunction = AnimationEasing;
 
+                AnimationSwapOpacity.From = ((Grid)BorderContentSwap.Child).Children[1].Opacity;
+                AnimationSwapOpacity.To = Value ? 0 : 1;
+                AnimationSwapOpacity.Duration = AnimationDuration;
+                AnimationSwapOpacity.EasingFunction = AnimationEasing;
+
+                AnimationSwapExpandOpacity.From = ((Grid)BorderContentSwap.Child).Children[0].Opacity;
+                AnimationSwapExpandOpacity.To = Value ? 1 : 0;
+                AnimationSwapExpandOpacity.Duration = AnimationDuration;
+                AnimationSwapExpandOpacity.EasingFunction = AnimationEasing;
+
                 ExpandAnimation.Children.Add(AnimationX);
                 ExpandAnimation.Children.Add(AnimationY);
                 ExpandAnimation.Children.Add(AnimationWidth);
                 ExpandAnimation.Children.Add(AnimationHeight);
                 ExpandAnimation.Children.Add(AnimationOpacity);
+                ExpandAnimation.Children.Add(AnimationSwapOpacity);
+                ExpandAnimation.Children.Add(AnimationSwapExpandOpacity);
 
+                // 애니메이션 대상 속성 설정
                 Storyboard.SetTargetProperty(AnimationX, new PropertyPath(Canvas.LeftProperty));
                 Storyboard.SetTargetProperty(AnimationY, new PropertyPath(Canvas.TopProperty));
                 Storyboard.SetTargetProperty(AnimationWidth, new PropertyPath(WidthProperty));
                 Storyboard.SetTargetProperty(AnimationHeight, new PropertyPath(HeightProperty));
                 Storyboard.SetTargetProperty(AnimationOpacity, new PropertyPath(OpacityProperty));
+                Storyboard.SetTargetProperty(AnimationSwapOpacity, new PropertyPath(OpacityProperty));
+                Storyboard.SetTargetProperty(AnimationSwapExpandOpacity, new PropertyPath(OpacityProperty));
 
+                // 애니메이션 대상 설정
                 Storyboard.SetTarget(AnimationX, this);
                 Storyboard.SetTarget(AnimationY, this);
                 Storyboard.SetTarget(AnimationWidth, this);
                 Storyboard.SetTarget(AnimationHeight, this);
                 Storyboard.SetTarget(AnimationOpacity, ParentDock.GridTopMenu);
+                Storyboard.SetTarget(AnimationSwapOpacity, ((Grid)BorderContentSwap.Child).Children[1]);
+                Storyboard.SetTarget(AnimationSwapExpandOpacity, ((Grid)BorderContentSwap.Child).Children[0]);
 
+                // 애니메이션 완료 이벤트 설정
                 ExpandAnimation.Completed += (o, i) =>
                 {
+                    if (Completed != null)
+                    {
+                        Completed();
+                    }
+
                     this.Width = Width;
                     this.Height = Height;
                     Canvas.SetLeft(this, X);
                     Canvas.SetTop(this, Y);
                     ParentDock.GridTopMenu.Opacity = Value ? 1 : 0;
                     ParentDock.GridTopMenu.Visibility = Value ? Visibility.Visible : Visibility.Collapsed;
-
+                    BorderContent.Visibility = Visibility.Visible;
+                    BorderContentSwap.Visibility = Visibility.Collapsed;
                     Resizing = false;
                 };
 
+                // 애니메이션 실행
                 ExpandAnimation.FillBehavior = FillBehavior.Stop;
                 ExpandAnimation.Begin();
             }
         }
 
-        private void CallMethod(String Method, object Parameter = null)
+        private void CallMethod(string Method, object Parameter = null)
         {
             if (WidgetTarget != null)
             {
@@ -351,6 +444,7 @@ namespace Lumino
                     switch (AssemblyEntry)
                     {
                         case "WebView":
+                            BorderContent.Background = Brushes.Black;
                             ChromiumWebBrowser WebView = new ChromiumWebBrowser();
                             WebView.Address = AssemblyArgument;
                             BorderContent.Child = WebView;
