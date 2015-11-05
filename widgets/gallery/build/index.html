@@ -3,17 +3,132 @@
 <head lang="ko">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>JARVIS-weather</title>
+    <title>JARVIS-gallery</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="./libs/slick.css" />
+    <link rel="stylesheet" href="./libs/MetroJs.min.css" />
+    <link rel="stylesheet" href="./css/main.css" />
 
-    <script type="text/javascript" src="/libs/modernizr-2.6.2.min.js"></script>
+    <script type="text/javascript" src="./libs/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
+    <div id="component-loader" style="display: none;">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
 
 
-    <script type="text/javascript" src="/libs/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="/js/main.js"></script>
+    <main id="app">
+        <section id="SCREEN_NORMAL">
+            <div id="component-live-tiles">
+                <div class="col col-2">
+                    <div class="row row-2">
+                        <div data-attr="live-tile-item"
+                             class="tile-item live-tile two-by-two"
+                             data-mode="carousel"
+                             data-speed="750" data-delay="4500">
+                            <div><img class="full" src="./assets/img1.jpg" alt="1" /></div>
+                            <div><img class="full" src="./assets/img2.jpg" alt="2" /></div>
+                        </div>
+                    </div>
+                    <div class="row row-1">
+                        <div class="col col-1">
+                            <div data-attr="live-tile-item"
+                                 class="tile-item live-tile one-by-one"
+                                 data-speed="750" data-delay="6000">
+                                <div><img class="full" src="./assets/img3.jpg" alt="3" /></div>
+                                <div><img class="full" src="./assets/img4.jpg" alt="4" /></div>
+                            </div>
+                        </div>
+                        <div class="col col-1">
+                            <div data-attr="live-tile-item"
+                                 class="tile-item live-tile one-by-one"
+                                 data-mode="fade"
+                                 data-speed="750" data-delay="5500">
+                                <div><img class="full" src="./assets/img5.jpg" alt="5" /></div>
+                                <div><img class="full" src="./assets/img6.jpg" alt="6" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="row row-1">
+                        <div class="col col-1">
+                            <div data-attr="live-tile-item"
+                                 class="tile-item live-tile one-by-one"
+                                 data-direction="horizontal"
+                                 data-speed="750" data-delay="3000">
+                                <div class="full-back green"><span>Lumino<br />Gallery Widget</span></div>
+                                <div class="full-back blue"><span>SW<br />Maestro 6th</span></div>
+                            </div>
+                        </div>
+                        <div class="col col-2">
+                            <div data-attr="live-tile-item"
+                                 class="tile-item live-tile two-by-one"
+                                 data-speed="750" data-delay="4000">
+                                <div><img src="./assets/img7.jpg" alt="7" /></div>
+                                <div><img src="./assets/img8.jpg" alt="8" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-2">
+                        <div class="col col-2">
+                            <div data-attr="live-tile-item"
+                                 class="tile-item live-tile two-by-two"
+                                 data-mode="flip"
+                                 data-speed="750" data-delay="3500">
+                                <div><img class="full" src="./assets/img9.jpg" alt="9" /></div>
+                                <div><img class="full" src="./assets/img10.jpg" alt="10" /></div>
+                            </div>
+                        </div>
+                        <div class="col col-1">
+                            <div class="row row-1">
+                                <div data-attr="live-tile-item"
+                                     class="tile-item live-tile one-by-one"
+                                     data-mode="fade"
+                                     data-speed="750" data-delay="5000">
+                                    <div><img class="full" src="./assets/img11.jpg" alt="11" /></div>
+                                    <div><img class="full" src="./assets/img12.jpg" alt="12" /></div>
+                                </div>
+                            </div>
+                            <div class="row row-1">
+                                <div data-attr="live-tile-item"
+                                     class="tile-item live-tile one-by-one"
+                                     data-mode="flip"
+                                     data-direction="horizontal"
+                                     data-speed="750" data-delay="2500">
+                                    <div class="full-back orange">
+                                        <span class="center">
+                                            <img src="./assets/WidgetIcons/GalleryWidget-SVG.svg" />
+                                        </span>
+                                    </div>
+                                    <div class="full-back red">
+                                        <span class="center">
+                                            <span>JARVIS</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="SCREEN_ACTIVE" style="display: none;">
+        </section>
+    </main>
+
+
+
+    <script type="text/javascript" src="./libs/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="./libs/slick.min.js"></script>
+    <script type="text/javascript" src="./libs/MetroJs.min.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+
 </body>
 </html>

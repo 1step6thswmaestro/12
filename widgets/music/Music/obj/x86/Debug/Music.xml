@@ -20,12 +20,22 @@ Music
  
  </summary>
 </member>
-<member name="T:Music.Widget">
+<member name="T:Music.ExpandView">
 <summary>
-Widget
+ExpandView
 </summary>
 </member>
-<member name="M:Music.Widget.InitializeComponent">
+<member name="M:Music.ExpandView.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:Music.MusicView">
+<summary>
+MusicView
+</summary>
+</member>
+<member name="M:Music.MusicView.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>
@@ -44,6 +54,46 @@ InitializeComponent
 <summary>
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:Music.Widget">
+<summary>
+Widget
+</summary>
+</member>
+<member name="M:Music.Widget.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+<summary>
+GeneratedInternalTypeHelper
+</summary>
+</member>
+<member name="M:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+<summary>
+CreateInstance
+</summary>
+</member>
+<member name="M:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+<summary>
+GetPropertyValue
+</summary>
+</member>
+<member name="M:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+<summary>
+SetPropertyValue
+</summary>
+</member>
+<member name="M:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+<summary>
+CreateDelegate
+</summary>
+</member>
+<member name="M:Music.XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+<summary>
+AddEventHandler
 </summary>
 </member>
 </members>

@@ -291,7 +291,7 @@ namespace Lumino
         private void LoadWidgets()
         {
             // 위젯 검색
-            string[] Widgets = Directory.GetFiles(@"C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Lumino\Widgets", "*.ini", SearchOption.AllDirectories);
+            string[] Widgets = Directory.GetFiles(ConfigManager.WidgetPath, "*.ini", SearchOption.AllDirectories);
 
             // 검색된 위젯 추가
             foreach(string Path in Widgets)
@@ -339,7 +339,6 @@ namespace Lumino
                         Target.StartMouseDown();
                     }
                 };
-                
 
                 // 콘텐츠 스택에 섬네일 컨트롤 추가
                 StackDrawerContent.Children.Add(WidgetStack);
@@ -360,7 +359,10 @@ namespace Lumino
 
         private void BtnBack_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ExpandedWidget.Expand = false;
+            if (ExpandedWidget != null)
+            {
+                ExpandedWidget.Expand = false;
+            }
         }
 
         private void BtnAbout_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

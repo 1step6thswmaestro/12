@@ -83,6 +83,9 @@
 @color-blue: #2196F3;
 @color-red: #F44336;
 @color-green: #4CAF50;
+@color-amber: #FFC107;
+@color-orange: #FF9800;
+@color-yellow: #FFEB3B;
 
 
 html, body {
@@ -97,4 +100,100 @@ html, body {
     padding: 0;
 
     position: relative;
+
+    display: flex;
+}
+
+#app {
+    flex: 1;
+    display: flex;
+
+    #SCREEN_NORMAL {
+        flex: 1;
+        display: flex;
+
+        #component-live-tiles {
+            flex: 1;
+            padding: .5vh .5vw;
+            display: flex;
+
+            .tile-item {
+                position: relative;
+                padding: 0;
+                margin: 0;
+                outline: 0;
+                border: .5vw solid transparent;
+                display: block;
+                z-index: 20;
+                overflow: hidden;
+                float: left;
+                box-sizing: border-box;
+                width: 100%;
+                flex: 1;
+                height: auto;
+
+                img {
+                    width: 100%;
+                    height: auto;
+
+                    &.full {
+                        width: auto;
+                        height: 100%;
+                        margin-left: -20%;
+                    }
+                }
+
+                .center {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    img {
+                        width: 75%;
+                        height: 75%;
+                    }
+                }
+
+                .full-back {
+                    padding: 1vw;
+
+                    &.green { background-color: @color-green; }
+                    &.blue { background-color: @color-blue; }
+                    &.red { background-color: @color-red; }
+                    &.white { background-color: @color-white; }
+                    &.amber { background-color: @color-amber; }
+                    &.orange { background-color: @color-orange; }
+                    &.yellow { background-color: @color-yellow; }
+
+                    span {
+                        font-size: 2vw;
+                        font-family: @font-main;
+                        line-height: 1.5;
+                        color: @color-white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.col {
+    display: flex;
+    flex-direction: column;
+
+    &-1 { flex: 1; }
+    &-2 { flex: 2; }
+    &-3 { flex: 3; }
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+
+    &-1 { flex: 1; }
+    &-2 { flex: 2; }
+    &-3 { flex: 3; }
 }

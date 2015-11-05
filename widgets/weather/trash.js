@@ -848,3 +848,107 @@ $('.reset').click(function () {
 
  module.exports = WeatherConditionConstants;
  */
+
+
+/*
+
+ .weather-list {
+ position: absolute;
+
+ width: 100%;
+ height: 85.71428571%; // 12/14
+
+ left: 0;
+ top: 7.14285714%; // 1/14
+
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+
+ &-item {
+ width: 75%;
+ flex: 1;
+ margin: 1vh 0;
+
+ border: .5vh solid @color-white;
+
+ will-change: all;
+ transition: all .3s cubic-bezier(0.6,0,0.4,1);
+
+ line-height: 1;
+
+ &.active { width: 90%; flex-grow: 2; background-color: @color-white;  }
+
+ &:first-child { margin-top: 0; }
+ &:last-child { margin-bottom: 0; }
+
+ display: flex;
+ align-items: center;
+ color: @color-white;
+
+ &-day {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+
+ &-day_of_week {
+ font-size: 2vh;
+ font-weight: 500;
+ }
+ &-date {
+ font-size: 1vh;
+ font-weight: 300;
+ opacity: .75;
+ }
+ }
+ &-temp {
+ flex: 1;
+ justify-content: center;
+
+ &-highTemp {
+ font-size: 1.6vh;
+ font-weight: 500;
+ &:after { font-weight: 300; content: "º";  }
+ }
+ &-division {
+ font-size: .8vh;
+ font-weight: 500;
+ color: @color-grey-500;
+ }
+ &-lowTemp {
+ font-size: 1vh;
+ font-weight: 300;
+ opacity: .75;
+ &:after { font-weight: 300; content: "º";  }
+ }
+ }
+ &-cond {
+ flex: 2;
+ display: flex;
+ align-items: center;
+ svg {
+ width: 6vh;
+ height: 6vh;
+ }
+ &-description {
+ margin-left: 1vh;
+ font-size: 1.6vh;
+ font-weight: 300;
+ }
+ }
+ &-precip {
+ flex: .75;
+ font-size: 1.6vh;
+ font-weight: 300;
+ }
+ &-wind {
+ flex: 1;
+ font-size: 1.6vh;
+ font-weight: 300;
+ }
+ }
+ }
+
+ */

@@ -9,10 +9,12 @@
   "author": "soma-JARVIS",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "flowing-js": "^1.1.0",
     "keymirror": "^0.1.1",
+    "masonry-layout": "^3.3.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

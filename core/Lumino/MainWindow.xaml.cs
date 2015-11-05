@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Lumino
@@ -13,16 +14,37 @@ namespace Lumino
             InitializeComponent();
 
             // 초기화
-            /*
-            Top = 0;
-            Left = 0;
-            Width = System.Windows.SystemParameters.PrimaryScreenWidth;
-            Height = System.Windows.SystemParameters.PrimaryScreenHeight;
-            WindowStyle = WindowStyle.None;
-            ResizeMode = ResizeMode.NoResize;
-            Topmost = true;
-            */
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            bool IsFullscreen = false;
+            foreach(string arg in Environment.GetCommandLineArgs())
+            {
+                try
+                {
+                    if (arg.Equals("-Fullscreen"))
+                    {
+                        Top = 0;
+                        Left = 0;
+                        Width = SystemParameters.PrimaryScreenWidth;
+                        Height = SystemParameters.PrimaryScreenHeight;
+                        WindowStyle = WindowStyle.None;
+                        ResizeMode = ResizeMode.NoResize;
+                        Topmost = true;
+                        IsFullscreen = true;
+                    }
+                    if (arg.IndexOf("-Margin(") != -1)
+                    {
+                        string[] margin = arg.Split('(')[1].Split(')')[0].Split(',');
+                        DockRoot.Margin = new Thickness(double.Parse(margin[0]), double.Parse(margin[1]), double.Parse(margin[2]), double.Parse(margin[3]));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            if (!IsFullscreen)
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
 
             // 이미지 품질
             RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.HighQuality);

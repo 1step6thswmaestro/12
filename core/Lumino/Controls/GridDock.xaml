@@ -12,16 +12,20 @@
         <Canvas x:Name="CanvasRoot"/>
         <Grid x:Name="GridTopMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Black" Height="100" Visibility="Collapsed" Opacity="0">
             <Grid.OpacityMask>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Offset="1"/>
-                </LinearGradientBrush>
+                <ImageBrush ImageSource="/Lumino;component/Images/Mask.png"/>
             </Grid.OpacityMask>
             <StackPanel x:Name="BtnBack" Orientation="Horizontal" HorizontalAlignment="Left">
                 <Image Width="45" Height="45" Source="/Lumino;component/Images/BtnBack.png" Margin="10,0,0,0"/>
                 <TextBlock x:Name="TextTitle" Text="제목" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="White" FontWeight="Bold" FontSize="32" MaxWidth="500"/>
             </StackPanel>
             <Image x:Name="BtnAbout" Width="30" Height="30" HorizontalAlignment="Right" Source="/Lumino;component/Images/BtnAbout.png" Margin="0,0,20,0"/>
+        </Grid>
+        <Grid x:Name="GridTopDeleteMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Black" Height="100" Visibility="Collapsed">
+            <Grid.OpacityMask>
+                <ImageBrush ImageSource="/Lumino;component/Images/Mask.png"/>
+            </Grid.OpacityMask>
+            <Image Width="45" Height="45" Source="/Lumino;component/Images/BtnDelete.png" Margin="10,0,0,0"/>
+            <Grid x:Name="GridDeleteLight" Background="#7FFF0000"/>
         </Grid>
         <StackPanel x:Name="StackDrawer" SnapsToDevicePixels="True" VerticalAlignment="Bottom">
             <Border x:Name="GripDrawer" HorizontalAlignment="Center" Background="#B2FFFFFF" CornerRadius="10,10,0,0" Height="50" Width="140">

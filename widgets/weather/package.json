@@ -15,6 +15,7 @@
     "es6-promise": "^3.0.2",
     "express": "^4.13.3",
     "flowing-js": "^1.0.0",
+    "gulp-concat": "^2.6.0",
     "jsdom": "^6.5.1",
     "react": "^0.13.3",
     "superagent": "^1.4.0",

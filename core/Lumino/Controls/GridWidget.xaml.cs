@@ -6,9 +6,9 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using Lumino.Functions;
 using CefSharp.Wpf;
-using System.Collections.Generic;
 using System.Windows.Threading;
 using Lumino.Controls;
+using System.Windows.Media;
 
 namespace Lumino
 {
@@ -208,6 +208,7 @@ namespace Lumino
         private double OriginalWidth;
         private double OriginalHeight;
         private bool PositionError;
+        private bool DeleteSelect;
         private bool GuidelineOriginal;
         private bool Resizing = false;
         private bool LongClick = false;
@@ -464,6 +465,7 @@ namespace Lumino
             }
 
             ParentDock.BringToFront(this);
+            ParentDock.GridTopDeleteMenu.Visibility = Visibility.Visible;
             GridSelect.Visibility = Visibility.Visible;
             if (e != null)
             {
@@ -479,24 +481,32 @@ namespace Lumino
                 ParentDock.Guideline = false;
             }
 
-            if (PositionError)
+            if (!DeleteSelect)
             {
-                if (NowLoading)
+                if (PositionError)
                 {
-                    ParentDock.Remove(this);
+                    if (NowLoading)
+                    {
+                        ParentDock.Remove(this);
+                    }
+                    else
+                    {
+                        SetPosition(LastRow, LastColumn, true);
+                        GridError.Visibility = Visibility.Collapsed;
+                    }
                 }
                 else
                 {
-                    SetPosition(LastRow, LastColumn, true);
-                    GridError.Visibility = Visibility.Collapsed;
+                    LastRow = Row;
+                    LastColumn = Column;
+                    SetPosition(Row, Column, true);
+                    ParentDock.Config.SaveWidgets();
                 }
             }
-            else
+
+            if (ParentDock != null)
             {
-                LastRow = Row;
-                LastColumn = Column;
-                SetPosition(Row, Column, true);
-                ParentDock.Config.SaveWidgets();
+                ParentDock.GridTopDeleteMenu.Visibility = Visibility.Collapsed;
             }
 
             GridSelect.Visibility = Visibility.Collapsed;
@@ -518,27 +528,30 @@ namespace Lumino
 
         private void GridWidget_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (LongClickTimer != null)
+            if (!Expand)
             {
-                LongClickTimer.Stop();
-                LongClickTimer = null;
-            }
-
-            if (!LongClick)
-            {
-                if (!NowLoading)
+                if (LongClickTimer != null)
                 {
-                    Expand = true;
+                    LongClickTimer.Stop();
+                    LongClickTimer = null;
+                }
+
+                if (!LongClick)
+                {
+                    if (!NowLoading)
+                    {
+                        Expand = true;
+                    }
+                    else
+                    {
+                        StopMouseDown();
+                        NowLoading = false;
+                    }
                 }
                 else
                 {
-                    StopMouseDown();
-                    NowLoading = false;
+                    LongClick = false;
                 }
-            }
-            else
-            {
-                LongClick = false;
             }
         }
 
@@ -564,17 +577,7 @@ namespace Lumino
 
         private void GridWidget_LongClick()
         {
-            AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
-                "선택된 위젯 삭제",
-                "선택한 위젯을 삭제하시겠습니까? 삭제한 위젯은 애플리케이션의 위젯 서랍에서 다시 불러올 수 있습니다.",
-                true);
-
-            Dialog.ShowDialog();
-            LongClick = false;
-            if (Dialog.GetResult())
-            {
-                ParentDock.Remove(this);
-            }
+            // MOUSE LONG CLICK EVENT
         }
 
         private void GridWidget_Loaded(object sender, RoutedEventArgs e)
@@ -597,6 +600,10 @@ namespace Lumino
             if (!Expand)
             {
                 StopMouseDown();
+                if (DeleteSelect)
+                {
+                    ParentDock.Remove(this);
+                }
             }
         }
 
@@ -653,6 +660,7 @@ namespace Lumino
                             }
                         }
 
+                        // 다른 위젯과의 충돌 검사
                         if (IsIntersect)
                         {
                             PositionError = true;
@@ -664,6 +672,18 @@ namespace Lumino
                             GridError.Visibility = Visibility.Collapsed;
                         }
                     }
+                }
+
+                // 삭제 영역으로의 충돌 검사
+                if (TargetPosition.Y <= ParentDock.GridTopDeleteMenu.ActualHeight)
+                {
+                    DeleteSelect = true;
+                    ParentDock.GridDeleteLight.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    DeleteSelect = false;
+                    ParentDock.GridDeleteLight.Visibility = Visibility.Collapsed;
                 }
             }
         }

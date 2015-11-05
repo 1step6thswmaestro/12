@@ -46,14 +46,6 @@ var TodayWeather = {
         this.HighTemp = DOM.find('[weather-attr = today-weather-highTemp]');
         this.LowTemp = DOM.find('[weather-attr = today-weather-lowTemp]');
         this.Description = DOM.find('[weather-attr = today-weather-description]');
-
-        DOM.on('click tap', function(event) {
-            if (event.which == 1) { //Left Mouse Clicked
-                AppDispatcher.activeApp();
-            }
-        });
-
-
     },
 
     setWeatherData: function() {
@@ -90,6 +82,13 @@ var TodayWeather = {
         Constants.FlowID.ACTIVE_APP,
         function() {
             disableComponent();
+        }
+    ),
+
+    subscribeDisableApp: AppFlowController.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            activeComponent();
         }
     )
 };

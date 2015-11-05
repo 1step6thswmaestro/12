@@ -110,13 +110,23 @@
     <Import Include="System.Windows.Navigation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\VertexSlider.vb" />
     <Compile Include="Engine\FMODEX.vb" />
     <Compile Include="Engine\FMOD_DSP.vb" />
     <Compile Include="Engine\FMOD_ERRORS.vb" />
     <Compile Include="Engine\FMOD_MEMORYINFO.vb" />
     <Compile Include="Engine\ModFmodControl.vb" />
-    <Compile Include="Widget.xaml.vb">
-      <DependentUpon>Widget.xaml</DependentUpon>
+    <Compile Include="Functions\GlobalDefine.vb" />
+    <Compile Include="Functions\GlobalFunctions.vb" />
+    <Compile Include="Functions\ImageHelper.vb" />
+    <Compile Include="Functions\MediaManager.vb" />
+    <Compile Include="Functions\MusicItem.vb" />
+    <Compile Include="Functions\TagManager.vb" />
+    <Compile Include="View\ExpandView.xaml.vb">
+      <DependentUpon>ExpandView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MusicView.xaml.vb">
+      <DependentUpon>MusicView.xaml</DependentUpon>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
@@ -131,11 +141,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Widget.xaml.vb">
+      <DependentUpon>Widget.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
+    <Resource Include="Images\BtnNext.png" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -144,6 +158,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ExpandView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MusicView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Widget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -151,6 +177,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Default.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BtnPlay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BtnPause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BtnPrev.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Mask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ImgVolume.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

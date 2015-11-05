@@ -1,6 +1,6 @@
 var LanguageSelector = {
     getCurrentLanguage: function() {
-        return 'EN';
+        return 'KR';
     }
 };
 

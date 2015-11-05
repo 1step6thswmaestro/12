@@ -9,9 +9,14 @@ c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Mu
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Music.dll
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Music.xml
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Music.pdb
-c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Widget.g.vb
-c:\users\seop\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Widget.baml
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\policy.2.0.taglib-sharp.dll
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\taglib-sharp.dll
 c:\users\seop\documents\visual studio 2015\Projects\Music\Music\bin\x86\Debug\policy.2.0.taglib-sharp.config
-C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Music.vbprojResolveAssemblyReference.cache
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\View\MusicView.g.vb
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Widget.g.vb
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\View\MusicView.baml
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\Widget.baml
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\View\ExpandView.g.vb
+C:\Users\SEOP\documents\visual studio 2015\Projects\Music\Music\obj\x86\Debug\View\ExpandView.baml
+C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Music\Music\obj\x86\Debug\GeneratedInternalTypeHelper.g.vb
+C:\Users\SEOP\Documents\Visual Studio 2015\Projects\Music\Music\obj\x86\Debug\ResourceDictionary.baml

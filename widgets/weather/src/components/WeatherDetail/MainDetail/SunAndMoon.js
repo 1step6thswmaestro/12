@@ -7,6 +7,7 @@ var WeatherStore = require('../../../stores/WeatherStore');
 
 var DOM;
 var TimeLine;
+var MoonShape;
 var texts = {
     'sun-rise': 0,
     'sun-set': 0,
@@ -20,6 +21,7 @@ var SunAndMoon = {
     initialize: function($) {
         DOM = $('#day-weather-sun-and-moon');
         TimeLine = DOM.find('#time-line');
+        MoonShape = DOM.find('#moon-shape');
 
         this.descriptionDOMs = {
             'helper-day': DOM.find('[text-attr=helper-day]'),
@@ -35,6 +37,8 @@ var SunAndMoon = {
 
         this.dayLength = TimeLine.find('[weather-attr=day-length]');
 
+        this.moonShapeIcon = MoonShape.find('[weather-attr=moon-shape-icon]');
+        this.moonShapeDescription = MoonShape.find('[weather-attr=moon-shape-description]');
 
         this.initDescriptionText(LanguageSelector.getCurrentLanguage());
         DateSelector.addSlideChangeListener(this.displayContext.bind(this));
@@ -48,16 +52,6 @@ var SunAndMoon = {
 
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
-
-        if (index == 0) { this._contextForToday(index); }
-        else { this._contextForOtherDays(index); }
-    },
-
-    _contextForToday: function() {
-
-    },
-
-    _contextForOtherDays: function(index) {
         var data = (WeatherStore.getSunMoonData())[index].sun;
 
         var sunRiseTime;
@@ -72,20 +66,9 @@ var SunAndMoon = {
                     case 'twilight-end': return new Date(data.twilight['civilEndISO']);
                 }
             })();
-            //var options = {
-            //    useEasing : true,
-            //    useGrouping : true,
-            //    separator : ',',
-            //    decimal : '.',
-            //    prefix : this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":",
-            //    suffix : ''
-            //};
 
             if (prop == 'sun-rise') { sunRiseTime = newTextDate; }
             if (prop == 'sun-set') { sunSetTime = newTextDate; }
-
-            //var countText = new CountUp(prop, texts[prop]*=1, newTextDate.getMinutes(), 0, 2.5, options);
-            //countText.start();
 
             var text = this.__convertLeadingZeros(newTextDate.getHours(), 2) + ":" + this.__convertLeadingZeros(newTextDate.getMinutes(), 2);
             this[prop].text(text);

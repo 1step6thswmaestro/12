@@ -10,6 +10,7 @@ namespace Lumino.Functions
     public class ConfigManager
     {
         public static string VirtualStore = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lumino";
+        public static string WidgetPath = VirtualStore + "\\Widgets";
         public static string ConfigFile = VirtualStore + "\\Config.cfg";
         private GridDock MasterDock;
 
@@ -22,6 +23,12 @@ namespace Lumino.Functions
             if (!Directory.Exists(VirtualStore))
             {
                 Directory.CreateDirectory(VirtualStore);
+            }
+
+            // 위젯 디렉토리 생성
+            if (!Directory.Exists(WidgetPath))
+            {
+                Directory.CreateDirectory(WidgetPath);
             }
 
             // 구성 파일 생성
