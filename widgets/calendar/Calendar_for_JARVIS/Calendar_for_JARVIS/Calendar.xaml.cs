@@ -36,7 +36,8 @@ namespace Calendar_for_JARVIS
         public calendar_for_jarvis()
         {
             InitializeComponent();
-
+        }
+/*
             HIGHLIGHT_TODAY     = Resources["HighlightToday"] as Style;
             HIGHLIGHT_SCHEDULE  = Resources["HighlightSchedule"] as Style;
 
@@ -190,9 +191,6 @@ namespace Calendar_for_JARVIS
         #endregion
 
         #region Set date and days.
-        /* date is text at the top, in "YYYY년 MM월 DD일" format
-         * days are numbers in grid.
-         */
         private void set_date()
         {
             DateTime today = DateTime.Today;
@@ -325,6 +323,6 @@ namespace Calendar_for_JARVIS
                 Console.WriteLine("No upcoming events found.");
             }
         }
-        #endregion
+        #endregion*/
     }
 }
