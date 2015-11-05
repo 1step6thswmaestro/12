@@ -1,4 +1,4 @@
-﻿<Window x:Class="Calendar.MainWindow"
+﻿<Window x:Class="Calendar.WidgetView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="400" Width="400">

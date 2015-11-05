@@ -19,7 +19,6 @@ using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -28,9 +27,11 @@ namespace Calendar
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class WidgetView : Window
     {
-        public MainWindow()
+        static private bool is_expanded = false;
+
+        public WidgetView()
         {
             InitializeComponent();
 
@@ -39,8 +40,171 @@ namespace Calendar
 
             reset();
             refresh();
+
+            foreach (UIElement element in Grid_Calendar.Children)
+            {
+                if (element is TextBlock)
+                {
+                    TextBlock text = element as TextBlock;
+                    text.MouseLeftButtonDown += new MouseButtonEventHandler(on_click);
+                }
+            }
         }
 
+        public void on_click(object sender, MouseButtonEventArgs args)
+        {
+            if (is_expanded == false) return;
+
+            TextBlock text = sender as TextBlock;
+
+            Year.Text = text.Text;
+            Date.Text = "";
+        }
+
+        private void show(int row, int col)
+        {
+            Year.Text = row.ToString();
+            Date.Tag = col.ToString();
+        }
+
+        Events events;
+
+        private void attatch_schedule_list()
+        {
+            IEnumerable<ListView> lists = get_all<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
+            if (lists != null) {
+                lists = get_all<ListView>(NUMBER_OF_GRID_ROW + 1, 0);
+                foreach (ListView list in lists)
+                    list.Visibility = System.Windows.Visibility.Visible;
+                IEnumerable<Button> buttons = get_all<Button>(NUMBER_OF_GRID_ROW + 2, 0);
+                foreach (Button button in buttons)
+                    button.Visibility = System.Windows.Visibility.Visible;
+                return;
+            }
+            RowDefinition last_row =
+                Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW+2);
+            last_row.Height = new GridLength(40);
+
+            ListView schedule_list = new ListView {
+                Background = Brushes.Black,     BorderBrush = Brushes.Black,
+            };
+            ScrollViewer.SetHorizontalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
+            ScrollViewer.SetVerticalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
+            Grid.SetColumnSpan(schedule_list, NUMBER_OF_GRID_COL);
+            Grid.SetRow(schedule_list, NUMBER_OF_GRID_ROW + 2);
+            Grid_Calendar.Children.Add(schedule_list);
+
+            int selected_row, selected_col;
+
+            DateTime today = DateTime.Today;
+            int days = DateTime.DaysInMonth(today.Year, today.Month);
+            int start_day_of_month = (int)today.AddDays(-today.Day + 1).DayOfWeek;
+            int days_in_month = DateTime.DaysInMonth(today.Year, today.Month);
+
+            selected_row = (today.Day + start_day_of_month - 1) / 7;
+            selected_col = (int)today.DayOfWeek;
+
+            if (events.Items != null && events.Items.Count > 0)
+            {
+                foreach (var eventItem in events.Items)
+                {
+
+                    try
+                    {
+                        DateTime start_date = DateTime.ParseExact(
+                            eventItem.Start.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime end_date = DateTime.ParseExact(
+                            eventItem.End.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture); ;
+
+                        if (DateTime.Compare(start_date, today) <= 0 && DateTime.Compare(today, end_date) <= 0)
+                        {
+                            schedule_list.Items.Add(new ListViewItem
+                            {
+                                Foreground = Brushes.White,
+                                FontSize = 4,
+                                Content = eventItem.Summary
+                            });
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No upcoming events found.");
+            }
+
+            Button up_button = new Button
+            {
+                Background = Brushes.White, BorderThickness = new System.Windows.Thickness(0),
+                Height = 7, Width = 7,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                Margin = new System.Windows.Thickness(0, 2, 2, 0)
+
+            };
+            Button down_button = new Button
+            {
+                Background = Brushes.White,
+                BorderThickness = new System.Windows.Thickness(0),
+                Height = 7,
+                Width = 7,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                Margin = new System.Windows.Thickness(0, 10, 2, 0)
+            };
+            Grid.SetColumnSpan(up_button, NUMBER_OF_GRID_COL);
+            Grid.SetRow(up_button, NUMBER_OF_GRID_ROW + 2);
+            Grid_Calendar.Children.Add(up_button);
+            Grid.SetColumnSpan(down_button, NUMBER_OF_GRID_COL);
+            Grid.SetRow(down_button, NUMBER_OF_GRID_ROW + 2);
+            Grid_Calendar.Children.Add(down_button);
+            
+        }
+        private void detach_schedule_list()
+        {
+            RowDefinition last_row =
+                Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW + 2);
+            last_row.Height = new GridLength(10);
+
+            foreach (UIElement element in Grid_Calendar.Children)
+            {
+                if (element is ListView || element is Button)
+                {
+                    element.Visibility = System.Windows.Visibility.Hidden;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when widget is expanded or contracted.
+        /// </summary>
+        /// <param name="type">
+        /// If type is true then widget is expaned. Else widget is contracted.
+        /// </param>
+        public void IsExpand(bool type)
+        {
+            switch (type)
+            {
+                    // get smaller
+                case false:
+                    detach_schedule_list();
+                    break;
+                    // get larger
+                case true:
+                    attatch_schedule_list();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Refresh the content of calendar.
+        /// </summary>
         private void refresh()
         {
             set_date();
@@ -66,7 +230,9 @@ namespace Calendar
         }
         #endregion
 
-        // Reset all UIElements
+        /// <summary>
+        /// Reset content of calendar.
+        /// </summary>
         private void reset()
         {
             Year.Text = "9999년";
@@ -85,7 +251,12 @@ namespace Calendar
             }
         }
 
-        // Check if it's out of Grid_Calendar's range
+        /// <summary>
+        /// Check if row and column is out of Grid_Calendar.
+        /// </summary>
+        /// <param name="row">Row of Grid_Calendar.</param>
+        /// <param name="col">Column of Grid_Calendar.</param>
+        /// <returns>True if row and column is out of Grid_Calendar.</returns>
         static private bool is_out_of_grid(int row, int col) {
             return (row >= NUMBER_OF_GRID_ROW 
                 || row < 0 
@@ -94,6 +265,13 @@ namespace Calendar
         }
 
         #region Methods for get UI elements in Grid. Access using row and column.
+        /// <summary>
+        /// Get a UIElement of typename T in Grid_Calendar, specified with row and column.
+        /// </summary>
+        /// <typeparam name="T">typename of class inherit UIElement.</typeparam>
+        /// <param name="row">Specified row of Grid_Calendar.</param>
+        /// <param name="col">Specified column of Grid_Calendar.</param>
+        /// <returns>UIElement</returns>
         private T get<T> (int row, int col) where T : UIElement
         {
             if (is_out_of_grid(row, col)) return default(T);
@@ -105,6 +283,13 @@ namespace Calendar
                     return element as T;
             return default(T);
         }
+        /// <summary>
+        /// Get all UIElements of typename T in Grid_Calendar, specified with row and column.
+        /// </summary>
+        /// <typeparam name="T">typename of class inherit UIElement.</typeparam>
+        /// <param name="row">Specified row of Grid_Calendar.</param>
+        /// <param name="col">Specified column of Grid_Calendar.</param>
+        /// <returns>List of UIElemenets.</returns>
         private IEnumerable<T> get_all<T>(int row, int col) where T : UIElement
         {
             if (is_out_of_grid(row, col)) return null;
@@ -120,6 +305,13 @@ namespace Calendar
         #endregion
 
         #region Methods for highlight mark.
+        /// <summary>
+        /// Check if cell is highlighted.
+        /// </summary>
+        /// <param name="row">Row of cell.</param>
+        /// <param name="col">Column of cell.</param>
+        /// <param name="highlight">Type of highlight.</param>ed
+        /// <returns>True if cell is highlighted or not.</returns>
         private bool is_highlighted (int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return false;
@@ -128,6 +320,12 @@ namespace Calendar
                 if (ellipse.Style.Equals(highlight_style(highlight))) return true;
             return false;
         }
+        /// <summary>
+        /// Delete highlight of cell.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <param name="highlight"></param>
         private void unhighlight (int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
@@ -178,7 +376,9 @@ namespace Calendar
                     text.Style = fontstyle;
                     text.Text = day.ToString();
 
-                    if (day == DateTime.Today.Day) highlight(row, col, Highlight.TODAY);
+                    if (day == DateTime.Today.Day 
+                        && fontstyle.Equals (Resources["ThisMonth"] as Style) == true)
+                        highlight(row, col, Highlight.TODAY);
 
                     day++;
                     if (day > days_in_month)
@@ -248,7 +448,7 @@ namespace Calendar
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
             // List events.
-            Events events = request.Execute();
+            events = request.Execute();
             Console.WriteLine("Upcoming events:");
             if (events.Items != null && events.Items.Count > 0)
             {
