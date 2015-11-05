@@ -1,0 +1,9 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Calendar_for_JARVIS="clr-namespace:Calendar_for_JARVIS;assembly=Calendar_for_JARVIS" x:Class="WpfApplication1.MainWindow"
+        Title="MainWindow" Height="400" Width="400">
+    <Grid>
+        <Calendar_for_JARVIS:UserControl1/>
+    </Grid>
+</Window>
