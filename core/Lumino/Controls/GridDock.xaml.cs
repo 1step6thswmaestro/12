@@ -359,7 +359,10 @@ namespace Lumino
 
         private void BtnBack_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ExpandedWidget.Expand = false;
+            if (ExpandedWidget != null)
+            {
+                ExpandedWidget.Expand = false;
+            }
         }
 
         private void BtnAbout_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -17,16 +17,28 @@ namespace Lumino
             bool IsFullscreen = false;
             foreach(string arg in Environment.GetCommandLineArgs())
             {
-                if (arg.Equals("-Fullscreen"))
+                try
                 {
-                    Top = 0;
-                    Left = 0;
-                    Width = SystemParameters.PrimaryScreenWidth;
-                    Height = SystemParameters.PrimaryScreenHeight;
-                    WindowStyle = WindowStyle.None;
-                    ResizeMode = ResizeMode.NoResize;
-                    Topmost = true;
-                    IsFullscreen = true;
+                    if (arg.Equals("-Fullscreen"))
+                    {
+                        Top = 0;
+                        Left = 0;
+                        Width = SystemParameters.PrimaryScreenWidth;
+                        Height = SystemParameters.PrimaryScreenHeight;
+                        WindowStyle = WindowStyle.None;
+                        ResizeMode = ResizeMode.NoResize;
+                        Topmost = true;
+                        IsFullscreen = true;
+                    }
+                    if (arg.IndexOf("-Margin(") != -1)
+                    {
+                        string[] margin = arg.Split('(')[1].Split(')')[0].Split(',');
+                        DockRoot.Margin = new Thickness(double.Parse(margin[0]), double.Parse(margin[1]), double.Parse(margin[2]), double.Parse(margin[3]));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
                 }
             }
             if (!IsFullscreen)
