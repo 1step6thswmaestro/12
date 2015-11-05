@@ -8,3 +8,4 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\clock\clock_for_jarvis\clock_for_jarvis\obj\Debug\clock_for_jarvis.csprojResolveAssemblyReference.cache

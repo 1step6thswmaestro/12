@@ -51,7 +51,7 @@ namespace Calendar_for_JARVIS
         {
             set_date();
             set_days();
-            set_schedule_highlight();
+//            set_schedule_highlight();
         }
 
         private int NUMBER_OF_GRID_ROW = 6;
