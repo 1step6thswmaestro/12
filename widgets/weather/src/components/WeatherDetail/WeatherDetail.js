@@ -21,10 +21,6 @@ function initializeDatas() {
         return;
     }
 
-    TempGraph.initGraph();
-    DateSelector.initItems();
-
-
     countCallback = 0;
 }
 
@@ -34,6 +30,11 @@ function activeComponent() {
     DOM.animate({
         opacity: 1
     }, 500);
+
+    setTimeout(function() {
+        TempGraph.initGraph();
+        DateSelector.initItems();
+    }, 1000);
 }
 
 function disableComponent() {
