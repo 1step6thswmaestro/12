@@ -8,7 +8,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <Grid ClipToBounds="True">
-        <ContentPresenter x:Name="PagePresenterMusic"/>
-        <ContentPresenter x:Name="PagePresenterExpand"/>
+        <ContentPresenter x:Name="PagePresenter"/>
     </Grid>
 </UserControl>
