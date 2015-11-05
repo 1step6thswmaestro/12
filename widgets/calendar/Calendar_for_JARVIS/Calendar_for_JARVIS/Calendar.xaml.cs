@@ -27,14 +27,14 @@ using System.Threading;
 namespace Calendar_for_JARVIS
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for Calendar.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class Calendar : UserControl
     {
         static private bool is_expanded = false;
         Events events;
 
-        public UserControl1()
+        public Calendar()
         {
             InitializeComponent();
 

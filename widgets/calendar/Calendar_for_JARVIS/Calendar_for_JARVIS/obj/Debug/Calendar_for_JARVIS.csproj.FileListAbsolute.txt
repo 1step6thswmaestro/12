@@ -1,3 +1,4 @@
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\packages.config
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\Calendar_for_JARVIS.dll.config
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\Calendar_for_JARVIS.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\Calendar_for_JARVIS.pdb
@@ -36,12 +37,12 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Cal
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\System.Net.Http.Primitives.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Debug\Zlib.Portable.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csproj.App.config
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csprojResolveAssemblyReference.cache
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\UserControl1.baml
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\UserControl1.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar.g.cs
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS_MarkupCompile.cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.g.resources
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.Properties.Resources.resources
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csprojResolveAssemblyReference.cache
