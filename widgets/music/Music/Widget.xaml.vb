@@ -1,10 +1,23 @@
-﻿Imports System.Windows.Media.Animation
+﻿Imports System.ComponentModel
+Imports System.Threading
+Imports System.Windows.Media.Animation
 
 Public Class Widget
 
 #Region " [ 객체 ] "
     Private MusicView As New MusicView
     Private ExpandView As New ExpandView
+    Private WorkThread As New Queue(Of UpdateWork)
+    Private WorkThreadEvent As New AutoResetEvent(False)
+    Private MonitorThread As New BackgroundWorker
+    Private MonitorThreadEvent As New AutoResetEvent(False)
+#End Region
+
+#Region " [ 구조체 ] "
+    Private Structure UpdateWork
+        Dim Path As String
+        Dim Callback As WaitCallback
+    End Structure
 #End Region
 
     Private Sub Widget_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
@@ -20,41 +33,83 @@ Public Class Widget
         PagePresenterExpand.Content = ExpandView
         PagePresenterExpand.Visibility = Visibility.Collapsed
 
+        ' 모니터 생성
+        AddHandler MonitorThread.DoWork,
+            Sub()
+                Do
+                    SyncLock WorkThread
+                        If WorkThread.Any Then
+                            Dim Target As UpdateWork = WorkThread.Dequeue()
+                            If Target.Path = SetPath Then
+                                ThreadPool.QueueUserWorkItem(Target.Callback)
+                                WorkThreadEvent.WaitOne()
+                            End If
+                        Else
+                            MonitorThreadEvent.WaitOne()
+                        End If
+                    End SyncLock
+                Loop
+            End Sub
+        MonitorThread.RunWorkerAsync()
+
         ' 이벤트 연결
         ' - 미디어 변경 이벤트
         AddHandler MediaManager.OnMediaChanged,
             Sub(ByVal Path As String, ByVal IDX As Integer)
-                ' 태그 갱신
-                Dim Title As String = TagManager.GetTag(Path, TagManager.TagType.Title)
-                Dim Artist As String = TagManager.GetTag(Path, TagManager.TagType.Artist)
-                Dim AlbumArt As BitmapFrame = TagManager.GetAlbumArt(Path)
-                MusicView.TextTitle.Text = Title
-                MusicView.TextArtist.Text = Artist
-                ExpandView.TextTitle.Text = Title
-                ExpandView.TextArtist.Text = Artist
+                Dim Callback As New WaitCallback(
+                     Sub()
+                         ' 태그 갱신
+                         Dim Title As String = TagManager.GetTag(Path, TagManager.TagType.Title)
+                         Dim Artist As String = TagManager.GetTag(Path, TagManager.TagType.Artist)
+                         Dim AlbumArt As BitmapFrame = TagManager.GetAlbumArt(Path)
 
-                ' 앨범 이미지 갱신
-                Dim Brush As New ImageBrush
-                If AlbumArt IsNot Nothing Then
-                    Brush.ImageSource = AlbumArt
-                Else
-                    Brush.ImageSource = ImageHelper.ImageLoad("pack://application:,,,/Music;component/Images/Default.png")
-                End If
-                MusicView.EllipseAlbum.Fill = Brush
-                ExpandView.ImgBackground.Source = ImageHelper.SetBlurEffect(AlbumArt)
+                         Dispatcher.Invoke(
+                             Sub()
+                                 MusicView.TextTitle.Text = Title
+                                 MusicView.TextArtist.Text = Artist
+                                 ExpandView.TextTitle.Text = Title
+                                 ExpandView.TextArtist.Text = Artist
+                             End Sub)
 
-                ' 스펙트럼 색상 변경
-                For i As Integer = 0 To MusicView.ProgressBarList.Count - 1
-                    MusicView.ProgressBarList(i).Foreground = New SolidColorBrush(ImageHelper.AverageColor(AlbumArt))
-                Next
+                         ' 앨범 이미지 갱신
+                         Dispatcher.Invoke(
+                          Sub()
+                              Dim Brush As New ImageBrush
+                              If AlbumArt IsNot Nothing Then
+                                  Brush.ImageSource = AlbumArt
+                              Else
+                                  Brush.ImageSource = ImageHelper.ImageLoad("pack://application:,,,/Music;component/Images/Default.png")
+                              End If
 
-                ' 스펙트럼 패널 표시
-                If MusicView.SpectrumPanel.Visibility <> Visibility.Visible Then
-                    MusicView.SpectrumPanel.Visibility = Visibility.Visible
-                End If
+                              MusicView.EllipseAlbum.Fill = Brush
+                              ExpandView.ImgBackground.Source = ImageHelper.SetBlurEffect(AlbumArt)
+                          End Sub)
 
-                ' 선택된 앨범 표시 갱신
-                ExpandView.ListMusic.SelectedIndex = IDX
+                         ' 스펙트럼 색상 변경
+                         For i As Integer = 0 To MusicView.ProgressBarList.Count - 1
+                             Dim Target As Integer = i
+                             Dim ColorAVG As Color = ImageHelper.AverageColor(AlbumArt)
+                             Dispatcher.Invoke(Sub() MusicView.ProgressBarList(Target).Foreground = New SolidColorBrush(ColorAVG))
+                         Next
+
+                         ' 스펙트럼 패널 표시
+                         Dispatcher.Invoke(
+                          Sub()
+                              If MusicView.SpectrumPanel.Visibility <> Visibility.Visible Then
+                                  MusicView.SpectrumPanel.Visibility = Visibility.Visible
+                              End If
+                          End Sub)
+
+                         ' 재설정 신호 발생
+                         WorkThreadEvent.Set()
+                     End Sub)
+
+                WorkThread.Enqueue(
+                    New UpdateWork With {
+                        .Path = Path,
+                        .Callback = Callback
+                    })
+                MonitorThreadEvent.Set()
             End Sub
 
         ' - 재생 위치 변경 이벤트
