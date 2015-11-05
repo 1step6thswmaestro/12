@@ -41,25 +41,28 @@
     top: 5%;
 
     display: flex;
-    justify-content: space-between;
-    flex-direction: column;
 
     color: @color-white;
 
     &-icon {
-        flex: 1;
         display: flex;
+        align-items: center;
+        margin: 0 -7.5vw 0 -10vw;
 
         svg {
-            flex: 1;
+            width: 50vw;
+            height: 50vw;
             color: @color-white;
         }
     }
 
     &-summary {
+        flex: 1;
+
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
 
         &-temp {
             display: flex;
@@ -67,7 +70,7 @@
 
             &-high {
                 padding-bottom: .5vw;
-                font-size: 13vw;
+                font-size: 15vw;
                 font-weight: 500;
                 &:after { margin-left: .66vw; font-weight: 300; content: "º";  }
             }
@@ -75,16 +78,16 @@
             &-division {
                 margin-left: 1vw;
                 margin-right: 3vw;
-                font-size: 6vw;
+                font-size: 10vw;
                 font-weight: 500;
                 color: @color-grey-500;
             }
 
             &-low {
-                font-size: 8vw;
+                font-size: 10vw;
                 font-weight: 100;
                 line-height: 1;
-                margin-top: 2vh;
+                margin-top: 5vh;
                 &:after { margin-left: .66vw; font-weight: 300; content: "º";  }
             }
         }
