@@ -21,10 +21,6 @@ function initializeDatas() {
         return;
     }
 
-    TempGraph.initGraph();
-    DateSelector.initItems();
-
-
     countCallback = 0;
 }
 
@@ -33,13 +29,18 @@ function activeComponent() {
     DOM.css('opacity', 0);
     DOM.animate({
         opacity: 1
-    }, '1000', 'easeInCubic');
+    }, 500);
+
+    setTimeout(function() {
+        TempGraph.initGraph();
+        DateSelector.initItems();
+    }, 1000);
 }
 
 function disableComponent() {
     DOM.animate({
         opacity: 0
-    }, '600', 'easeInCubic', function() {
+    }, 500, function() {
         DOM.attr('style', 'display: none;');
     });
 }

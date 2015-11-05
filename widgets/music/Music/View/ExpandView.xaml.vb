@@ -1,12 +1,14 @@
 ﻿Imports System.ComponentModel
 
 Public Class ExpandView
+    Private IsReady As Boolean = False
 
     Private Sub ExpandView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        If IO.Directory.Exists(DataStore) Then
-            ' 경로에서 음악 탐색
-            Dim LoadWorker As New BackgroundWorker
-            AddHandler LoadWorker.DoWork,
+        If Not IsReady Then
+            If IO.Directory.Exists(DataStore) Then
+                ' 경로에서 음악 탐색
+                Dim LoadWorker As New BackgroundWorker
+                AddHandler LoadWorker.DoWork,
                 Sub()
                     MediaManager.MusicList.Clear()
 
@@ -26,7 +28,10 @@ Public Class ExpandView
                     ListMusic.Dispatcher.Invoke(Sub() ListMusic.ItemsSource = MediaManager.MusicList)
                 End Sub
 
-            LoadWorker.RunWorkerAsync()
+                LoadWorker.RunWorkerAsync()
+            End If
+
+            IsReady = True
         End If
     End Sub
 

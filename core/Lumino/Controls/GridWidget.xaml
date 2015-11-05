@@ -9,6 +9,7 @@
 
     <Grid>
         <Border x:Name="BorderContent" Background="#00FFFFFF" ClipToBounds="True"/>
+        <Border x:Name="BorderContentSwap" Background="Black" ClipToBounds="True" Visibility="Collapsed"/>
         <Grid x:Name="GridSelect" x:FieldModifier="private" Background="#33FFFFFF" Visibility="Collapsed"/>
         <Grid x:Name="GridError" x:FieldModifier="private" Background="#7FFF0000" Visibility="Collapsed"/>
     </Grid>
