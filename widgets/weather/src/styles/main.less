@@ -105,11 +105,11 @@ html, body {
 #loader {
     position: absolute;
 
-    width: 50%;
-    height: 50%;
+    width: 75%;
+    height: 75%;
 
-    left: 25%;
-    top: 25%;
+    left: 12.5%;
+    top: 12.5%;
 
     display: flex;
     justify-content: center;
@@ -117,12 +117,12 @@ html, body {
 
     .spinner {
         width: 100%;
-        height: 10vw;
+        height: 20vw;
         text-align: center;
     }
 
     .spinner > div {
-        width: 10vw;
+        width: 20vw;
         height: 100%;
         background-color: @color-white;
 
@@ -143,6 +143,17 @@ html, body {
     }
 
     @keyframes sk-bouncedelay {
+        0%, 80%, 100% {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+        40% {
+            -webkit-transform: scale(1.0);
+            transform: scale(1.0);
+        }
+    }
+
+    @-webkit-keyframes sk-bouncedelay {
         0%, 80%, 100% {
             -webkit-transform: scale(0);
             transform: scale(0);

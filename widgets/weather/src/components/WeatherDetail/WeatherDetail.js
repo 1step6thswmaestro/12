@@ -30,18 +30,10 @@ function initializeDatas() {
 
 function activeComponent() {
     DOM.removeAttr('style');
-    DOM.css('opacity', 0);
-    DOM.animate({
-        opacity: 1
-    }, '1000', 'easeInCubic');
 }
 
 function disableComponent() {
-    DOM.animate({
-        opacity: 0
-    }, '600', 'easeInCubic', function() {
-        DOM.attr('style', 'display: none;');
-    });
+    DOM.attr('style', 'display: none;');
 }
 
 

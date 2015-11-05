@@ -4,6 +4,15 @@ var LanguageSelector = require('./LanguageSelector');
 var icons = {};
 var formats = ['CloudCodes', 'CoverageCodes', 'IntensityCodes', 'WeatherCodes'];
 
+
+/**
+ * 이 클래스는 날씨 API의 primaryCode를 String으로 변환하기 위한 클래스입니다.
+ *
+ * getForecastText(@primaryCode): @primaryCode를 의미있는 String으로 변환합니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 var WeatherCodeUtil = {
     getForecastText: function(_primaryCode) {
         if (_primaryCode == null || _primaryCode == undefined) { return null; }

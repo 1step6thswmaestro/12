@@ -30,6 +30,14 @@ function loadComplete() {
 }
 
 
+/**
+ * 이 클래스는 Loader 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화하고 API호출 및 타이머를 작동시킵니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 var Loader = {
     initialize: function($) {
         LoaderDOM = $('#loader');
