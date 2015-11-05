@@ -59,23 +59,20 @@ namespace Lumino
                         OriginalWidth = ActualWidth;
                         OriginalHeight = ActualHeight;
 
-                        ExpandAnimation(true, new Action(() =>
+                        ExpandAnimation(true);
+                        if (!AssemblyFile.Equals("local"))
+                        {
+                            CallMethod("IsExpand", true);
+                        }
+                        else
+                        {
+                            switch (AssemblyEntry)
                             {
-                                if (!AssemblyFile.Equals("local"))
-                                {
-                                    CallMethod("IsExpand", true);
-                                }
-                                else
-                                {
-                                    switch (AssemblyEntry)
-                                    {
-                                        case "WebView":
-                                            ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(true);");
-                                            break;
-                                    }
-                                }
+                                case "WebView":
+                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(true);");
+                                    break;
                             }
-                        ));
+                        }
 
                         ParentDock.TextTitle.Text = Title;
                         ParentDock.GripDrawer.Visibility = Visibility.Collapsed;
@@ -83,23 +80,20 @@ namespace Lumino
                     }
                     else
                     {
-                        ExpandAnimation(false, new Action(() =>
+                        ExpandAnimation(false);
+                        if (!AssemblyFile.Equals("local"))
+                        {
+                            CallMethod("IsExpand", false);
+                        }
+                        else
+                        {
+                            switch (AssemblyEntry)
                             {
-                                if (!AssemblyFile.Equals("local"))
-                                {
-                                    CallMethod("IsExpand", false);
-                                }
-                                else
-                                {
-                                    switch (AssemblyEntry)
-                                    {
-                                        case "WebView":
-                                            ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(false);");
-                                            break;
-                                    }
-                                }
+                                case "WebView":
+                                    ((ChromiumWebBrowser)BorderContent.Child).ExecuteScriptAsync("IsExpand(false);");
+                                    break;
                             }
-                        ));
+                        }
 
                         ParentDock.GripDrawer.Visibility = Visibility.Visible;
                         ParentDock.StackDrawerContent.Visibility = Visibility.Visible;
@@ -380,11 +374,13 @@ namespace Lumino
                 // 애니메이션 완료 이벤트 설정
                 ExpandAnimation.Completed += (o, i) =>
                 {
+                    // 액션 호출
                     if (Completed != null)
                     {
                         Completed();
                     }
 
+                    // 변경된 값 반영
                     this.Width = Width;
                     this.Height = Height;
                     Canvas.SetLeft(this, X);
@@ -392,7 +388,30 @@ namespace Lumino
                     ParentDock.GridTopMenu.Opacity = Value ? 1 : 0;
                     ParentDock.GridTopMenu.Visibility = Value ? Visibility.Visible : Visibility.Collapsed;
                     BorderContent.Visibility = Visibility.Visible;
-                    BorderContentSwap.Visibility = Visibility.Collapsed;
+                    ((Grid)BorderContentSwap.Child).Children[1].Opacity = Value ? 0 : 1;
+                    ((Grid)BorderContentSwap.Child).Children[0].Opacity = Value ? 1 : 0;
+
+                    // 웹 위젯 렌더링 지연 처리
+                    if (AssemblyEntry.Equals("WebView"))
+                    {
+                        DispatcherTimer CompleteTimer = new DispatcherTimer();
+                        CompleteTimer.Tick += (Tick_object, Tick_sender) =>
+                        {
+                            CompleteTimer.Stop();
+                            if (!Resizing)
+                            {
+                                BorderContentSwap.Visibility = Visibility.Collapsed;
+                            }
+                        };
+                        CompleteTimer.Interval = TimeSpan.FromMilliseconds(500);
+                        CompleteTimer.Start();
+                    }
+                    else
+                    {
+                        BorderContentSwap.Visibility = Visibility.Collapsed;
+                    }
+
+                    // 플래그 갱신
                     Resizing = false;
                 };
 

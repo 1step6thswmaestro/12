@@ -431,6 +431,7 @@
                                 &:nth-child(2) { flex: 1; }
                                 &:nth-child(3) {
                                     flex: 6;
+                                    -webkit-transition: all 1.5s cubic-bezier(0.6,0,0.4,1);
                                     transition: all 1.5s cubic-bezier(0.6,0,0.4,1);
                                 }
                                 &:nth-child(4) { flex: 1; }
@@ -522,9 +523,11 @@
 
                                     bottom: 3.3vh;
 
+                                    -webkit-animation: spin 4s linear infinite;
                                     animation: spin 4s linear infinite;
 
                                     @keyframes spin { 100% { transform:rotate(360deg); } }
+                                    @-webkit-keyframes spin { 100% { transform:rotate(360deg); } }
                                 }
                             }
                         }
@@ -600,6 +603,7 @@
         margin: .5vh 0 2vh 0;
 
         &-data {
+            -webkit-transition: transform 1s cubic-bezier(0.6,0,0.4,1);
             transition: transform 1s cubic-bezier(0.6,0,0.4,1);
         }
     }
@@ -676,7 +680,7 @@
                     flex: 1;
                     display: flex;
                     align-items: center;
-                    font-size: 8vw;
+                    font-size: 6vw;
                     line-height: 1;
 
                     svg {
