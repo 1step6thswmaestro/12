@@ -32,3 +32,16 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Tes
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\obj\Debug\TestApplication.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\obj\Debug\TestApplication.exe
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\obj\Debug\TestApplication.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.PlatformServices.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.PlatformServices.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\log4net.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.PlatformServices.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.PlatformServices.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.PlatformServices.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Google.Apis.Auth.PlatformServices.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\log4net.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\TestApplication\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml

@@ -31,41 +31,20 @@ namespace Calendar_for_JARVIS
     /// </summary>
     public partial class calendar_for_jarvis : UserControl
     {
-        Events events;
-
-        public calendar_for_jarvis()
-        {
-            InitializeComponent();
-        }
-/*
-            HIGHLIGHT_TODAY     = Resources["HighlightToday"] as Style;
-            HIGHLIGHT_SCHEDULE  = Resources["HighlightSchedule"] as Style;
-
-            reset();
-            refresh();
-        }
-
-        /// <summary>
-        /// Refresh the content of calendar.
-        /// </summary>
-        private void refresh()
-        {
-            set_date();
-            set_days();
-//            set_schedule_highlight();
-        }
-
+        private Events events;
         private int NUMBER_OF_GRID_ROW = 6;
         private int NUMBER_OF_GRID_COL = 7;
 
         #region Control type of highlight mark
         enum Highlight { TODAY, SCHEDULE }
         private Style HIGHLIGHT_TODAY, HIGHLIGHT_SCHEDULE;
-        private Style highlight_style(Highlight type) {
-            switch (type) {
-                case Highlight.TODAY :
+        private Style highlight_style(Highlight type)
+        {
+            switch (type)
+            {
+                case Highlight.TODAY:
                     return HIGHLIGHT_TODAY;
-                case Highlight.SCHEDULE :
+                case Highlight.SCHEDULE:
                     return HIGHLIGHT_SCHEDULE;
                 default:
                     return null;
@@ -73,6 +52,16 @@ namespace Calendar_for_JARVIS
         }
         #endregion
 
+        public calendar_for_jarvis()
+        {
+            InitializeComponent();
+
+            HIGHLIGHT_TODAY = Resources["HighlightToday"] as Style;
+            HIGHLIGHT_SCHEDULE = Resources["HighlightSchedule"] as Style;
+
+            reset();
+            refresh();
+        }
         /// <summary>
         /// Reset content of calendar.
         /// </summary>
@@ -100,10 +89,11 @@ namespace Calendar_for_JARVIS
         /// <param name="row">Row of Grid_Calendar.</param>
         /// <param name="col">Column of Grid_Calendar.</param>
         /// <returns>True if row and column is out of Grid_Calendar.</returns>
-        private bool is_out_of_grid(int row, int col) {
-            return (row >= NUMBER_OF_GRID_ROW 
-                || row < 0 
-                || col < 0 
+        private bool is_out_of_grid(int row, int col)
+        {
+            return (row >= NUMBER_OF_GRID_ROW
+                || row < 0
+                || col < 0
                 || col >= NUMBER_OF_GRID_COL);
         }
 
@@ -115,7 +105,7 @@ namespace Calendar_for_JARVIS
         /// <param name="row">Specified row of Grid_Calendar.</param>
         /// <param name="col">Specified column of Grid_Calendar.</param>
         /// <returns>UIElement</returns>
-        private T get<T> (int row, int col) where T : UIElement
+        private T get<T>(int row, int col) where T : UIElement
         {
             if (is_out_of_grid(row, col)) return default(T);
             row += 2;
@@ -155,7 +145,7 @@ namespace Calendar_for_JARVIS
         /// <param name="col">Column of cell.</param>
         /// <param name="highlight">Type of highlight.</param>ed
         /// <returns>True if cell is highlighted or not.</returns>
-        private bool is_highlighted (int row, int col, Highlight highlight)
+        private bool is_highlighted(int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return false;
             IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
@@ -169,7 +159,7 @@ namespace Calendar_for_JARVIS
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <param name="highlight"></param>
-        private void unhighlight (int row, int col, Highlight highlight)
+        private void unhighlight(int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
             IEnumerable<Ellipse> ellipses = get_all<Ellipse>(row, col);
@@ -180,7 +170,7 @@ namespace Calendar_for_JARVIS
                     return;
                 }
         }
-        private void highlight (int row, int col, Highlight highlight)
+        private void highlight(int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
             Ellipse ellipse = new Ellipse { Style = highlight_style(highlight) };
@@ -189,6 +179,16 @@ namespace Calendar_for_JARVIS
             Grid_Calendar.Children.Add(ellipse);
         }
         #endregion
+
+        /// <summary>
+        /// Refresh the content of calendar.
+        /// </summary>
+        private void refresh()
+        {
+            set_date();
+            set_days();
+            set_schedule_highlight();
+        }
 
         #region Set date and days.
         private void set_date()
@@ -323,6 +323,6 @@ namespace Calendar_for_JARVIS
                 Console.WriteLine("No upcoming events found.");
             }
         }
-        #endregion*/
+        #endregion
     }
 }
