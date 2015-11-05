@@ -64,6 +64,10 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
         this.selectItem(SelectorItemDOMs.eq(0), this);
     },
 
+    refresh: function() {
+        DateSelectorDOM.slick('setPosition');
+    },
+
     selectItem: function(selectedItemDOM, _this) {
         currentIndex = $(selectedItemDOM).attr('idx');
 
