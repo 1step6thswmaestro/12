@@ -190,7 +190,6 @@ namespace Calendar_for_JARVIS
             set_schedule_highlight();
         }
 
-
         #region Set date and days.
         private void set_date()
         {
