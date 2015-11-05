@@ -1,0 +1,11 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:clock_for_jarvis="clr-namespace:clock_for_jarvis;assembly=clock_for_jarvis" x:Class="TestApplication.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+
+        <clock_for_jarvis:UserControl1 HorizontalAlignment="Left" Margin="0,0,0,-0.333" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

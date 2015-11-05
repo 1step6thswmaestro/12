@@ -30,6 +30,7 @@ namespace Calendar
     public partial class WidgetView : Window
     {
         static private bool is_expanded = false;
+        Events events;
 
         public WidgetView()
         {
@@ -49,60 +50,31 @@ namespace Calendar
                     text.MouseLeftButtonDown += new MouseButtonEventHandler(on_click);
                 }
             }
+#if DEBUG
+            IsExpand(true);
+#endif
         }
 
         public void on_click(object sender, MouseButtonEventArgs args)
         {
             if (is_expanded == false) return;
-
-            TextBlock text = sender as TextBlock;
-
-            Year.Text = text.Text;
-            Date.Text = "";
         }
 
-        private void show(int row, int col)
+        private void show_schedule_list(DateTime dateTime)
         {
-            Year.Text = row.ToString();
-            Date.Tag = col.ToString();
-        }
+            ListView schedule_list = get<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
 
-        Events events;
-
-        private void attatch_schedule_list()
-        {
-            IEnumerable<ListView> lists = get_all<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
-            if (lists != null) {
-                lists = get_all<ListView>(NUMBER_OF_GRID_ROW + 1, 0);
-                foreach (ListView list in lists)
-                    list.Visibility = System.Windows.Visibility.Visible;
-                IEnumerable<Button> buttons = get_all<Button>(NUMBER_OF_GRID_ROW + 2, 0);
-                foreach (Button button in buttons)
-                    button.Visibility = System.Windows.Visibility.Visible;
-                return;
-            }
-            RowDefinition last_row =
-                Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW+2);
-            last_row.Height = new GridLength(40);
-
-            ListView schedule_list = new ListView {
-                Background = Brushes.Black,     BorderBrush = Brushes.Black,
-            };
-            ScrollViewer.SetHorizontalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
-            ScrollViewer.SetVerticalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
-            Grid.SetColumnSpan(schedule_list, NUMBER_OF_GRID_COL);
-            Grid.SetRow(schedule_list, NUMBER_OF_GRID_ROW + 2);
-            Grid_Calendar.Children.Add(schedule_list);
+            schedule_list.Items.Add(new ListViewItem { Foreground = Brushes.White, FontSize = 4,
+            Content = "Test Item"});
 
             int selected_row, selected_col;
 
-            DateTime today = DateTime.Today;
-            int days = DateTime.DaysInMonth(today.Year, today.Month);
-            int start_day_of_month = (int)today.AddDays(-today.Day + 1).DayOfWeek;
-            int days_in_month = DateTime.DaysInMonth(today.Year, today.Month);
+            int days = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+            int start_day_of_month = (int)dateTime.AddDays(-dateTime.Day + 1).DayOfWeek;
+            int days_in_month = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
 
-            selected_row = (today.Day + start_day_of_month - 1) / 7;
-            selected_col = (int)today.DayOfWeek;
+            selected_row = (dateTime.Day + start_day_of_month - 1) / 7;
+            selected_col = (int)dateTime.DayOfWeek;
 
             if (events.Items != null && events.Items.Count > 0)
             {
@@ -118,13 +90,14 @@ namespace Calendar
                             eventItem.End.Date, "yyyy-MM-dd",
                             System.Globalization.CultureInfo.InvariantCulture); ;
 
-                        if (DateTime.Compare(start_date, today) <= 0 && DateTime.Compare(today, end_date) <= 0)
+                        if (DateTime.Compare(start_date, dateTime) <= 0 && DateTime.Compare(dateTime, end_date) <= 0)
                         {
+
                             schedule_list.Items.Add(new ListViewItem
                             {
                                 Foreground = Brushes.White,
                                 FontSize = 4,
-                                Content = eventItem.Summary
+                                Content = (eventItem.Summary == null ? "제목 없는 일정" : eventItem.Summary)
                             });
                         }
                     }
@@ -138,47 +111,80 @@ namespace Calendar
             {
                 Console.WriteLine("No upcoming events found.");
             }
+        }
 
-            Button up_button = new Button
-            {
-                Background = Brushes.White, BorderThickness = new System.Windows.Thickness(0),
-                Height = 7, Width = 7,
-                VerticalAlignment = System.Windows.VerticalAlignment.Top,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                Margin = new System.Windows.Thickness(0, 2, 2, 0)
+        private void attatch_schedule_list()
+        {
+            // Make last row longer.
+            RowDefinition last_row
+                = Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW + 2);
+            last_row.Height = new GridLength(40);
 
-            };
-            Button down_button = new Button
+            ListView schedule_list = get<ListView>(NUMBER_OF_GRID_ROW + 2, 0);
+            if (schedule_list != null)
             {
-                Background = Brushes.White,
-                BorderThickness = new System.Windows.Thickness(0),
-                Height = 7,
-                Width = 7,
-                VerticalAlignment = System.Windows.VerticalAlignment.Top,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                Margin = new System.Windows.Thickness(0, 10, 2, 0)
-            };
-            Grid.SetColumnSpan(up_button, NUMBER_OF_GRID_COL);
-            Grid.SetRow(up_button, NUMBER_OF_GRID_ROW + 2);
-            Grid_Calendar.Children.Add(up_button);
-            Grid.SetColumnSpan(down_button, NUMBER_OF_GRID_COL);
-            Grid.SetRow(down_button, NUMBER_OF_GRID_ROW + 2);
-            Grid_Calendar.Children.Add(down_button);
+                schedule_list.Visibility = System.Windows.Visibility.Visible;
+                return;
+            }
+
+            schedule_list = new ListView { Background = Brushes.Black, BorderThickness = new Thickness(0) };
+            ScrollViewer.SetHorizontalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
+            ScrollViewer.SetVerticalScrollBarVisibility(schedule_list, ScrollBarVisibility.Hidden);
+            Grid.SetRow(schedule_list, NUMBER_OF_GRID_ROW + 2);
+            Grid.SetColumnSpan(schedule_list, NUMBER_OF_GRID_COL);
+            Grid_Calendar.Children.Add(schedule_list);
             
+            //show_schedule_list(DateTime.Today);
+
+            int selected_row, selected_col;
+
+            DateTime dateTime = DateTime.Today;
+
+            int days = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+            int start_day_of_month = (int)dateTime.AddDays(-dateTime.Day + 1).DayOfWeek;
+            int days_in_month = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+
+            selected_row = (dateTime.Day + start_day_of_month - 1) / 7;
+            selected_col = (int)dateTime.DayOfWeek;
+
+            if (events.Items != null && events.Items.Count > 0)
+            {
+                foreach (var eventItem in events.Items)
+                {
+
+                    try
+                    {
+                        DateTime start_date = DateTime.ParseExact(
+                            eventItem.Start.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime end_date = DateTime.ParseExact(
+                            eventItem.End.Date, "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture); ;
+
+                        if (DateTime.Compare(start_date, dateTime) <= 0 && DateTime.Compare(dateTime, end_date) <= 0)
+                        {
+
+                            schedule_list.Items.Add(new ListViewItem
+                            {
+                                Foreground = Brushes.White,
+                                FontSize = 4,
+                                Content = (eventItem.Summary == null ? "제목 없는 일정" : eventItem.Summary)
+                            });
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No upcoming events found.");
+            }
         }
         private void detach_schedule_list()
         {
-            RowDefinition last_row =
-                Grid_Calendar.RowDefinitions.ElementAt<RowDefinition>(NUMBER_OF_GRID_ROW + 2);
-            last_row.Height = new GridLength(10);
-
-            foreach (UIElement element in Grid_Calendar.Children)
-            {
-                if (element is ListView || element is Button)
-                {
-                    element.Visibility = System.Windows.Visibility.Hidden;
-                }
-            }
         }
 
         /// <summary>
@@ -189,6 +195,7 @@ namespace Calendar
         /// </param>
         public void IsExpand(bool type)
         {
+            is_expanded = type;
             switch (type)
             {
                     // get smaller
