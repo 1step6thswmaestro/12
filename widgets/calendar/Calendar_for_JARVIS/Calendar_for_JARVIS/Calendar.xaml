@@ -11,7 +11,7 @@
         <Style x:Key="YearAndDate" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="8" />
-            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="FontFamily" Value="Neo Gothic" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
@@ -19,7 +19,7 @@
         <Style x:Key="Days" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="3" />
-            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="FontFamily" Value="Segoe Ui Light" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -28,7 +28,7 @@
         <Style x:Key="NotThisMonth" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Gray"/>
             <Setter Property="FontSize" Value="5" />
-            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="FontFamily" Value="Segoe Ui Light" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -38,7 +38,7 @@
         <Style x:Key="ThisMonth" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="5" />
-            <Setter Property="FontFamily" Value="Nanum Gothic" />
+            <Setter Property="FontFamily" Value="Segoe Ui Light" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -87,7 +87,7 @@
                 <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="0"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="10"/>
@@ -139,11 +139,6 @@
                        Style="{StaticResource ResourceKey=Days}" />
 
             <Line Grid.Row="0" Grid.Column="0" Style="{StaticResource Line}"/>
-            <Line Grid.Row="1" Grid.Column="0" Style="{StaticResource Line}"/>
-            <Line Grid.Row="2" Grid.Column="0" Style="{StaticResource Line}"/>
-            <Line Grid.Row="3" Grid.Column="0" Style="{StaticResource Line}"/>
-            <Line Grid.Row="4" Grid.Column="0" Style="{StaticResource Line}"/>
-            <Line Grid.Row="5" Grid.Column="0" Style="{StaticResource Line}"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="27"
