@@ -59,9 +59,17 @@
     font-weight: 500;
     font-style: normal;
 }
+@font-face {
+    font-family: 'Segoe';
+    src: url('../assets/segoeuil.ttf');
+    font-weight: 500;
+    font-style: normal;
+}
 
 @font-main: notokr, 'Helvetica Neue', Helvetica, sans-serif;
-@font-neo: MSNeo;
+
+@font-kr: MSNeo;
+@font-en: Segoe;
 
 @arc-diameter: 170px;
 
@@ -111,7 +119,7 @@ html, body {
     height: 100%;
     background-color: @color-black;
 
-    font-family: @font-neo;
+    font-family: @font-main;
     line-height: 180%;
 
     margin: 0;
