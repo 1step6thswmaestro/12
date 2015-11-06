@@ -1,4 +1,4 @@
-# Lumino
+﻿# Lumino
 Team. **JARVIS**
 
 * **멘토**
@@ -31,8 +31,15 @@ TV 디스플레이와 반투명 거울(half-mirror)을 준비합니다.
 TV 디스플레이에 알맞게 거울을 재단한 후, 거울을 TV 디스플레이에 접합합니다.
 
 #### 2. 미니PC 및 Raspberry PI 설치
+적당한 크기와 성능의 미니PC와 라즈베리 파이를 준비한 후 TV에 연결합니다.
+이때 라즈베리 파이는 반드시 HDMI로 TV와 연결되도록 합니다.
+libcec가 지원하는 브랜드의 TV여야 합니다.
 
 #### 3. Raspberry PI 센서 연결
+라즈베리 파이에 인체감지 센서를 연결합니다. 사람을 감지할 수 있도록 적절한 위치에 센서를 부착합니다.
+프로토타입에 사용한 제품은 다음과 같습니다.
+
+* [PIR 인체감지 센서](http://www.artrobot.co.kr/front/php/product.php?product_no=757&main_cate_no=&display_group=)
 
 #### 4. Lumino 플랫폼 탑재 및 실행
 

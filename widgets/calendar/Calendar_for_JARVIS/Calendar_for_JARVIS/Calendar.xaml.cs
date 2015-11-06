@@ -258,6 +258,7 @@ namespace Calendar_for_JARVIS
                     System.Environment.SpecialFolder.Personal);
                 credPath = System.IO.Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart");
 
+                MessageBox.Show(credPath);
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
