@@ -34,6 +34,12 @@ var WeatherIcons = {
     getIconDOM: function(id) {
         if (!Icons.hasOwnProperty(id)) { throw new Error("해당 id의 날씨 정보가 없습니다."); }
         return Icons[id].DOM;
+    },
+
+    getStaticIconDOM: function(iconName) {
+        if (!CodedWeather.StaticIcons.hasOwnProperty(iconName)) throw new Error("해당 iconName의 날씨 정보가 없습니다.");
+        var _dom = '<i class="climacon ' + CodedWeather.StaticIcons[iconName] + '"></i>';
+        return $(_dom);
     }
 };
 

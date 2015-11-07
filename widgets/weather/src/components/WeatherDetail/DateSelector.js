@@ -27,30 +27,28 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
 
         ArrowLeftDOM = $('#arrow-left');
         ArrowRightDOM = $('#arrow-right');
-
-        this.initSlider();
     },
 
     initSlider: function() {
-        DateSelectorDOM.slick({
-            infinite: false,
-            slidesToShow: 5,
-            slidesToScroll: 3,
-            arrows: false,
-            dots: false
+        DateSelectorDOM.owlCarousel({
+            items: 5,
+            itemsDesktop: [1199,5],
+            itemsDesktopSmall: [979,5],
+            itemsTablet: [768,5]
         });
-        //DateSelectorDOM.slick('setPosition');
+        DateSelectorDOM.attr('style', 'display: flex');
 
         currentIndex = 0;
 
-        ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.slick('slickPrev'); });
-        ArrowRightDOM.on('click tap', function() { DateSelectorDOM.slick('slickNext'); });
-
+        ArrowLeftDOM.on('click tap', function() { DateSelectorDOM.trigger('owl.prev'); });
+        ArrowRightDOM.on('click tap', function() { DateSelectorDOM.trigger('owl.next'); });
 
         var that = this;
         SelectorItemDOMs.on('click tap', function() {
             that.selectItem(this, that);
         });
+
+        this.initItems();
     },
 
     initItems: function() {
@@ -62,10 +60,10 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
         }
 
         this.selectItem(SelectorItemDOMs.eq(0), this);
+        this.refresh();
     },
 
     refresh: function() {
-        DateSelectorDOM.slick('setPosition');
     },
 
     selectItem: function(selectedItemDOM, _this) {
@@ -76,13 +74,6 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
 
         _this.emitSlideChange();
     },
-
-    subscribeActiveApp: AppFlowController.addSubscribe(
-        Constants.FlowID.ACTIVE_APP,
-        function() {
-            DateSelectorDOM.slick('slickGoTo', 0);
-        }
-    ),
 
     getCurrentIndex: function() {
         return currentIndex;

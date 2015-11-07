@@ -3,6 +3,7 @@ var WeatherStore = require('../../stores/WeatherStore');
 
 
 var TempGraphDOM;
+var SunTimesDOM;
 var WrapperDOM;
 
 var dataArrays;
@@ -15,6 +16,7 @@ var currentSlideIndex = 0;
 var TempGraph = {
     initialize: function($) {
         TempGraphDOM = $("#detail-tempGraph");
+        SunTimesDOM = $('#detail-sun-times');
         WrapperDOM = $('#tempGraph-wrapper');
 
         DateSelector.addSlideChangeListener(this.moveGraph.bind(this));
@@ -117,9 +119,22 @@ var TempGraph = {
     moveGraph: function() {
         var newIndex = DateSelector.getCurrentIndex();
 
-        movedDistance += ((newIndex - currentSlideIndex) * 100);
-        var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
-        TempGraphDOM.css('transform', translateX);
+        if (newIndex == 0) {
+            TempGraphDOM.attr('style', 'display: none;');
+            console.log("hide");
+            SunTimesDOM.css('opacity', 0).removeAttr('style');
+            SunTimesDOM.animate({
+                opacity: 1
+            }, 500);
+        }
+        else {
+            TempGraphDOM.removeAttr('style');
+            SunTimesDOM.attr('style', 'display: none');
+
+            movedDistance += ((newIndex - currentSlideIndex) * 100);
+            var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
+            TempGraphDOM.css('transform', translateX);
+        }
 
         currentSlideIndex = newIndex;
     }
