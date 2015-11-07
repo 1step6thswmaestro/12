@@ -19,6 +19,9 @@ var TempGraph = {
         SunTimesDOM = $('#detail-sun-times');
         WrapperDOM = $('#tempGraph-wrapper');
 
+        this.sunArea = SunTimesDOM.find('#sun-area');
+        this.sunPath = SunTimesDOM.find('#sun-path');
+
         DateSelector.addSlideChangeListener(this.moveGraph.bind(this));
     },
 
@@ -67,7 +70,7 @@ var TempGraph = {
 
 
         leftMargin = dataArrays.leftMargin;
-        var translateX = "translateX(" + leftMargin + "%)"; //TODO: Not Working
+        var translateX = "translateX(" + leftMargin + "%)";
         TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
@@ -119,13 +122,19 @@ var TempGraph = {
     moveGraph: function() {
         var newIndex = DateSelector.getCurrentIndex();
 
-        if (newIndex == 0) {
+        this.sunArea.css('width', '0%');
+        this.sunPath.css('-webkit-transform', 'rotateZ(-75deg)');
+
+        this.resetSunPath();
+
+        if (newIndex == 0 && DateSelector.isFirstIsTomorrow()) {
             TempGraphDOM.attr('style', 'display: none;');
-            console.log("hide");
             SunTimesDOM.css('opacity', 0).removeAttr('style');
             SunTimesDOM.animate({
                 opacity: 1
             }, 500);
+
+            this.animateSunPath(newIndex);
         }
         else {
             TempGraphDOM.removeAttr('style');
@@ -137,6 +146,40 @@ var TempGraph = {
         }
 
         currentSlideIndex = newIndex;
+    },
+
+    resetSunPath: function() {
+        this.sunArea.css('width', '0%');
+        this.sunPath.css('-webkit-transform', 'rotateZ(-75deg)');
+    },
+
+    animateSunPath: function(index) {
+        var sunData = (WeatherStore.getSunMoonData())[index].sun;
+
+        var sunRiseDate = new Date(sunData['riseISO']);
+        var sunSetDate = new Date(sunData['setISO']);
+
+        var length = (sunSetDate.getHours() - sunRiseDate.getHours()) * 60 * 60 + (sunSetDate.getMinutes() - sunRiseDate.getMinutes()) * 60;
+
+        var nowDate = new Date();
+        var currentLength = null;
+
+        if ((nowDate.getTime() >= sunRiseDate.getTime())
+        && (nowDate.getTime() <= sunSetDate.getTime())) {
+            currentLength = (nowDate.getHours() - sunRiseDate.getHours()) * 60 * 60 + (nowDate.getMinutes() - sunRiseDate.getMinutes()) * 60;
+        }
+
+        var percent = (currentLength == null) ? 100 : (currentLength / length) * 100;
+        var deg = '75';
+
+        if (currentLength != null) {
+            if (percent >= 50) deg = ((percent - 50) * 1.5).toString();
+            else deg = '-' + ((50 - percent) * 1.5).toString();
+        }
+
+
+        this.sunArea.css('width', percent + '%');
+        this.sunPath.css('-webkit-transform', 'rotateZ(' + deg + 'deg)');
     }
 };
 

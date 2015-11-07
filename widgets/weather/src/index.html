@@ -106,15 +106,9 @@
                     <div class="weather-detail-selectedDate-main-right">
                         <div id="day-weather-sun-and-moon" class="weather-detail-selectedDate-main-right-top">
                             <span class="weather-detail-selectedDate-main-title">SUN & MOON</span>
-                            <div class="sun-times" style="display: none;">
-                                <div class="sun-path">
-                                    <div class="sun-animation"></div>
-                                </div>
-                                <div class="sun-symbol-path"><span class="symbol">☀</span></div>
-                            </div>
 
                             <div id="moon-shape" class="moon-shape">
-                                <i weather-attr="moon-shape-icon" class="climacon moon waxing quarter"></i>
+                                <i weather-attr="moon-shape-icon"></i>
                                 <span weather-attr="moon-shape-description" class="description">상현달</span>
                             </div>
 
@@ -200,7 +194,12 @@
                 <div id="detail-tempGraph" class="weather-detail-tempGraph-data">
                 </div>
                 <div id="detail-sun-times" class="sun-times" style="display: none;">
-
+                    <div class="sun-times">
+                        <div class="sun-path">
+                            <div id="sun-area" class="sun-animation"></div>
+                        </div>
+                    </div>
+                    <div id="sun-path" class="sun-symbol-path"><span class="symbol">☀</span></div>
                 </div>
             </div>
 

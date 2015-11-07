@@ -1,5 +1,6 @@
 var LanguageSelector = require('../../../utils/LanguageSelector');
 var Loacalize = require('../../../constants/Localize');
+var CodedWeather = require('../../../constants/CodedWeather');
 
 var DateSelector = require('../DateSelector');
 var WeatherStore = require('../../../stores/WeatherStore');
@@ -52,7 +53,8 @@ var SunAndMoon = {
 
     displayContext: function() {
         var index = DateSelector.getCurrentIndex();
-        var data = (WeatherStore.getSunMoonData())[index].sun;
+        var sunData = (WeatherStore.getSunMoonData())[index].sun;
+        var moonShape = (WeatherStore.getSunMoonData())[index].moon.phase.name;
 
         var sunRiseTime;
         var sunSetTime;
@@ -60,10 +62,10 @@ var SunAndMoon = {
         for (var prop in texts) {
             var newTextDate = (function() {
                 switch(prop) {
-                    case 'sun-rise': return new Date(data['riseISO']);
-                    case 'sun-set': return new Date(data['setISO']);
-                    case 'twilight-start': return new Date(data.twilight['civilBeginISO']);
-                    case 'twilight-end': return new Date(data.twilight['civilEndISO']);
+                    case 'sun-rise': return new Date(sunData['riseISO']);
+                    case 'sun-set': return new Date(sunData['setISO']);
+                    case 'twilight-start': return new Date(sunData.twilight['civilBeginISO']);
+                    case 'twilight-end': return new Date(sunData.twilight['civilEndISO']);
                 }
             })();
 
@@ -74,11 +76,21 @@ var SunAndMoon = {
             this[prop].text(text);
         }
 
-
         var length = (sunSetTime.getHours() - sunRiseTime.getHours()) * 60 * 60 + (sunSetTime.getMinutes() - sunRiseTime.getMinutes()) * 60;
         var flexGrowth = 6 * length / STANDARD_DAY_LENGTH;
 
         this.dayLength.css('flex-grow', flexGrowth);
+
+
+        this.moonShapeDescription.css('opacity', 0);
+        this.moonShapeDescription.animate({
+            opacity: 1
+        }, 650, 'swing').html(CodedWeather.MoonShape[moonShape][LanguageSelector.getCurrentLanguage()]);
+
+        this.moonShapeIcon.css('opacity', 0);
+        this.moonShapeIcon.animate({
+            opacity: 1
+        }, 650, 'swing').empty().append(this.__getMoonIcon(moonShape));
     },
 
 
@@ -91,6 +103,23 @@ var SunAndMoon = {
                 zero += '0';
         }
         return zero + number;
+    },
+
+    __getMoonIcon: function(moonShape) {
+        var iconDOM = '<i class="climacon moon ';
+        console.log("moonShape", moonShape);
+        switch (moonShape) {
+            case 'new moon' : iconDOM += 'new'; break;
+            case 'waxing crescent' : iconDOM += 'waxing crescent'; break;
+            case 'first quarter' : iconDOM += 'waxing quarter'; break;
+            case 'waxing gibbous' : iconDOM += 'waxing gibbous'; break;
+            case 'full moon' : iconDOM += 'full'; break;
+            case 'waning gibbous' : iconDOM += 'waning gibbous'; break;
+            case 'last quarter' : iconDOM += 'waning quarter'; break;
+            case 'waning crescent' : iconDOM += 'waning crescent'; break;
+        }
+        iconDOM += '"></i>';
+        return iconDOM;
     }
 };
 

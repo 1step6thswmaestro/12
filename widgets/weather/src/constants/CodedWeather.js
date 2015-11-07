@@ -231,6 +231,41 @@ var CodedWeather = {
         }
     },
 
+    MoonShape: {
+        'new moon': {
+            KR: '신월',
+            EN: 'New Moon'
+        },
+        'waxing crescent': {
+            KR: '초승달',
+            EN: 'Waxing<br />Crescent'
+        },
+        'first quarter': {
+            KR: '상현달',
+            EN: 'First<br />Quarter'
+        },
+        'waxing gibbous': {
+            KR: '볼록한<br />상현달',
+            EN: 'Waxing<br />Gibbous'
+        },
+        'full moon': {
+            KR: '보름달',
+            EN: 'Full Moon'
+        },
+        'waning gibbous': {
+            KR: '볼록한<br />하현달',
+            EN: 'Waning<br />Gibbous'
+        },
+        'last quarter': {
+            KR: '하현달',
+            EN: 'Last<br />Quarter'
+        },
+        'waning crescent': {
+            KR: '그믐달',
+            EN: 'Waning<br />Crescent'
+        }
+    },
+
     Icons: {
         'am_pcloudy.png': 'cloudSun',
         'am_pcloudyr.png': 'cloudDrizzleSunAlt',

@@ -79,6 +79,13 @@ var DateSelector = _.extend({}, EventEmitter.prototype, {
         return currentIndex;
     },
 
+    isFirstIsTomorrow: function() {
+        var today = new Date();
+        var dataDay = new Date(ItemDatas[0]['dateTimeISO']);
+
+        return ((today.getMonth() == dataDay.getMonth()) && (today.getDate() == dataDay.getDate()));
+    },
+
     emitSlideChange: function() { this.emit('slideChange'); },
     addSlideChangeListener: function(callback) { this.on('slideChange', callback); },
     removeSlideChangeListener: function(callback) { this.removeListener('slideChange', callback); }
