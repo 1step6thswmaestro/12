@@ -170,16 +170,30 @@ var TempGraph = {
         }
 
         var percent = (currentLength == null) ? 100 : (currentLength / length) * 100;
-        var deg = '75';
+        var rDeg = 75;
 
         if (currentLength != null) {
-            if (percent >= 50) deg = ((percent - 50) * 1.5).toString();
-            else deg = '-' + ((50 - percent) * 1.5).toString();
+            var R = 33.6464758;
+            var _x = 65 * percent / 100;
+            var deg15 = Math.PI / 12;
+            var rad2deg = 180 / Math.PI;
+
+            console.log("R", R);
+            console.log("x'", _x);
+            console.log("deg15", deg15);
+
+            var a = 165 - Math.acos(_x/R - Math.cos(deg15)) * rad2deg;
+
+            console.log("a", a);
+
+            rDeg = a;
+
+            if (rDeg >= 75) rDeg = (rDeg - 75).toString();
+            else rDeg = '-' + (75 - rDeg).toString();
         }
 
-
+        this.sunPath.css('-webkit-transform', 'rotateZ(' + rDeg + 'deg)');
         this.sunArea.css('width', percent + '%');
-        this.sunPath.css('-webkit-transform', 'rotateZ(' + deg + 'deg)');
     }
 };
 
