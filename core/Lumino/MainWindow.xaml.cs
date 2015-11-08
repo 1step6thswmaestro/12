@@ -56,8 +56,8 @@ namespace Lumino
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // 독 설정
-            DockRoot.Row = 15;
-            DockRoot.Column = 10;
+            DockRoot.Row = 18;
+            DockRoot.Column = 12;
             DockRoot.Overflow = false;
             DockRoot.GuidelineWhenMove = true;
         }
