@@ -35,7 +35,7 @@ namespace Calendar_for_JARVIS
 
             CultureInfo ci = new CultureInfo("en-US");
             Events events = calendar_for_jarvis.events;
-            DateTime? prevDateTime = null;
+            int? prevDay = null;
             if (events.Items != null && events.Items.Count > 0)
             {
                 foreach (var eventItem in events.Items)
@@ -43,11 +43,12 @@ namespace Calendar_for_JARVIS
 
                     try
                     {
-                        if (prevDateTime == null || prevDateTime.Value.Day != eventItem.Start.DateTime.Value.Day)
-                            ScheduleListView.Items.Add(NewDateItem(eventItem.Start.DateTime.Value));
+                        DateTime startDateTime = (eventItem.Start.DateTime == null ? DateTime.Parse(eventItem.Start.Date) : eventItem.Start.DateTime.Value);
+                        if (prevDay == null || startDateTime.Day != prevDay )
+                            ScheduleListView.Items.Add(NewDateItem(startDateTime));
                         ScheduleListView.Items.Add(NewScheduleItem(eventItem));
 
-                        prevDateTime = eventItem.Start.DateTime;
+                        prevDay = startDateTime.Day;
                     }
                     catch (Exception e)
                     {
@@ -90,14 +91,26 @@ namespace Calendar_for_JARVIS
                 VerticalAlignment = System.Windows.VerticalAlignment.Center,
                 Margin = new Thickness (3, 0, 0, 0) };
 
-            _timeStackPanel.Children.Add (new TextBlock {
-                Text = eventItem.Start.DateTime.Value.ToString("hh:mmtt", ci),
-                Style = Resources["ScheduleTimeStyle"] as Style
-            }); _timeStackPanel.Children.Add(new TextBlock
+            // not all day event
+            if (eventItem.Start.Date == null)
             {
-                Text = eventItem.End.DateTime.Value.ToString("hh:mmtt", ci),
-                Style = Resources["ScheduleTimeStyle"] as Style
-            });
+                _timeStackPanel.Children.Add(new TextBlock
+                {
+                    Text = eventItem.Start.DateTime.Value.ToString("hh:mmtt", ci),
+                    Style = Resources["ScheduleTimeStyle"] as Style
+                }); _timeStackPanel.Children.Add(new TextBlock
+                {
+                    Text = eventItem.End.DateTime.Value.ToString("hh:mmtt", ci),
+                    Style = Resources["ScheduleTimeStyle"] as Style
+                });
+            }
+            else
+            {
+                _timeStackPanel.Children.Add(new TextBlock { Text = "All Day",
+                Style = Resources["ScheduleTimeStyle"] as Style});
+                _timeStackPanel.Children.Add(new TextBlock { Text = "Event",
+                Style = Resources["ScheduleTimeStyle"] as Style});
+            }
             _innerStackPannel.Children.Add(_timeStackPanel);
 
             _innerStackPannel.Children.Add(new TextBlock

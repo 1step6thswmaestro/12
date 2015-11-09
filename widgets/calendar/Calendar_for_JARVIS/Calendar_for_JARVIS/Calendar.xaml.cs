@@ -313,20 +313,17 @@ namespace Calendar_for_JARVIS
 
                     try
                     {
-                        DateTime start_date = DateTime.ParseExact(
-                            eventItem.Start.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture);
-                        DateTime end_date = DateTime.ParseExact(
-                            eventItem.End.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture);
+                        int start_date = (eventItem.Start.DateTime == null ? DateTime.Parse(eventItem.Start.Date).Day : eventItem.Start.DateTime.Value.Day);
+                        int end_date = (eventItem.End.DateTime == null ? DateTime.Parse(eventItem.End.Date).Day : eventItem.End.DateTime.Value.Day);
 
-                        while (start_date != end_date)
+                        do
                         {
-                            int row = (start_date.Day+start_day_of_month-1)/7,
-                                col = (int)start_date.DayOfWeek;
-                            highlight (row, col, Highlight.SCHEDULE);
-                            start_date = start_date.AddDays(1);
+                            int row = (start_date + start_day_of_month - 1) / 7,
+                                col = (int)DateTime.Today.AddDays(-DateTime.Today.Day + start_date).DayOfWeek;
+                            highlight(row, col, Highlight.SCHEDULE);
+                            start_date++;
                         }
+                        while (start_date < end_date);
                     }
                     catch (Exception e)
                     {

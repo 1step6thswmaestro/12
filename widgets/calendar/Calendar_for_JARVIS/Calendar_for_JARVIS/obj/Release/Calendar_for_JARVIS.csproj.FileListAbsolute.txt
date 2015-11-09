@@ -37,11 +37,15 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Cal
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Release\System.Net.Http.Primitives.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\bin\Release\Zlib.Portable.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.csproj.App.config
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\UserControl1.baml
-C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\UserControl1.g.cs
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS_MarkupCompile.cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.g.resources
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.Properties.Resources.resources
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\Calendar_for_JARVIS.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\calendar.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\ProjectScreen.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\ScheduleList.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\calendar.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\ProjectScreen.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Release\ScheduleList.g.cs
