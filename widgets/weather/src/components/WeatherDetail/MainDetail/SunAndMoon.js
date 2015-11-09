@@ -107,7 +107,6 @@ var SunAndMoon = {
 
     __getMoonIcon: function(moonShape) {
         var iconDOM = '<i class="climacon moon ';
-        console.log("moonShape", moonShape);
         switch (moonShape) {
             case 'new moon' : iconDOM += 'new'; break;
             case 'waxing crescent' : iconDOM += 'waxing crescent'; break;

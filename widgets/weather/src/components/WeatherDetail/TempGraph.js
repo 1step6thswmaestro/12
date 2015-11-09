@@ -22,6 +22,9 @@ var TempGraph = {
         this.sunArea = SunTimesDOM.find('#sun-area');
         this.sunPath = SunTimesDOM.find('#sun-path');
 
+        this.sunRiseDescription = SunTimesDOM.find('[weather-attr=description-sun-rise]');
+        this.sunSetDescription = SunTimesDOM.find('[weather-attr=description-sun-set]');
+
         DateSelector.addSlideChangeListener(this.moveGraph.bind(this));
     },
 
@@ -70,7 +73,7 @@ var TempGraph = {
 
 
         leftMargin = dataArrays.leftMargin;
-        var translateX = "translateX(" + leftMargin + "%)";
+        var translateX = "translate3d(" + leftMargin + "%,0,0)";
         TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
@@ -122,9 +125,6 @@ var TempGraph = {
     moveGraph: function() {
         var newIndex = DateSelector.getCurrentIndex();
 
-        this.sunArea.css('width', '0%');
-        this.sunPath.css('-webkit-transform', 'rotateZ(-75deg)');
-
         this.resetSunPath();
 
         if (newIndex == 0 && DateSelector.isFirstIsTomorrow()) {
@@ -141,7 +141,7 @@ var TempGraph = {
             SunTimesDOM.attr('style', 'display: none');
 
             movedDistance += ((newIndex - currentSlideIndex) * 100);
-            var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
+            var translateX = "translate3d(" + (leftMargin - movedDistance) + "%, 0,0)";
             TempGraphDOM.css('transform', translateX);
         }
 
@@ -150,7 +150,7 @@ var TempGraph = {
 
     resetSunPath: function() {
         this.sunArea.css('width', '0%');
-        this.sunPath.css('-webkit-transform', 'rotateZ(-75deg)');
+        this.sunPath.css('transform', 'rotate3d(0,0,1,-75deg)');
     },
 
     animateSunPath: function(index) {
@@ -158,6 +158,18 @@ var TempGraph = {
 
         var sunRiseDate = new Date(sunData['riseISO']);
         var sunSetDate = new Date(sunData['setISO']);
+
+        this.sunRiseDescription.text(
+            this.__convertLeadingZeros(sunRiseDate.getHours(), 2)
+            + ':'
+            + this.__convertLeadingZeros(sunRiseDate.getMinutes(), 2)
+        );
+
+        this.sunSetDescription.text(
+            this.__convertLeadingZeros(sunSetDate.getHours(), 2)
+            + ':'
+            + this.__convertLeadingZeros(sunSetDate.getMinutes(), 2)
+        );
 
         var length = (sunSetDate.getHours() - sunRiseDate.getHours()) * 60 * 60 + (sunSetDate.getMinutes() - sunRiseDate.getMinutes()) * 60;
 
@@ -178,13 +190,19 @@ var TempGraph = {
             var deg15 = Math.PI / 12;
             var rad2deg = 180 / Math.PI;
 
-            console.log("R", R);
-            console.log("x'", _x);
-            console.log("deg15", deg15);
+            var a = null;
 
-            var a = 165 - Math.acos(_x/R - Math.cos(deg15)) * rad2deg;
+            if (0 <= _x && _x < 50) {
+                a = Math.acos(Math.cos(deg15) - _x/R) * rad2deg - 15;
+            }
+            else if (_x > 50) {
+                a = 165 - Math.acos(_x/R - Math.cos(deg15)) * rad2deg;
+            }
+            else {
+                a = 75;
+            }
 
-            console.log("a", a);
+            if (a == null) throw new Error("안돼");
 
             rDeg = a;
 
@@ -192,8 +210,19 @@ var TempGraph = {
             else rDeg = '-' + (75 - rDeg).toString();
         }
 
-        this.sunPath.css('-webkit-transform', 'rotateZ(' + rDeg + 'deg)');
+        this.sunPath.css('transform', 'rotate3d(0,0,1,' + rDeg + 'deg)');
         this.sunArea.css('width', percent + '%');
+    },
+
+    __convertLeadingZeros: function(number, digits) {
+        var zero = '';
+        number = number.toString();
+
+        if (number.length < digits) {
+            for (var i = 0; i < digits - number.length; i++)
+                zero += '0';
+        }
+        return zero + number;
     }
 };
 

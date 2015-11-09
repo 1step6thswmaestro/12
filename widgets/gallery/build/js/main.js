@@ -2785,6 +2785,196 @@ module.exports = keyMirror;
 }.call(this));
 
 },{}],7:[function(require,module,exports){
+var Flowing = require('../../controller/AppFlowController');
+var Constants = require('../../constants/Constants');
+
+function activeComponent() {
+    Screen
+        .removeAttr('style')
+        .css('opacity', 0)
+        .animate({
+            opacity: 1
+        }, 1000, 'swing');
+
+    setTimeout(function() {
+        selectedImage.data('owlCarousel').reinit({
+            singleItem : true,
+            slideSpeed : 1000,
+            pagination: false,
+            afterAction : syncPosition,
+            responsiveRefreshRate : 200,
+            autoPlay: false
+        });
+
+        selector.data('owlCarousel').reinit({
+            items : 5,
+            itemsDesktop      : [1199,5],
+            itemsDesktopSmall     : [979,5],
+            itemsTablet       : [768,5],
+            itemsMobile       : [479,5],
+            pagination: true,
+            responsiveRefreshRate : 100,
+            autoPlay: false,
+            afterInit : function(el){
+                el.find(".owl-item").eq(0).addClass("synced");
+            }
+        });
+
+        selector.find('.owl-wrapper').css('display', 'flex');
+        selectedImage.find('.owl-wrapper').css('display', 'flex');
+    }, 1000);
+
+    selector.on('click', '.owl-item', function(e) {
+        e.preventDefault();
+        var num = $(this).data('owlItem');
+        selectedImage.trigger('owl.goTo', num);
+    });
+}
+
+function disableComponent() {
+    Screen
+        .animate({
+            opacity: 0
+        }, 650, 'swing', function() {
+            Screen.attr('style', "display: none;");
+        });
+}
+
+function syncPosition(el){
+    var current = this.currentItem;
+    selector
+        .find(".owl-item")
+        .removeClass("synced")
+        .eq(current)
+        .addClass("synced")
+    if(selector.data("owlCarousel") !== undefined){
+        center(current)
+    }
+}
+
+function center(number){
+    var sync2visible = selector.data("owlCarousel").owl.visibleItems;
+    var num = number;
+    var found = false;
+    for(var i in sync2visible){
+        if(num === sync2visible[i]){
+            var found = true;
+        }
+    }
+
+    if(found === false){
+        if(num > sync2visible[sync2visible.length-1]){
+            selector.trigger("owl.goTo", num - sync2visible.length+2)
+        }else{
+            if(num - 1 === -1){
+                num = 0;
+            }
+            selector.trigger("owl.goTo", num);
+        }
+    } else if(num === sync2visible[sync2visible.length-1]){
+        selector.trigger("owl.goTo", sync2visible[1])
+    } else if(num === sync2visible[0]){
+        selector.trigger("owl.goTo", num-1)
+    }
+
+}
+
+
+var Screen;
+var DOM;
+
+var selectedImage;
+var selector;
+
+var ImageSlider = {
+    initialize: function($) {
+        Screen = $('#SCREEN_ACTIVE');
+        DOM = $('#component-image-slider');
+
+        selectedImage = DOM.find('[component-attr=selected-image]');
+        selector = DOM.find('[component-attr=selector]');
+
+        this.btnPrev = DOM.find('[component-attr=btn_prev]');
+        this.btnNext = DOM.find('[component-attr=btn_next]');
+
+        this.initSlider();
+    },
+
+    initSlider: function() {
+        selectedImage.owlCarousel();
+        selector.owlCarousel();
+
+        this.btnPrev.on('click tap', function() { selector.trigger('owl.prev'); });
+        this.btnNext.on('click tap', function() { selector.trigger('owl.next'); });
+    },
+
+    activeApp: Flowing.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            activeComponent();
+        }
+    ),
+
+    disableApp: Flowing.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            disableComponent();
+        }
+    )
+};
+
+module.exports = ImageSlider;
+},{"../../constants/Constants":9,"../../controller/AppFlowController":10}],8:[function(require,module,exports){
+var Flowing = require('../../controller/AppFlowController');
+var Constants = require('../../constants/Constants');
+
+function activeComponent() {
+    Screen
+        .removeAttr('style')
+        .css('opaicty', 0)
+        .animate({
+            opacity: 1
+        }, 650, 'swing');
+}
+
+function disableComponent() {
+    Screen
+        .animate({
+            opacity: 0
+        }, 650, 'swing', function() {
+           Screen.attr('style', "display: none;");
+        });
+}
+
+
+
+var Screen;
+var DOM;
+
+var LiveTiles = {
+    initialize: function($) {
+        Screen = $('#SCREEN_NORMAL');
+        DOM = $('#component-image-slider');
+    },
+
+    activeApp: Flowing.addSubscribe(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            console.log("active");
+            disableComponent();
+        }
+    ),
+
+    disableApp: Flowing.addSubscribe(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            activeComponent();
+        }
+    )
+};
+
+module.exports = LiveTiles;
+},{"../../constants/Constants":9,"../../controller/AppFlowController":10}],9:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = {
@@ -2794,17 +2984,18 @@ module.exports = {
         DISABLE_APP: null
     })
 };
-},{"keymirror":5}],8:[function(require,module,exports){
+},{"keymirror":5}],10:[function(require,module,exports){
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
 var AppFlowController = new FlowController();
 
 AppFlowController.addFlow(Constants.FlowID.LOAD_PICTURES);
-
+AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
+AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
 
 module.exports = AppFlowController;
-},{"../constants/Constants":7,"flowing-js":2}],9:[function(require,module,exports){
+},{"../constants/Constants":9,"flowing-js":2}],11:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
@@ -2826,23 +3017,57 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
-},{"../constants/Constants":7,"../controller/AppFlowController":8}],10:[function(require,module,exports){
+},{"../constants/Constants":9,"../controller/AppFlowController":10}],12:[function(require,module,exports){
 'use strict';
 
 require('./utils/PlatformCommands')();
+require('./stores/PictureStore');
+
+var ImageSlider = require('./components/ImageSlider/ImageSlider');
+var LiveTiles = require('./components/LiveTiles/LiveTiles');
 
 $(document).ready(function() {
     var liveTiles = $('#component-live-tiles');
 
     liveTiles.find('.tile-item').not('.exclude').liveTile();
+
+    LiveTiles.initialize($);
+    ImageSlider.initialize($);
 });
-},{"./utils/PlatformCommands":11}],11:[function(require,module,exports){
+},{"./components/ImageSlider/ImageSlider":7,"./components/LiveTiles/LiveTiles":8,"./stores/PictureStore":13,"./utils/PlatformCommands":14}],13:[function(require,module,exports){
+var Flowing = require('../controller/AppFlowController');
+var Constants = require('../constants/Constants');
+
+var Promise = require('flowing-js').Promise;
+
+var PictureStore = {
+    activeApp: Flowing.addTarget(
+        Constants.FlowID.ACTIVE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    ),
+
+    disableApp: Flowing.addTarget(
+        Constants.FlowID.DISABLE_APP,
+        function() {
+            return new Promise(function(resolve, reject) {
+                resolve();
+            });
+        }
+    )
+};
+
+module.exports = PictureStore;
+},{"../constants/Constants":9,"../controller/AppFlowController":10,"flowing-js":2}],14:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 
 var initWidget = (function (window) {
     function addExpendMethod() {
-        if (window.hasOwnProperty('IsExpend')) { return; }
-        window.IsExpend = function(state) {
+        if (window.hasOwnProperty('IsExpand')) { return; }
+        window.IsExpand = function(state) {
             if (state) {
                 AppDispatcher.activeApp();
             }
@@ -2858,4 +3083,4 @@ var initWidget = (function (window) {
 })(window);
 
 module.exports = initWidget;
-},{"../dispatcher/AppDispatcher":9}]},{},[10]);
+},{"../dispatcher/AppDispatcher":11}]},{},[12]);

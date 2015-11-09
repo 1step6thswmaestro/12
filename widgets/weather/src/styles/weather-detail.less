@@ -714,6 +714,30 @@
                 width: 75vw;
                 height: 24.938127vw;
                 position: relative;
+
+                .description-sun-rise {
+                    display: inline-block;
+                    position: absolute;
+
+                    left: 0;
+                    bottom: 0;
+
+                    color: @color-grey-700;
+                    font-size: 4vw;
+                    font-weight: 300;
+                }
+
+                .description-sun-set {
+                    display: inline-block;
+                    position: absolute;
+
+                    right: 0;
+                    bottom: 0;
+
+                    color: @color-grey-700;
+                    font-size: 4vw;
+                    font-weight: 300;
+                }
             }
 
             .sun-path {
@@ -751,8 +775,9 @@
 
                 .symbol {
                     display: inline-block;
-                    font-size: 2vw;
+                    font-size: 5vw;
                     line-height: 1;
+                    margin: -1.5vw 0 0 -2.5vw;
                 }
             }
 
