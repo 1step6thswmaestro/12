@@ -32,7 +32,7 @@
 
 
 .weather-detail {
-    padding-top: 50px;
+    padding-top: 100px;
     position: absolute;
 
     width: 100%;
@@ -41,16 +41,26 @@
     left: 0;
     top: 0; // 1/14
 
+    display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     &-selectedDate {
-        flex: 6;
+        -webkit-box-flex: 5;
+        -webkit-flex: 5;
+        flex: 5;
 
         width: 75%;
 
+        display: -webkit-box;
+        display: -webkit-flex;
         display: flex;
+
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
         flex-direction: column;
 
         color: @color-white;
@@ -71,14 +81,26 @@
             &-right {
                 margin-top: 2vh;
 
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
                 flex: 1;
 
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
                 flex-direction: column;
+
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
                 justify-content: center;
 
                 &-description {
                     display: inline-block;
+                    margin-top: .75vh;
                     font-size: 2vh;
                     color: @color-grey-700;
                 }
@@ -100,8 +122,12 @@
                     span { display: inline-block; }
 
                     &-highTemp {
+                        display: -webkit-box;
+                        display: -webkit-flex;
                         display: flex;
+
                         font-size: 5vh;
+
                         &:after {
                             margin-left: .75vw;
                             font-size: 3vh;
@@ -129,7 +155,12 @@
         }
 
         &-main {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
             flex: 1;
+
+            display: -webkit-box;
+            display: -webkit-flex;
             display: flex;
 
             &-title {
@@ -145,7 +176,13 @@
 
                 margin-right: .5vw;
 
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
                 flex-direction: column;
 
                 .day-info {
@@ -160,12 +197,23 @@
 
                     &-sub {
                         margin-top: 1vh;
+
+                        display: -webkit-box;
+                        display: -webkit-flex;
                         display: flex;
 
                         &-item {
+                            -webkit-box-flex: 1;
+                            -webkit-flex: 1;
                             flex: 1;
+
+                            display: -webkit-flex;
+                            display: -webkit-box;
                             display: flex;
+
+                            -webkit-align-items: center;
                             align-items: center;
+
                             font-size: 1vh;
                             color: @color-grey-700;
                             line-height: 1;
@@ -180,18 +228,43 @@
                 }
 
                 .details {
+                    -webkit-box-flex: 1;
+                    -webkit-flex: 1;
                     flex: 1;
+
+                    display: -webkit-box;
+                    display: -webkit-flex;
                     display: flex;
+
+                    -webkit-box-orient: vertical;
+                    -webkit-box-direction: normal;
+                    -webkit-flex-direction: column;
                     flex-direction: column;
 
                     .row {
+                        -webkit-box-flex: 1;
+                        -webkit-flex: 1;
                         flex: 1;
+
+                        display:  -webkit-box;
+                        display:  -webkit-flex;
                         display: flex;
 
                         .col {
+                            -webkit-box-flex: 1;
+                            -webkit-flex: 1;
                             flex: 1;
+
+                            display: -webkit-box;
+                            display: -webkit-flex;
                             display: flex;
+
+                            -webkit-box-orient: vertical;
+                            -webkit-box-direction: normal;
+                            -webkit-flex-direction: column;
                             flex-direction: column;
+
+                            -webkit-align-items: center;
                             align-items: center;
 
                             i {
@@ -199,15 +272,15 @@
                             }
 
                             .item {
-                                font-size: 1.5vh;
+                                font-size: 1vh;
                                 line-height: 1;
                                 font-weight: 300;
                                 text-align: center;
                                 opacity: .55;
-                                margin: .3vh 0;
+                                margin: .3vh 0 .5vh 0;
                             }
                             .value {
-                                font-size: 2vh;
+                                font-size: 1.75vh;
                                 font-weight: 300;
                                 color: #63b4cf;
 
@@ -239,26 +312,42 @@
             }
 
             &-right {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
                 flex: 1;
+
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
                 flex-direction: column;
 
                 margin-left: .5vw;
 
                 &-top {
+                    -webkit-box-flex: 1;
+                    -webkit-flex: 1;
                     flex: 1;
+
                     border: .2vh solid @color-white;
-                    margin-bottom: .5vh;
+                    margin-bottom: .5vw;
 
                     position: relative;
 
                     .moon-shape {
                         position: absolute;
 
-                        right: 1vw;
-                        top: 1vh;
+                        right: 1.5vw;
+                        top: 2vh;
 
+                        display: -webkit-flex;
+                        display: -webkit-box;
                         display: flex;
+
+                        -webkit-align-items: center;
                         align-items: center;
 
                         i {
@@ -273,62 +362,13 @@
                         }
                     }
 
-                    .sun-times {
-                        box-sizing: content-box;
-                        margin: 0 auto;
-                        padding-top: 2vh;
-                        width: 30vw;
-                        height: 7.41180vw;
-                        border-bottom: .2vh solid #999;
-
-                        position: relative;
-
-                        overflow-y: hidden;
-
-                        .sun-path {
-                            margin: 0 auto;
-
-                            width: 20vw;
-                            height: 20vw;
-
-                            overflow: hidden;
-                            border: .22vh dashed #999;
-                            border-radius: 50%;
-                        }
-
-                        .sun-animation {
-                            width: 0;
-                            height: 10vw;
-                            background-color: rgba(255, 255, 0, 0.4);
-                            -webkit-transition: width 2s ease;
-                            transition: width 2s ease;
-                        }
-
-                        .sun-symbol-path {
-                            position: absolute;
-                            color: yellow;
-                            width: 2vw;
-                            height: 10vw;
-                            -webkit-transition: -webkit-transform 2s ease;
-                            -webkit-transform-origin: 50% 100%;
-                            -webkit-transform: rotateZ(-75deg);
-                            left: 14vw;
-                            bottom: -2.5882vw;
-
-                            .symbol {
-                                display: inline-block;
-                                font-size: 2vw;
-                                line-height: 1;
-                                margin-top: -.7vw;
-                            }
-                        }
-
-                    }
-
                     .time-line {
 
                         .line {
-                            margin: 3vh 0;
+                            margin: 5vh 0 0 0;
+
+                            display: -webkit-flex;
+                            display: -webkit-box;
                             display: flex;
 
                             span {
@@ -428,21 +468,28 @@
                                     }
                                 }
 
-                                &:nth-child(1) { flex: 2; }
-                                &:nth-child(2) { flex: 1; }
+                                &:nth-child(1) { -webkit-flex: 2; -webkit-box-flex: 2; flex: 2; }
+                                &:nth-child(2) { -webkit-flex: 1; -webkit-box-flex: 1; flex: 1; }
                                 &:nth-child(3) {
+                                    -webkit-flex: 6;
+                                    -webkit-box-flex: 6;
                                     flex: 6;
                                     -webkit-transition: all 1.5s cubic-bezier(0.6,0,0.4,1);
                                     transition: all 1.5s cubic-bezier(0.6,0,0.4,1);
                                 }
-                                &:nth-child(4) { flex: 1; }
-                                &:nth-child(5) { flex: 8; }
+                                &:nth-child(4) { -webkit-flex: 1; -webkit-box-flex: 1; flex: 1; }
+                                &:nth-child(5) { -webkit-flex: 8; -webkit-box-flex: 8; flex: 8; }
                             }
                         }
 
                         .helper {
-                            padding: 2vh 0 1vh 1vh;
+                            padding: 5.5vh 0 1vh 1vh;
+
+                            display: -webkit-flex;
+                            display: -webkit-box;
                             display: flex;
+
+                            -webkit-align-items: center;
                             align-items: center;
 
                             .box {
@@ -468,16 +515,25 @@
 
                 }
                 &-bottom {
+                    -webkit-flex: 1;
+                    -webkit-box-flex: 1;
                     flex: 1;
+
                     border: .2vh solid @color-white;
-                    margin-top: .5vh;
+                    margin-top: .5vw;
 
                     .wind-miller {
-                        margin: 1.5vh 0 1vh 0;
+                        margin: 3.5vh 0 1vh 0;
+
+                        display: -webkit-flex;
+                        display: -webkit-box;
                         display: flex;
 
                         .mill {
+                            -webkit-flex: 1;
+                            -webkit-box-flex: 1;
                             flex: 1;
+
                             position: relative;
                             height: 9vh;
 
@@ -535,13 +591,27 @@
 
                         .descrip {
                             padding-right: 1vh;
+
+                            -webkit-flex: 2;
+                            -webkit-box-flex: 2;
                             flex: 2;
+
+                            display: -webkit-flex;
+                            display: -webkit-box;
                             display: flex;
+
+                            -webkit-box-orient: vertical;
+                            -webkit-box-direction: normal;
+                            -webkit-flex-direction: column;
                             flex-direction: column;
 
                             .wind {
+                                -webkit-flex: 2;
+                                -webkit-box-flex: 2;
                                 flex: 2;
 
+                                display: -webkit-flex;
+                                display: -webkit-box;
                                 display: flex;
 
                                 svg {
@@ -551,7 +621,13 @@
                                 }
 
                                 .text {
+                                    display: -webkit-flex;
+                                    display: -webkit-box;
                                     display: flex;
+
+                                    -webkit-box-orient: vertical;
+                                    -webkit-box-direction: normal;
+                                    -webkit-flex-direction: column;
                                     flex-direction: column;
 
                                     span {
@@ -562,9 +638,20 @@
                                 }
                             }
                             .pressure {
+                                -webkit-flex: 1;
+                                -webkit-box-flex: 1;
                                 flex: 1;
+
+                                display: -webkit-flex;
+                                display: -webkit-box;
                                 display: flex;
+
+                                -webkit-box-orient: vertical;
+                                -webkit-box-direction: normal;
+                                -webkit-flex-direction: column;
                                 flex-direction: column;
+
+                                -webkit-align-items: center;
                                 align-items: flex-end;
 
                                 position: relative;
@@ -597,7 +684,10 @@
         box-sizing: content-box;
         display: block;
         width: 100%;
-        flex: 3;
+
+        -webkit-flex: 2;
+        -webkit-box-flex: 2;
+        flex: 2;
 
         overflow: hidden;
 
@@ -607,21 +697,118 @@
             -webkit-transition: transform 1s cubic-bezier(0.6,0,0.4,1);
             transition: transform 1s cubic-bezier(0.6,0,0.4,1);
         }
+
+        .sun-times {
+            box-sizing: content-box;
+            margin: 0 auto;
+            width: 75vw;
+            padding-top: 2vw;
+            height: 24.938127vw;
+            border-bottom: .2vh solid #999;
+
+            position: relative;
+
+            overflow-y: hidden;
+
+            &-inner {
+                width: 75vw;
+                height: 24.938127vw;
+                position: relative;
+
+                .description-sun-rise {
+                    display: inline-block;
+                    position: absolute;
+
+                    left: 0;
+                    bottom: 0;
+
+                    color: @color-grey-700;
+                    font-size: 4vw;
+                    font-weight: 300;
+                }
+
+                .description-sun-set {
+                    display: inline-block;
+                    position: absolute;
+
+                    right: 0;
+                    bottom: 0;
+
+                    color: @color-grey-700;
+                    font-size: 4vw;
+                    font-weight: 300;
+                }
+            }
+
+            .sun-path {
+                position: absolute;
+
+                left: 5vw;
+                top: 0;
+
+                width: 65vw;
+                height: 65vw;
+
+                overflow: hidden;
+                border: .22vh dashed #999;
+                border-radius: 32.5vw;
+            }
+
+            .sun-animation {
+                width: 0;
+                height: 24.938127vw;
+                background-color: rgba(255, 255, 0, 0.4);
+                -webkit-transition: width 2s ease;
+                transition: width 2s ease;
+            }
+
+            .sun-symbol-path {
+                position: absolute;
+                color: yellow;
+                width: 1px;
+                height: 33.6464758vw;
+                -webkit-transition: -webkit-transform 2s ease;
+                -webkit-transform-origin: 50% 100%;
+                -webkit-transform: rotateZ(0deg);
+                left: 37.5vw;
+                bottom: -7.9083487376vw;
+
+                .symbol {
+                    display: inline-block;
+                    font-size: 5vw;
+                    line-height: 1;
+                    margin: -1.5vw 0 0 -2.5vw;
+                }
+            }
+
+        }
+
     }
 
     &-dateSelector {
-        flex: 2;
+        -webkit-flex: 1.5;
+        -webkit-box-flex: 1.5;
+        flex: 1.5;
+
         width: 100%;
         padding-bottom: 2vh;
         color: @color-white;
 
+        display: -webkit-flex;
+        display: -webkit-box;
         display: flex;
+
+        -webkit-align-items: stretch;
         align-items: stretch;
 
         .arrow {
             margin: .5vh;
 
+            display: -webkit-flex;
+            display: -webkit-box;
             display: flex;
+
+            -webkit-align-items: center;
             align-items: center;
 
             button {
@@ -638,18 +825,22 @@
         }
 
         .day-select-slider {
+            -webkit-flex: 1;
+            -webkit-box-flex: 1;
             flex: 1;
+            //
+            display: -webkit-flex;
+            display: -webkit-box;
             display: flex;
             //align-items: stretch;
-
-            .slick-list {
+            //
+            //
+            .owl-wrapper-outer {
+                -webkit-flex: 1;
+                -webkit-box-flex: 1;
                 flex: 1;
-                display: flex;
-                //align-items: stretch;
 
-                .slick-track {
-                    display: flex;
-                    //align-items: stretch;
+                .owl-wrapper {
                 }
             }
 
@@ -657,12 +848,22 @@
             &-item {
                 outline: 0;
                 padding: .5vh 0;
+
+                display: -webkit-flex;
+                display: -webkit-box;
                 display: flex;
+
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
                 flex-direction: column;
+
+                -webkit-align-items: center;
                 align-items: center;
 
+                box-sizing: border-box;
                 height: auto;
-                margin: 0 .5vw;
+                margin: 0 1vw;
                 border: .2vh solid @color-white;
 
                 cursor: pointer;
@@ -671,25 +872,40 @@
                     margin-top: .75vh;
                     font-size: 1.75vh;
                     line-height: 1;
+                    cursor: pointer;
                 }
                 .date {
                     font-size: .88vh;
                     font-weight: 100;
                     line-height: 1.7;
+                    cursor: pointer;
                 }
                 .icon {
+                    -webkit-flex: 1;
+                    -webkit-box-flex: 1;
                     flex: 1;
+
+                    display: -webkit-flex;
+                    display: -webkit-box;
                     display: flex;
+
+                    -webkit-align-items: center;
                     align-items: center;
+
                     font-size: 6vw;
                     line-height: 1;
+                    cursor: pointer;
 
-                    svg {
-                        width: 8vw;
+                    margin-bottom: 2vh;
+
+                    i {
+                        font-size: 8vw;
                         color: @color-white;
+                        cursor: pointer;
                     }
                 }
                 .temp {
+                    cursor: pointer;
                     .highTemp {
                         font-size: 1.8vh;
                         font-weight: 500;
@@ -728,8 +944,8 @@
                     .date { font-weight: 500; }
 
                     .icon {
-                        .climacon_component-stroke {
-                            fill: @color-grey-700;
+                        i {
+                            color: #000000;
                         }
                     }
                 }

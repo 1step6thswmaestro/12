@@ -56,7 +56,7 @@ var _DayItemView = (function() {
         this.date.text((thisDate.getMonth() + 1) + "." + thisDate.getDate());
 
         this.icon.empty();
-        var iconDOM = WeatherIcons.getIconDOM(CodedWeather.Icons[datas['icon']]).clone();
+        var iconDOM = WeatherIcons.getStaticIconDOM(datas['icon']).clone();
         this.icon.append(iconDOM);
 
         this.highTemp.text(datas['maxTempC']);

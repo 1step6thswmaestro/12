@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Lumino.Functions
 {
@@ -63,13 +61,15 @@ namespace Lumino.Functions
                         Column = int.Parse(ConfigSplit[1])
                     };
 
-                    Widget.Load(ConfigSplit[2]);
-                    MasterDock.Add(Widget);
+                    if (Widget.Load(ConfigSplit[2]))
+                    {
+                        MasterDock.Add(Widget);
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Widget Load Error");
+                Console.WriteLine("Widget Load Error : " + ex.ToString());
             }
         }
     }

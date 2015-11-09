@@ -3,6 +3,7 @@ var WeatherStore = require('../../stores/WeatherStore');
 
 
 var TempGraphDOM;
+var SunTimesDOM;
 var WrapperDOM;
 
 var dataArrays;
@@ -15,7 +16,14 @@ var currentSlideIndex = 0;
 var TempGraph = {
     initialize: function($) {
         TempGraphDOM = $("#detail-tempGraph");
+        SunTimesDOM = $('#detail-sun-times');
         WrapperDOM = $('#tempGraph-wrapper');
+
+        this.sunArea = SunTimesDOM.find('#sun-area');
+        this.sunPath = SunTimesDOM.find('#sun-path');
+
+        this.sunRiseDescription = SunTimesDOM.find('[weather-attr=description-sun-rise]');
+        this.sunSetDescription = SunTimesDOM.find('[weather-attr=description-sun-set]');
 
         DateSelector.addSlideChangeListener(this.moveGraph.bind(this));
     },
@@ -65,7 +73,7 @@ var TempGraph = {
 
 
         leftMargin = dataArrays.leftMargin;
-        var translateX = "translateX(" + leftMargin + "%)"; //TODO: Not Working
+        var translateX = "translate3d(" + leftMargin + "%,0,0)";
         TempGraphDOM.css('transform', translateX);
 
         currentSlideIndex = DateSelector.getCurrentIndex();
@@ -117,11 +125,104 @@ var TempGraph = {
     moveGraph: function() {
         var newIndex = DateSelector.getCurrentIndex();
 
-        movedDistance += ((newIndex - currentSlideIndex) * 100);
-        var translateX = "translateX(" + (leftMargin - movedDistance) + "%)";
-        TempGraphDOM.css('transform', translateX);
+        this.resetSunPath();
+
+        if (newIndex == 0 && DateSelector.isFirstIsTomorrow()) {
+            TempGraphDOM.attr('style', 'display: none;');
+            SunTimesDOM.css('opacity', 0).removeAttr('style');
+            SunTimesDOM.animate({
+                opacity: 1
+            }, 500);
+
+            this.animateSunPath(newIndex);
+        }
+        else {
+            TempGraphDOM.removeAttr('style');
+            SunTimesDOM.attr('style', 'display: none');
+
+            movedDistance += ((newIndex - currentSlideIndex) * 100);
+            var translateX = "translate3d(" + (leftMargin - movedDistance) + "%, 0,0)";
+            TempGraphDOM.css('transform', translateX);
+        }
 
         currentSlideIndex = newIndex;
+    },
+
+    resetSunPath: function() {
+        this.sunArea.css('width', '0%');
+        this.sunPath.css('transform', 'rotate3d(0,0,1,-75deg)');
+    },
+
+    animateSunPath: function(index) {
+        var sunData = (WeatherStore.getSunMoonData())[index].sun;
+
+        var sunRiseDate = new Date(sunData['riseISO']);
+        var sunSetDate = new Date(sunData['setISO']);
+
+        this.sunRiseDescription.text(
+            this.__convertLeadingZeros(sunRiseDate.getHours(), 2)
+            + ':'
+            + this.__convertLeadingZeros(sunRiseDate.getMinutes(), 2)
+        );
+
+        this.sunSetDescription.text(
+            this.__convertLeadingZeros(sunSetDate.getHours(), 2)
+            + ':'
+            + this.__convertLeadingZeros(sunSetDate.getMinutes(), 2)
+        );
+
+        var length = (sunSetDate.getHours() - sunRiseDate.getHours()) * 60 * 60 + (sunSetDate.getMinutes() - sunRiseDate.getMinutes()) * 60;
+
+        var nowDate = new Date();
+        var currentLength = null;
+
+        if ((nowDate.getTime() >= sunRiseDate.getTime())
+        && (nowDate.getTime() <= sunSetDate.getTime())) {
+            currentLength = (nowDate.getHours() - sunRiseDate.getHours()) * 60 * 60 + (nowDate.getMinutes() - sunRiseDate.getMinutes()) * 60;
+        }
+
+        var percent = (currentLength == null) ? 100 : (currentLength / length) * 100;
+        var rDeg = 75;
+
+        if (currentLength != null) {
+            var R = 33.6464758;
+            var _x = 65 * percent / 100;
+            var deg15 = Math.PI / 12;
+            var rad2deg = 180 / Math.PI;
+
+            var a = null;
+
+            if (0 <= _x && _x < 50) {
+                a = Math.acos(Math.cos(deg15) - _x/R) * rad2deg - 15;
+            }
+            else if (_x > 50) {
+                a = 165 - Math.acos(_x/R - Math.cos(deg15)) * rad2deg;
+            }
+            else {
+                a = 75;
+            }
+
+            if (a == null) throw new Error("안돼");
+
+            rDeg = a;
+
+            if (rDeg >= 75) rDeg = (rDeg - 75).toString();
+            else rDeg = '-' + (75 - rDeg).toString();
+        }
+
+        this.sunPath.css('transform', 'rotate3d(0,0,1,' + rDeg + 'deg)');
+        this.sunArea.css('width', percent + '%');
+    },
+
+    __convertLeadingZeros: function(number, digits) {
+        var zero = '';
+        number = number.toString();
+
+        if (number.length < digits) {
+            for (var i = 0; i < digits - number.length; i++)
+                zero += '0';
+        }
+        return zero + number;
     }
 };
 

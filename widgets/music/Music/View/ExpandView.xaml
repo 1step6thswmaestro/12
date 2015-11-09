@@ -30,15 +30,15 @@
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,0,0,5">
                                 <Image Width="70" Height="70" Source="{Binding AlbumArt}"/>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="Bold" FontSize="20" FontFamily="Microsoft NeoGothic">
-                                        <TextBlock.OpacityMask>
+                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="Bold" FontSize="20">
+                                        <TextBlock.OpacityMask> 
                                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                                 <GradientStop Color="Black" Offset="0"/>
                                                 <GradientStop Offset="1" Color="#66FFFFFF"/>
                                             </LinearGradientBrush>
                                         </TextBlock.OpacityMask>
                                     </TextBlock>
-                                    <TextBlock Text="{Binding Artist}" Foreground="White" FontWeight="Normal" FontSize="14" FontFamily="Microsoft NeoGothic">
+                                    <TextBlock Text="{Binding Artist}" Foreground="White" FontWeight="Normal" FontSize="14">
                                         <TextBlock.OpacityMask>
                                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                                 <GradientStop Color="Black" Offset="0"/>
@@ -72,7 +72,7 @@
                     <StackPanel.Effect>
                         <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
                     </StackPanel.Effect>
-                    <TextBlock x:Name="TextTitle" Text="알 수 없는 제목" Foreground="White" TextTrimming="CharacterEllipsis" TextAlignment="Center" FontSize="24" FontWeight="Bold" FontFamily="Microsoft NeoGothic">
+                    <TextBlock x:Name="TextTitle" Text="알 수 없는 제목" Foreground="White" TextTrimming="CharacterEllipsis" TextAlignment="Center" FontSize="24" FontWeight="Bold">
                         <TextBlock.OpacityMask>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="0"/>
@@ -80,7 +80,7 @@
                             </LinearGradientBrush>
                         </TextBlock.OpacityMask>
                     </TextBlock>
-                    <TextBlock x:Name="TextArtist" Text="알 수 없는 음악가" Foreground="White" TextTrimming="CharacterEllipsis" TextAlignment="Center" FontSize="16" FontFamily="Microsoft NeoGothic">
+                    <TextBlock x:Name="TextArtist" Text="알 수 없는 음악가" Foreground="White" TextTrimming="CharacterEllipsis" TextAlignment="Center" FontSize="16">
                         <TextBlock.OpacityMask>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="0"/>

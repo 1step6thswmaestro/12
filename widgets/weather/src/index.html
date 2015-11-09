@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./assets/WeatherIcon/climacons-font.css" />
     <link rel="stylesheet" href="./libs/weather-icons-animation.css" />
     <link rel="stylesheet" href="./libs/animate.css" />
-    <link rel="stylesheet" href="./libs/slick.css" />
+    <link rel="stylesheet" href="./libs/owl.carousel.css" />
     <link rel="stylesheet" href="./css/main.css" />
 
     <script type="text/javascript" src="./libs/modernizr-2.6.2.min.js"></script>
@@ -106,15 +106,9 @@
                     <div class="weather-detail-selectedDate-main-right">
                         <div id="day-weather-sun-and-moon" class="weather-detail-selectedDate-main-right-top">
                             <span class="weather-detail-selectedDate-main-title">SUN & MOON</span>
-                            <div class="sun-times" style="display: none;">
-                                <div class="sun-path">
-                                    <div class="sun-animation"></div>
-                                </div>
-                                <div class="sun-symbol-path"><span class="symbol">☀</span></div>
-                            </div>
 
                             <div id="moon-shape" class="moon-shape">
-                                <i weather-attr="moon-shape-icon" class="climacon moon waxing quarter"></i>
+                                <i weather-attr="moon-shape-icon"></i>
                                 <span weather-attr="moon-shape-description" class="description">상현달</span>
                             </div>
 
@@ -199,9 +193,20 @@
             <div id="tempGraph-wrapper" class="weather-detail-tempGraph">
                 <div id="detail-tempGraph" class="weather-detail-tempGraph-data">
                 </div>
+                <div id="detail-sun-times" class="sun-times" style="display: none;">
+                    <div class="sun-times-inner">
+                        <div class="sun-path">
+                            <div id="sun-area" class="sun-animation"></div>
+                        </div>
+                        <div id="sun-path" class="sun-symbol-path"><span class="symbol">☀</span></div>
+
+                        <span weather-attr="description-sun-rise" class="description-sun-rise"></span>
+                        <span weather-attr="description-sun-set" class="description-sun-set"></span>
+                    </div>
+                </div>
             </div>
 
-            <div id="detail-date-selector" class="weather-detail-dateSelector">
+            <div id="detail-date-selector" class="weather-detail-dateSelector owl-carousel">
                 <div class="arrow arrow-left"><button id="arrow-left"><i class="material-icons">&#xE314;</i></button></div>
                 <div id="day-select-slider" class="day-select-slider">
                     <div class="day-select-slider-item active" idx="0">
@@ -377,6 +382,7 @@
             </div>
         </section>
     </main>
+
 
     <div id="weather-animated-icons" style="display: none;">
         <svg version="1.1" id="sun" class="climacon climacon_sun" viewBox="15 15 70 70">
@@ -2285,9 +2291,9 @@
     ['corechart']}]}"></script>
     <script type="text/javascript" src="./libs/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="./libs/jquery.easing.1.3.js"></script>
-    <script type="text/javascript" src="./libs/slick.min.js"></script>
     <script type="text/javascript" src="./libs/jquery.actual.min.js"></script>
     <script type="text/javascript" src="./libs/countUp.min.js"></script>
+    <script type="text/javascript" src="./libs/owl.carousel.min.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>

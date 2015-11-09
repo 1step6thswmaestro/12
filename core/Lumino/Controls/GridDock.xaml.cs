@@ -17,8 +17,8 @@ namespace Lumino
     public partial class GridDock : UserControl
     {
         #region 속성
-        public List<Double> RowDefinitions = new List<Double>();
-        public List<Double> ColumnDefinitions = new List<Double>();
+        public List<double> RowDefinitions = new List<double>();
+        public List<double> ColumnDefinitions = new List<double>();
 
         private int _Row;
         public int Row
@@ -156,7 +156,6 @@ namespace Lumino
             get { return _IsDrawerOpening; }
         }
 
-        private GridWidget _ExpandedWidget;
         public GridWidget ExpandedWidget
         {
             get
@@ -187,7 +186,7 @@ namespace Lumino
                 double TopOffset = 0;
                 double LeftOffset = 0;
 
-                Pen DrawPen = new Pen(Brushes.White, GridThickness);
+                Pen DrawPen = new Pen((Brush) new BrushConverter().ConvertFromString("#888888"), GridThickness);
                 DrawPen.Freeze();
 
                 foreach (double Row in RowDefinitions)
@@ -337,6 +336,16 @@ namespace Lumino
                     {
                         Add(Target);
                         Target.StartMouseDown();
+                    }
+                    else
+                    {
+                        AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
+                            "오류",
+                            "위젯을 로드할 수 없습니다.\n" +
+                            "구성 파일을 확인해주십시오.",
+                            false);
+
+                        Dialog.ShowDialog();
                     }
                 };
 

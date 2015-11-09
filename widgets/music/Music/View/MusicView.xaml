@@ -53,8 +53,7 @@
                            TextTrimming="CharacterEllipsis"
                            Padding="10,0"
                            TextOptions.TextRenderingMode="Aliased"
-                           TextOptions.TextFormattingMode="Ideal"
-                           FontFamily="Microsoft NeoGothic"/>
+                           TextOptions.TextFormattingMode="Ideal"/>
 
                 <TextBlock x:Name="TextArtist"
                            Foreground="White"
@@ -64,8 +63,7 @@
                            TextTrimming="CharacterEllipsis"
                            Padding="10,0"
                            TextOptions.TextRenderingMode="Aliased"
-                           TextOptions.TextFormattingMode="Ideal"
-                           FontFamily="Microsoft NeoGothic"/>
+                           TextOptions.TextFormattingMode="Ideal"/>
             </StackPanel>
             <TextBlock x:Name="TextTime"
                        Foreground="White"
@@ -77,8 +75,7 @@
                        VerticalAlignment="Center"
                        TextOptions.TextRenderingMode="Aliased"
                        TextOptions.TextFormattingMode="Ideal"
-                       Margin="2.5,99,2.5,0"
-                       FontFamily="Microsoft NeoGothic"/>
+                       Margin="2.5,99,2.5,0"/>
         </Grid>
     </Viewbox>
 </UserControl>

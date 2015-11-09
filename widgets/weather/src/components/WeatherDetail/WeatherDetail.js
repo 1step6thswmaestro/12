@@ -12,33 +12,20 @@ var WindAndPressure = require('./MainDetail/WindAndPressure');
 
 var DOM;
 
-var countCallback = 0;
-
-
-function initializeDatas() {
-    if (countCallback == 0 || countCallback == 1) {
-        countCallback++;
-        return;
-    }
-
-
-    //DateSelector.refresh();
-
-    countCallback = 0;
-}
-
 function activeComponent() {
+    console.log("active");
     DOM.removeAttr('style');
     DOM.css('opacity', 0);
-    DOM.animate({
-        opacity: 1
-    }, 500);
 
     setTimeout(function() {
+        DateSelector.initSlider();
         TempGraph.initGraph();
-        DateSelector.initItems();
-        DateSelector.refresh();
-    }, 750);
+
+        DOM.animate({
+            opacity: 1
+        }, 500);
+    }, 500);
+
 }
 
 function disableComponent() {
@@ -54,8 +41,6 @@ var WeatherDetail = {
     initialize: function($) {
         DOM = $('section#weather-detail-component');
 
-        countCallback = 0;
-
         DateSelector.initialize($);
         TempGraph.initialize($);
 
@@ -65,26 +50,6 @@ var WeatherDetail = {
         WindAndPressure.initialize($);
     },
 
-    subscribeForecastData: AppFlowController.addSubscribe(
-        Constants.FlowID.GET_FORECAST_DATA,
-        function() {
-            initializeDatas();
-        }
-    ),
-
-    subscribeTwoWeeksData: AppFlowController.addSubscribe(
-        Constants.FlowID.GET_14_FORECAST_DATA,
-        function() {
-            initializeDatas();
-        }
-    ),
-
-    subscribeSunMoonData: AppFlowController.addSubscribe(
-        Constants.FlowID.GET_SUN_MOON_DATA,
-        function() {
-            initializeDatas();
-        }
-    ),
 
     subscribeActiveApp: AppFlowController.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
