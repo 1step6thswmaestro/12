@@ -45,3 +45,8 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Cal
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\ProjectScreen.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\ProjectScreen.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\ScheduleList.baml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\ScheduleList.g.cs
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\calendar\Calendar_for_JARVIS\Calendar_for_JARVIS\obj\Debug\Calendar_for_JARVIS.csprojResolveAssemblyReference.cache

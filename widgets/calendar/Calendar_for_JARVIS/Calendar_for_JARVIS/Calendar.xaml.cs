@@ -31,7 +31,7 @@ namespace Calendar_for_JARVIS
     /// </summary>
     public partial class calendar_for_jarvis : UserControl
     {
-        private Events events;
+        static public Events events;
         private int NUMBER_OF_GRID_ROW = 6;
         private int NUMBER_OF_GRID_COL = 7;
 
@@ -62,6 +62,7 @@ namespace Calendar_for_JARVIS
             reset();
             refresh();
         }
+
         /// <summary>
         /// Reset content of calendar.
         /// </summary>
@@ -156,9 +157,9 @@ namespace Calendar_for_JARVIS
         /// <summary>
         /// Delete highlight of cell.
         /// </summary>
-        /// <param name="row"></param>
-        /// <param name="col"></param>
-        /// <param name="highlight"></param>
+        /// <param name="row">Row of cell</param>
+        /// <param name="col">Column of cell</param>
+        /// <param name="highlight">Type of highlight</param>
         private void unhighlight(int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
@@ -170,6 +171,12 @@ namespace Calendar_for_JARVIS
                     return;
                 }
         }
+        /// <summary>
+        /// Mark highlight on cell.
+        /// </summary>
+        /// <param name="row">Row of cell</param>
+        /// <param name="col">Column of cell</param>
+        /// <param name="highlight">Type of highlight</param>
         private void highlight(int row, int col, Highlight highlight)
         {
             if (is_out_of_grid(row, col)) return;
@@ -191,12 +198,18 @@ namespace Calendar_for_JARVIS
         }
 
         #region Set date and days.
+        /// <summary>
+        /// Set date on the top as today.
+        /// </summary>
         private void set_date()
         {
             DateTime today = DateTime.Today;
             Year.Text = today.ToString("yyyy년");
             Date.Text = today.ToString("MM월 dd일");
         }
+        /// <summary>
+        /// Set days on calendar.
+        /// </summary>
         private void set_days()
         {
             DateTime today = DateTime.Today;
@@ -247,6 +260,9 @@ namespace Calendar_for_JARVIS
         #region Get and highlight schedules from Google Calendar
         private string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         private string ApplicationName = "Google Calendar API .NET Quickstart";
+        /// <summary>
+        /// Highlight on calendar if there is any schedule on that day.
+        /// </summary>
         private void set_schedule_highlight()
         {
             UserCredential credential;
@@ -258,7 +274,6 @@ namespace Calendar_for_JARVIS
                     System.Environment.SpecialFolder.Personal);
                 credPath = System.IO.Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart");
 
-                MessageBox.Show(credPath);
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
@@ -303,7 +318,7 @@ namespace Calendar_for_JARVIS
                             System.Globalization.CultureInfo.InvariantCulture);
                         DateTime end_date = DateTime.ParseExact(
                             eventItem.End.Date, "yyyy-MM-dd",
-                            System.Globalization.CultureInfo.InvariantCulture); ;
+                            System.Globalization.CultureInfo.InvariantCulture);
 
                         while (start_date != end_date)
                         {

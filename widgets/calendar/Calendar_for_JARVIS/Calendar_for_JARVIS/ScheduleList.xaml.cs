@@ -1,0 +1,121 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
+
+namespace Calendar_for_JARVIS
+{
+    /// <summary>
+    /// Interaction logic for ScheduleList.xaml
+    /// </summary>
+    public partial class ScheduleList : UserControl
+    {
+        public ScheduleList()
+        {
+            InitializeComponent();
+
+            ScheduleListView.Items.Clear();
+
+            CultureInfo ci = new CultureInfo("en-US");
+            Events events = calendar_for_jarvis.events;
+            DateTime? prevDateTime = null;
+            if (events.Items != null && events.Items.Count > 0)
+            {
+                foreach (var eventItem in events.Items)
+                {
+
+                    try
+                    {
+                        if (prevDateTime == null || prevDateTime.Value.Day != eventItem.Start.DateTime.Value.Day)
+                            ScheduleListView.Items.Add(NewDateItem(eventItem.Start.DateTime.Value));
+                        ScheduleListView.Items.Add(NewScheduleItem(eventItem));
+
+                        prevDateTime = eventItem.Start.DateTime;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No upcoming events found.");
+            }
+        }
+
+        private ListViewItem NewDateItem(DateTime date)
+        {
+            ListViewItem _listViewItem = new ListViewItem {
+                Padding = new Thickness(0) };
+            StackPanel _innerStackPannel = new StackPanel
+            { VerticalAlignment = VerticalAlignment.Center };
+            CultureInfo ci = new CultureInfo("en-US");
+            _innerStackPannel.Children.Add(new TextBlock 
+            { Text = date.ToString("MMM dd", ci), Style = Resources["DateStyle"] as Style });
+            _innerStackPannel.Children.Add(new Line
+            { Style = Resources["DateUnderline"] as Style });
+
+            _listViewItem.Content = _innerStackPannel;
+
+            return _listViewItem;
+        }
+
+        private ListViewItem NewScheduleItem(Event eventItem)
+        {
+            CultureInfo ci = new CultureInfo("en-US");
+            ListViewItem _listViewItem = new ListViewItem {
+                Padding = new Thickness(0) };
+            StackPanel _innerStackPannel = new StackPanel
+            { VerticalAlignment = VerticalAlignment.Center,
+              Orientation = Orientation.Horizontal };
+            StackPanel _timeStackPanel = new StackPanel {
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                Margin = new Thickness (3, 0, 0, 0) };
+
+            _timeStackPanel.Children.Add (new TextBlock {
+                Text = eventItem.Start.DateTime.Value.ToString("hh:mmtt", ci),
+                Style = Resources["ScheduleTimeStyle"] as Style
+            }); _timeStackPanel.Children.Add(new TextBlock
+            {
+                Text = eventItem.End.DateTime.Value.ToString("hh:mmtt", ci),
+                Style = Resources["ScheduleTimeStyle"] as Style
+            });
+            _innerStackPannel.Children.Add(_timeStackPanel);
+
+            _innerStackPannel.Children.Add(new TextBlock
+            {
+                Text = (eventItem.Summary == null ? "Untitled" : eventItem.Summary),
+                Style = Resources["ScheduleStyle"] as Style });
+
+            _listViewItem.Content = _innerStackPannel;
+
+            return _listViewItem;
+        }
+        public void OnListView_SelectionChanged(Object sender, RoutedEventArgs e)
+        {
+            if (null != sender && sender is ListView)
+            {
+                ListView lv = sender as ListView;
+                lv.SelectedIndex = -1;
+            }
+        }
+    }
+}

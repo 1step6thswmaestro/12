@@ -109,9 +109,11 @@
                         Margin="0, 6, 0, 0" >
                 <TextBlock Text="2015년"
                            Style="{StaticResource ResourceKey=YearAndDate}"
+                           Visibility="Hidden"
                            Name="Year" />
                 <TextBlock Text="10월 13일"
                            Style="{StaticResource ResourceKey=YearAndDate}"
+                           Visibility="Hidden"
                            Name="Date" />
             </StackPanel>
 
