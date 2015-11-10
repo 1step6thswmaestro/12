@@ -13,6 +13,14 @@ var movedDistance = 0;
 
 var currentSlideIndex = 0;
 
+/**
+ * 이 클래스는 WeatherDetail 컴포넌트의 TempGraph를 그리기 위한 클래스입니다.
+ * 이 클래스는 Widget이 Active 상태가 되었을 때 호출됩니다.
+ *
+ * @version 151110
+ * @author 나석주
+ */
+
 var TempGraph = {
     initialize: function($) {
         TempGraphDOM = $("#detail-tempGraph");
@@ -150,7 +158,7 @@ var TempGraph = {
 
     resetSunPath: function() {
         this.sunArea.css('width', '0%');
-        this.sunPath.css('transform', 'rotate3d(0,0,1,-75deg)');
+        this.sunPath.css('-webkit-transform', 'rotate3d(0,0,1,-75deg)');
     },
 
     animateSunPath: function(index) {
@@ -210,7 +218,7 @@ var TempGraph = {
             else rDeg = '-' + (75 - rDeg).toString();
         }
 
-        this.sunPath.css('transform', 'rotate3d(0,0,1,' + rDeg + 'deg)');
+        this.sunPath.css('-webkit-transform', 'rotate3d(0,0,1,' + rDeg + 'deg)');
         this.sunArea.css('width', percent + '%');
     },
 
