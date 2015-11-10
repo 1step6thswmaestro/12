@@ -59,36 +59,7 @@ function syncPosition(el){
         .find(".owl-item")
         .removeClass("synced")
         .eq(current)
-        .addClass("synced")
-    if(selector.data("owlCarousel") !== undefined){
-        center(current)
-    }
-}
-
-function center(number){
-    var sync2visible = selector.data("owlCarousel").owl.visibleItems;
-    var num = number;
-    var found = false;
-    for(var i in sync2visible){
-        if(num === sync2visible[i]){
-            var found = true;
-        }
-    }
-
-    if(found === false){
-        if(num > sync2visible[sync2visible.length-1]){
-            selector.trigger("owl.goTo", num - sync2visible.length+2)
-        }else{
-            if(num - 1 === -1){
-                num = 0;
-            }
-            selector.trigger("owl.goTo", num);
-        }
-    } else if(num === sync2visible[sync2visible.length-1]){
-        selector.trigger("owl.goTo", sync2visible[1])
-    } else if(num === sync2visible[0]){
-        selector.trigger("owl.goTo", num-1)
-    }
+        .addClass("synced");
 
 }
 

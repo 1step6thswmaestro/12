@@ -1,6 +1,20 @@
+var index = 0;
+var author;
+
+var authorConstants = [
+    '&#151; Steve Jobs',
+    '&#151; Allen Saunders',
+    '&#151; Mark Twain',
+	"&#151; Oscar Wilde, Lady Windermere's Fan",
+	'&#151; Thomas A. Edison'
+];
+
 $(document).ready(function($){
+
+    author = $('#author').find('span');
+
 	//set animation timing
-	var animationDelay = 2500,
+	var animationDelay = 6000,
 		//loading bar effect
 		barAnimationDelay = 3800,
 		barWaiting = barAnimationDelay - 3000, //3000 is the duration of the transition on the loading bar - set in the scss/css file
@@ -29,7 +43,7 @@ $(document).ready(function($){
 			var word = $(this),
 				letters = word.text().split(''),
 				selected = word.hasClass('is-visible');
-			for (i in letters) {
+			for (var i in letters) {
 				if(word.parents('.rotate-2').length > 0) letters[i] = '<em>' + letters[i] + '</em>';
 				letters[i] = (selected) ? '<i class="in">' + letters[i] + '</i>': '<i>' + letters[i] + '</i>';
 			}
@@ -39,6 +53,8 @@ $(document).ready(function($){
 	}
 
 	function animateHeadline($headlines) {
+        authorize();
+
 		var duration = animationDelay;
 		$headlines.each(function(){
 			var headline = $(this);
@@ -48,7 +64,7 @@ $(document).ready(function($){
 				setTimeout(function(){ headline.find('.cd-words-wrapper').addClass('is-loading') }, barWaiting);
 			} else if (headline.hasClass('clip')){
 				var spanWrapper = headline.find('.cd-words-wrapper'),
-					newWidth = spanWrapper.width() + 10
+					newWidth = spanWrapper.width() + 10;
 				spanWrapper.css('width', newWidth);
 			} else if (!headline.hasClass('type') ) {
 				//assign to .cd-words-wrapper the width of its longest word
@@ -59,15 +75,34 @@ $(document).ready(function($){
 				    if (wordWidth > width) width = wordWidth;
 				});
 				headline.find('.cd-words-wrapper').css('width', width);
-			};
+			}
 
 			//trigger animation
-			setTimeout(function(){ hideWord( headline.find('.is-visible').eq(0) ) }, duration);
+			setTimeout(function(){ hideWord( headline.find('.is-visible').eq(0) ); }, duration);
 		});
 	}
 
+    function authorize() {
+        author
+            .animate({
+                opacity: 0
+            }, 900, function() {
+                author
+                    .html(authorConstants[index++])
+                    .animate({
+                        opacity: 1
+                    }, 900, 'swing');
+            });
+
+
+        if (index == authorConstants.length) {
+            index = 0;
+        }
+    }
+
 	function hideWord($word) {
-		var nextWord = takeNext($word);
+        authorize();
+        var nextWord = takeNext($word);
 		
 		if($word.parents('.cd-headline').hasClass('type')) {
 			var parentSpan = $word.parent('.cd-words-wrapper');
