@@ -703,84 +703,76 @@
             margin: 0 auto;
             width: 75vw;
             padding-top: 2vw;
-            height: 24.938127vw;
-            border-bottom: .2vh solid #999;
 
             position: relative;
-
-            overflow-y: hidden;
 
             &-inner {
                 width: 75vw;
                 height: 24.938127vw;
                 position: relative;
-
-                .description-sun-rise {
-                    display: inline-block;
-                    position: absolute;
-
-                    left: 0;
-                    bottom: 0;
-
-                    color: @color-grey-700;
-                    font-size: 4vw;
-                    font-weight: 300;
-                }
-
-                .description-sun-set {
-                    display: inline-block;
-                    position: absolute;
-
-                    right: 0;
-                    bottom: 0;
-
-                    color: @color-grey-700;
-                    font-size: 4vw;
-                    font-weight: 300;
-                }
-            }
-
-            .sun-path {
-                position: absolute;
-
-                left: 5vw;
-                top: 0;
-
-                width: 65vw;
-                height: 65vw;
-
                 overflow: hidden;
-                border: .22vh dashed #999;
-                border-radius: 32.5vw;
-            }
 
-            .sun-animation {
-                width: 0;
-                height: 24.938127vw;
-                background-color: rgba(255, 255, 0, 0.4);
-                -webkit-transition: width 2s ease;
-                transition: width 2s ease;
-            }
+                border-bottom: .2vh solid #999;
 
-            .sun-symbol-path {
-                position: absolute;
-                color: yellow;
-                width: 1px;
-                height: 33.6464758vw;
-                -webkit-transition: -webkit-transform 2s ease;
-                -webkit-transform-origin: 50% 100%;
-                -webkit-transform: rotateZ(0deg);
-                left: 37.5vw;
-                bottom: -7.9083487376vw;
+                .sun-path {
+                    position: absolute;
 
-                .symbol {
-                    display: inline-block;
-                    font-size: 5vw;
-                    line-height: 1;
-                    margin: -1.5vw 0 0 -2.5vw;
+                    left: 5vw;
+                    top: 0;
+
+                    width: 65vw;
+                    height: 65vw;
+
+                    overflow: hidden;
+                    border: .22vh dashed #999;
+                    border-radius: 32.5vw;
+                }
+
+                .sun-animation {
+                    width: 0;
+                    height: 24.938127vw;
+                    background-color: rgba(255, 255, 0, 0.4);
+                    -webkit-transition: width 2s ease;
+                    transition: width 2s ease;
+                }
+
+                .sun-symbol-path {
+                    position: absolute;
+                    color: yellow;
+                    width: 1px;
+                    height: 33.6464758vw;
+                    -webkit-transition: -webkit-transform 2s ease;
+                    -webkit-transform-origin: 50% 100%;
+                    -webkit-transform: rotateZ(0deg);
+                    left: 37.5vw;
+                    bottom: -7.9083487376vw;
+
+                    .symbol {
+                        display: inline-block;
+                        font-size: 5vw;
+                        line-height: 1;
+                        margin: -1.5vw 0 0 -2.5vw;
+                    }
                 }
             }
 
+            &-description {
+                z-index: 9999;
+
+                display: -webkit-flex;
+                display: flex;
+
+                -webkit-justify-content: space-between;
+                justify-content: space-between;
+
+                background-color: @color-black;
+
+                span {
+                    display: inline-block;
+                    font-size: 20px;
+                    color: @color-grey-600;
+                }
+            }
         }
 
     }

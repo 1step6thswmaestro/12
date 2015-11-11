@@ -4,11 +4,14 @@ var Constants = require('../../constants/Constants');
 function activeComponent() {
     Screen
         .removeAttr('style')
-        .css('opacity', 0)
         .animate({
-            opacity: 1
-        }, 1000, 'swing');
-
+            opacity: 0
+        }, 500, 'swing', function() {
+            Screen.animate({
+                opacity: 1
+            }, 500, 'swing');
+        });
+    
     setTimeout(function() {
         selectedImage.data('owlCarousel').reinit({
             singleItem : true,
@@ -35,9 +38,12 @@ function activeComponent() {
 
         selector.find('.owl-wrapper').css('display', 'flex');
         selectedImage.find('.owl-wrapper').css('display', 'flex');
+
+        btnPrev.on('click tap', function() { selector.trigger('owl.prev'); });
+        btnNext.on('click tap', function() { selector.trigger('owl.next'); });
     }, 1000);
 
-    selector.on('click', '.owl-item', function(e) {
+    selector.on('mouseup', '.owl-item', function(e) {
         e.preventDefault();
         var num = $(this).data('owlItem');
         selectedImage.trigger('owl.goTo', num);
@@ -70,6 +76,9 @@ var DOM;
 var selectedImage;
 var selector;
 
+var btnPrev;
+var btnNext;
+
 var ImageSlider = {
     initialize: function($) {
         Screen = $('#SCREEN_ACTIVE');
@@ -78,8 +87,8 @@ var ImageSlider = {
         selectedImage = DOM.find('[component-attr=selected-image]');
         selector = DOM.find('[component-attr=selector]');
 
-        this.btnPrev = DOM.find('[component-attr=btn_prev]');
-        this.btnNext = DOM.find('[component-attr=btn_next]');
+        btnPrev = DOM.find('[component-attr=btn_prev]');
+        btnNext = DOM.find('[component-attr=btn_next]');
 
         this.initSlider();
     },
@@ -87,9 +96,6 @@ var ImageSlider = {
     initSlider: function() {
         selectedImage.owlCarousel();
         selector.owlCarousel();
-
-        this.btnPrev.on('click tap', function() { selector.trigger('owl.prev'); });
-        this.btnNext.on('click tap', function() { selector.trigger('owl.next'); });
     },
 
     activeApp: Flowing.addSubscribe(

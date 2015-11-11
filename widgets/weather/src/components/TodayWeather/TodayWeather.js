@@ -42,7 +42,7 @@ var TodayWeather = {
     },
 
     setWeatherData: function() {
-        var data = (WeatherStore.getForecastData()).periods[0];
+        var data = (WeatherStore.getTwoWeeksData()).periods[0];
 
         this.Icon.empty().append(WeatherIcons.getIconDOM(CodedWeather.Icons[data['icon']]).clone());
         this.HighTemp.text(data['maxTempC']);
