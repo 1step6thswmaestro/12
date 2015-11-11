@@ -29,8 +29,7 @@
             </StackPanel>
             <StackPanel Background="Black" Orientation="Horizontal"
                         Height="9"
-                        VerticalAlignment="Stretch"
-                        >
+                        VerticalAlignment="Stretch">
                 <TextBlock Name="Hour"
                        Style="{StaticResource ResourceKey=semi_light}"
                        Width="10"
@@ -45,6 +44,9 @@
                        Text="11" />
                 <TextBlock Name="Meridiem"
                        Style="{StaticResource ResourceKey=semi_light}"
+                           TextAlignment="Left"
+                           Margin="0, -1, 0, 0"
+                           FontSize="9"
                        Width="13"
                        Text="PM" />
             </StackPanel>
