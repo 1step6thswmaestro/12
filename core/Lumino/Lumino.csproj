@@ -127,6 +127,7 @@
     <Compile Include="Controls\GridWidget.xaml.cs">
       <DependentUpon>GridWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ScrollViewerWithTouch.cs" />
     <Compile Include="Functions\ConfigManager.cs" />
     <Compile Include="Functions\INI.cs" />
     <Compile Include="MainWindow.xaml.cs">

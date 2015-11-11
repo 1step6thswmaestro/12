@@ -6,6 +6,21 @@ Music
 </name>
 </assembly>
 <members>
+<member name="F:Music.ScrollViewerWithTouch._PanningMode">
+ <summary>
+ Original panning mode.
+ </summary>
+</member>
+<member name="F:Music.ScrollViewerWithTouch._PanningModeSet">
+ <summary>
+ Set panning mode only once.
+ </summary>
+</member>
+<member name="M:Music.ScrollViewerWithTouch.#cctor">
+ <summary>
+ Initializes static members of the <see cref="T:Music.ScrollViewerWithTouch"/> class.
+ </summary>
+</member>
 <member name="F:Music.ModFmodControl.system">
  <summary>
  

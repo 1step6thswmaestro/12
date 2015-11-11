@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl xmlns:Controls="clr-namespace:Lumino.Controls" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -28,14 +28,16 @@
             <Grid x:Name="GridDeleteLight" Background="#7FFF0000"/>
         </Grid>
         <StackPanel x:Name="StackDrawer" SnapsToDevicePixels="True" VerticalAlignment="Bottom">
-            <Border x:Name="GripDrawer" HorizontalAlignment="Center" Background="#B2FFFFFF" CornerRadius="10,10,0,0" Height="50" Width="140">
+            <Border x:Name="GripDrawer" HorizontalAlignment="Center" Background="#7FFFFFFF" CornerRadius="10,10,0,0" Height="50" Width="140">
                 <Image x:Name="ImageGrip" Source="/Lumino;component/Images/BtnUp.png" RenderTransformOrigin="0.5,0.5" >
                     <Image.RenderTransform>
                         <RotateTransform Angle="0"/>
                     </Image.RenderTransform>
                 </Image>
             </Border>
-            <StackPanel x:Name="StackDrawerContent" Background="#B2FFFFFF" Orientation="Horizontal" Height="150"/>
+            <Controls:ScrollViewerWithTouch x:Name="ScrollContent" PanningMode="HorizontalFirst" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="StackDrawerContent" Background="#7FFFFFFF" Orientation="Horizontal" Height="150"/>
+            </Controls:ScrollViewerWithTouch>
         </StackPanel>
     </Grid>
 </UserControl>

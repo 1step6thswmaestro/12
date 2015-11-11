@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 
 Public Class ExpandView
+    Private LastIDX As Integer = -1
     Private IsReady As Boolean = False
 
     Private Sub ExpandView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
@@ -35,15 +36,6 @@ Public Class ExpandView
         End If
     End Sub
 
-    Private Sub ListMusic_MouseLeftButtonUp(sender As Object, e As MouseButtonEventArgs) Handles ListMusic.MouseLeftButtonUp
-        Static LastIDX As Integer = -1
-        Dim CurrentListBox As ListBox = TryCast(sender, ListBox)
-        If LastIDX <> CurrentListBox.SelectedIndex Then
-            MediaManager.Play(CurrentListBox.SelectedIndex)
-            LastIDX = CurrentListBox.SelectedIndex
-        End If
-    End Sub
-
     Private Sub BtnPlay_MouseLeftButtonUp(sender As Object, e As MouseButtonEventArgs) Handles BtnPlay.MouseLeftButtonUp
         If MediaManager.MusicIDX = -1 Then
             MediaManager.Play(0)
@@ -64,5 +56,13 @@ Public Class ExpandView
 
     Private Sub SliderVolume_ValueChanged(sender As Object, e As RoutedPropertyChangedEventArgs(Of Double)) Handles SliderVolume.ValueChanged
         MediaManager.SetVolume(TryCast(sender, VertexSlider).Value)
+    End Sub
+
+    Private Sub ListMusic_MouseLeftButtonUp(sender As Object, e As MouseButtonEventArgs) Handles ListMusic.MouseLeftButtonUp
+        Dim CurrentListBox As ListBox = TryCast(sender, ListBox)
+        If LastIDX <> CurrentListBox.SelectedIndex Then
+            MediaManager.Play(CurrentListBox.SelectedIndex)
+            LastIDX = CurrentListBox.SelectedIndex
+        End If
     End Sub
 End Class

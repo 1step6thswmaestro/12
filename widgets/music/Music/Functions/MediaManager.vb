@@ -27,19 +27,21 @@ Public Class MediaManager
 
             ' 타이머 초기화
             Dim Path As String = MusicList(IDX).Path
-            PlayerTimer = New DispatcherTimer
-            PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
-            AddHandler PlayerTimer.Tick,
-                    Sub()
-                        If SetPath IsNot Nothing Then
-                            RaiseEvent OnPositionChanged()
+            If PlayerTimer Is Nothing Then
+                PlayerTimer = New DispatcherTimer
+                PlayerTimer.Interval = TimeSpan.FromMilliseconds(1)
+                AddHandler PlayerTimer.Tick,
+                        Sub()
+                            If SetPath IsNot Nothing Then
+                                RaiseEvent OnPositionChanged()
 
-                            If mplaytime() >= mplaytimelen() Then
-                                RaiseEvent OnMediaCompleted(Path)
+                                If mplaytime() >= mplaytimelen() Then
+                                    RaiseEvent OnMediaCompleted(Path)
+                                End If
                             End If
-                        End If
-                    End Sub
-            PlayerTimer.Start()
+                        End Sub
+                PlayerTimer.Start()
+            End If
 
             ' 미디어 초기화
             If SetPath IsNot Nothing Then
