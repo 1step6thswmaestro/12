@@ -110,6 +110,7 @@
     <Import Include="System.Windows.Navigation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ScrollViewerWithTouch.vb" />
     <Compile Include="Controls\VertexSlider.vb" />
     <Compile Include="Engine\FMODEX.vb" />
     <Compile Include="Engine\FMOD_DSP.vb" />
