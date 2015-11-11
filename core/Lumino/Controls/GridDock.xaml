@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl xmlns:Controls="clr-namespace:Lumino.Controls" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -35,7 +35,9 @@
                     </Image.RenderTransform>
                 </Image>
             </Border>
-            <StackPanel x:Name="StackDrawerContent" Background="#B2FFFFFF" Orientation="Horizontal" Height="150"/>
+            <Controls:ScrollViewerWithTouch x:Name="ScrollContent" PanningMode="HorizontalFirst" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="StackDrawerContent" Background="#B2FFFFFF" Orientation="Horizontal" Height="150"/>
+            </Controls:ScrollViewerWithTouch>
         </StackPanel>
     </Grid>
 </UserControl>

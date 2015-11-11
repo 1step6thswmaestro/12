@@ -594,6 +594,11 @@ namespace Lumino
                 ParentDock.Guideline = false;
             }
 
+            if (ParentDock != null)
+            {
+                ParentDock.GridTopDeleteMenu.Visibility = Visibility.Collapsed;
+            }
+
             if (!DeleteSelect)
             {
                 if (PositionError)
@@ -615,11 +620,6 @@ namespace Lumino
                     SetPosition(Row, Column, true);
                     ParentDock.Config.SaveWidgets();
                 }
-            }
-
-            if (ParentDock != null)
-            {
-                ParentDock.GridTopDeleteMenu.Visibility = Visibility.Collapsed;
             }
 
             GridSelect.Visibility = Visibility.Collapsed;

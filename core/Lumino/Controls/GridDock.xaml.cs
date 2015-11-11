@@ -325,7 +325,7 @@ namespace Lumino
                 WidgetStack.Children.Add(WidgetTitle);
 
                 // 위젯 섬네일 컨트롤 이벤트 설정
-                WidgetStack.MouseLeftButtonDown  += (s, e) =>
+                WidgetStack.MouseLeftButtonDown += (s, e) =>
                 {
                     IsDrawerOpen = false;
                     GridWidget Target = new GridWidget
@@ -362,8 +362,14 @@ namespace Lumino
             GripDrawer.MouseLeftButtonDown += GripDrawer_MouseLeftButtonDown;
             BtnBack.MouseLeftButtonUp += BtnBack_MouseLeftButtonUp;
             BtnAbout.MouseLeftButtonUp += BtnAbout_MouseLeftButtonUp;
+            ScrollContent.ManipulationBoundaryFeedback += ScrollContent_ManipulationBoundaryFeedback;
             Config.Initialize(this);
             Config.LoadWidgets();
+        }
+
+        private void ScrollContent_ManipulationBoundaryFeedback(object sender, System.Windows.Input.ManipulationBoundaryFeedbackEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private void BtnBack_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
