@@ -7,112 +7,128 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        <Style TargetType="Line" x:Key="Underline">
-            <Setter Property="X2" Value="1"/>
-            <Setter Property="Height" Value="0.05"/>
-            <Setter Property="Fill" Value="White"/>
-            <Setter Property="Stroke" Value="White"/>
-            <Setter Property="Stretch" Value="Fill"/>
+        <Style TargetType="TextBlock" x:Key="UserName">
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontSize" Value="1.8" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Foreground" Value="#DDDDDD" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="UserID">
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontSize" Value="1.6" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="Timespan">
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontSize" Value="1.6" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="Tweet">
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontSize" Value="3" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="White" />
         </Style>
     </UserControl.Resources>
     
     <Viewbox>
-        <ListBox Padding="0"        Background="Black"
-                 BorderThickness="0"
-                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 Width="40"     Height="60"
-                 >
+        <Grid Background="Black"
+              MouseDown="Grid_MouseDown"
+              Margin="1, 1, 0, 0"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Name="Timeline">
 
-            <ListBoxItem Padding="0" Width="38">
-                <StackPanel Width="36">
-                    <Grid>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="ABEC"
+            <StackPanel Width="36">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ABEC"
+                                   Style="{StaticResource UserName}"/>
+                        <TextBlock Text=" @mr_abec"
+                                   Style="{StaticResource UserID}"/>
+                    </StackPanel>
+                    <TextBlock Text="1 minutes ago"
+                               Style="{StaticResource Timespan}"/>
+                </Grid>
+                <TextBlock Text="으아아아아아아아악!!!"
+                           Style="{StaticResource Tweet}"/>
+                <TextBlock Text=" " FontSize="1" />
+            </StackPanel>
+
+
+            <StackPanel Width="36">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Avicii"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="#BBBBBB" />
-                            <TextBlock Text=" @mr_abec"
+                        <TextBlock Text=" @AVICII"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="1 minutes ago"
+                    </StackPanel>
+                    <TextBlock Text="9 minutes ago"
                                        VerticalAlignment="Bottom"   HorizontalAlignment="Right"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                    </Grid>
-                    <TextBlock Text="으아아아아아아아악!!!"
+                </Grid>
+                <TextBlock Text="LISTEN MY NEW SONG, WAITING FOR LOVE."
                                Foreground="White" FontSize="3" FontFamily="Segoe UI Light"
-                               TextWrapping="Wrap"
-                        />
-                </StackPanel>
-            </ListBoxItem>
+                               TextWrapping="Wrap" />
+                <TextBlock Text=" " FontSize="1" />
+            </StackPanel>
 
 
-            <ListBoxItem Padding="0" Width="38">
-                <StackPanel Width="36">
-                    <Grid>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Avicii"
+            <StackPanel Width="36">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="MR. WANG"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="#BBBBBB" />
-                            <TextBlock Text=" @AVICII"
+                        <TextBlock Text=" @mr_wang"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="9 minutes ago"
+                    </StackPanel>
+                    <TextBlock Text="9 minutes ago"
                                        VerticalAlignment="Bottom"   HorizontalAlignment="Right"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                    </Grid>
-                    <TextBlock Text="LISTEN MY NEW SONG, WAITING FOR LOVE."
+                </Grid>
+                <TextBlock Text="I'm got fired. It's real."
                                Foreground="White" FontSize="3" FontFamily="Segoe UI Light"
-                               TextWrapping="Wrap"
-                        />
-                </StackPanel>
-            </ListBoxItem>
+                               TextWrapping="Wrap" />
+                <TextBlock Text=" " FontSize="1"/>
+            </StackPanel>
 
-            <ListBoxItem Padding="0" Width="38">
-                <StackPanel Width="36">
-                    <Grid>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="MR. WANG"
-                                       VerticalAlignment="Bottom"
-                                       FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="#BBBBBB" />
-                            <TextBlock Text=" @mr_wang"
-                                       VerticalAlignment="Bottom"
-                                       FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="9 minutes ago"
-                                       VerticalAlignment="Bottom"   HorizontalAlignment="Right"
-                                       FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                    </Grid>
-                    <TextBlock Text="I'm got fired. It's real."
-                               Foreground="White" FontSize="3" FontFamily="Segoe UI Light"
-                               TextWrapping="Wrap"
-                        />
-                </StackPanel>
-            </ListBoxItem>
 
-            <ListBoxItem Padding="0" Width="38">
-                <StackPanel Width="36">
-                    <Grid>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="DOGEDOGE"
+            <StackPanel Width="36">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="DOGEDOGE"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="goe UI Light" Foreground="#BBBBBB" />
-                            <TextBlock Text=" @DOGEDOGE"
+                        <TextBlock Text=" @DOGEDOGE"
                                        VerticalAlignment="Bottom"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="9 minutes ago"
+                    </StackPanel>
+                    <TextBlock Text="9 minutes ago"
                                        VerticalAlignment="Bottom"   HorizontalAlignment="Right"
                                        FontSize="1.6"     FontFamily="Segoe UI Light" Foreground="Gray"/>
-                    </Grid>
-                    <TextBlock Text="wow such very doge wow"
+                </Grid>
+                <TextBlock Text="wow such very doge wow"
                                Foreground="White" FontSize="3" FontFamily="Segoe UI Light"
-                               TextWrapping="Wrap"
-                        />
-                </StackPanel>
-            </ListBoxItem>
+                               TextWrapping="Wrap"/>
+                <TextBlock Text=" " FontSize="1" />
+            </StackPanel>
 
-        </ListBox>
+        </StackPanel>
+        </Grid>
     </Viewbox>
 </UserControl>

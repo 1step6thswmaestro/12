@@ -66,3 +66,15 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bi
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\Org.Mentalis.Security.Cryptography.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\Mono.Math.xml
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\obj\Debug\TestApplication.csproj.App.config
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\LinqToTwitter.AspNet.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\LinqToTwitterPcl.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Core.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Interfaces.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Linq.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.PlatformServices.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Core.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Interfaces.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.Linq.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\System.Reactive.PlatformServices.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\Newtonsoft.Json.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TestApplication\bin\Debug\Newtonsoft.Json.xml

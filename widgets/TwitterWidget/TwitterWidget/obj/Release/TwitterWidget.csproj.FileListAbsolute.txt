@@ -71,3 +71,14 @@ C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\obj\
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\obj\Release\TwitterWidget.csproj.GenerateResource.Cache
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\obj\Release\TwitterWidget.dll
 C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\obj\Release\TwitterWidget.pdb
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\LinqToTwitter.AspNet.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\LinqToTwitterPcl.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Core.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Interfaces.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Linq.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.PlatformServices.dll
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Core.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Interfaces.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.Linq.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\bin\Release\System.Reactive.PlatformServices.xml
+C:\Users\인범\Documents\GitHub\JARVIS\widgets\TwitterWidget\TwitterWidget\obj\Release\TwitterWidget.csprojResolveAssemblyReference.cache
