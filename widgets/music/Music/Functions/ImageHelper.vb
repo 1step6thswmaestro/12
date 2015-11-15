@@ -81,4 +81,7 @@ Public Class ImageHelper
         Return MyRenderTargetBitmap
     End Function
 
+    Public Shared Function Resize(ByVal Target As BitmapFrame, ByVal Width As Integer, ByVal Height As Integer) As BitmapFrame
+        Return BitmapFrame.Create(New TransformedBitmap(Target, New ScaleTransform(Width / Target.Width, Height / Target.Height, 0, 0)))
+    End Function
 End Class

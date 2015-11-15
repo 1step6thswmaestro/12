@@ -23,7 +23,7 @@
             <Grid Grid.Row="0">
                 <ListBox x:Name="ListMusic" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="50,120,50,20" ItemContainerStyle="{StaticResource ListBoxItemStyle}" Style="{DynamicResource ListBoxStyle}">
                     <ListBox.Effect>
-                        <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
+                        <DropShadowEffect RenderingBias="Performance" ShadowDepth="0"/>
                     </ListBox.Effect>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -61,7 +61,7 @@
                         </LinearGradientBrush>
                     </StackPanel.OpacityMask>
                     <StackPanel.Effect>
-                        <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
+                        <DropShadowEffect RenderingBias="Performance" ShadowDepth="0"/>
                     </StackPanel.Effect>
                     <Image x:Name="BtnPrevious" Width="30" Source="/Music;component/Images/BtnPrev.png" Margin="0,0,10,0"/>
                     <Image x:Name="BtnPlay" Width="50" Source="/Music;component/Images/BtnPlay.png"/>
@@ -70,7 +70,7 @@
 
                 <StackPanel VerticalAlignment="Center" Margin="180,0">
                     <StackPanel.Effect>
-                        <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
+                        <DropShadowEffect RenderingBias="Performance" ShadowDepth="0"/>
                     </StackPanel.Effect>
                     <TextBlock x:Name="TextTitle" Text="알 수 없는 제목" Foreground="White" TextTrimming="CharacterEllipsis" TextAlignment="Center" FontSize="24" FontWeight="Bold">
                         <TextBlock.OpacityMask>
@@ -98,7 +98,7 @@
                         </LinearGradientBrush>
                     </StackPanel.OpacityMask>
                     <StackPanel.Effect>
-                        <DropShadowEffect RenderingBias="Quality" ShadowDepth="0"/>
+                        <DropShadowEffect RenderingBias="Performance" ShadowDepth="0"/>
                     </StackPanel.Effect>
                     <Image Width="18" Source="/Music;component/Images/ImgVolume.png" Margin="0,0,10,0"/>
                     <local:VertexSlider x:Name="SliderVolume" Opacity="0.8" Width="100" Height="15" Value="50" Maximum="100" Style="{StaticResource VertexSliderStyle}" AutoMove="True" Foreground="Silver" Background="White"/>

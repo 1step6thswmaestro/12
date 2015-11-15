@@ -11,7 +11,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#0C000000"/>
+    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#00000000"/>
     <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#05000000"/>
     <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#19000000"/>
     <Style x:Key="ListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
