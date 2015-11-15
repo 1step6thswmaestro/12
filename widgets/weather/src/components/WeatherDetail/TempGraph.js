@@ -103,7 +103,7 @@ var TempGraph = {
                 fontSize: "1vw",
                 chartArea: {width: "100%", height: '60%'},
                 hAxis: {
-                    textStyle: {color: '#616161', fontSize: 20}
+                    textStyle: {color: '#9E9E9E', fontSize: 24}
                 },
                 pointsVisible: false,
                 vAxis: {baselineColor: 'black', gridlines: {color: 'black'}, textStyle: { color: 'black'}},
