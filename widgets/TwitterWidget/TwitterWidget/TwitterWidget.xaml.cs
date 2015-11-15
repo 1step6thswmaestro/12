@@ -42,7 +42,7 @@ namespace TwitterWidget
             stream();
         }
         
-        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+        // get access auth from Twitter
         private SingleUserAuthorizer authorizer = new SingleUserAuthorizer
         {
             CredentialStore = new SingleUserInMemoryCredentialStore
@@ -54,12 +54,12 @@ namespace TwitterWidget
             }
         };
 
-        private void refreshTimeLine(object sender, EventArgs e)
-        {
-            Timeline.Children.Clear();
-            refresh();
-        }
-
+        /// <summary>
+        /// Add new tweet into timeline.
+        /// </summary>
+        /// <param name="name">Name of writter.</param>
+        /// <param name="id">ID of writter.</param>
+        /// <param name="text">Content of tweet.</param>
         private void addTweet(string name, string id, string text)
         {
             _flag = true;
@@ -105,6 +105,10 @@ namespace TwitterWidget
             _flag = false;
         }
 
+        /// <summary>
+        /// Add new tweet into timeline.
+        /// </summary>
+        /// <param name="status">Status object of tweet.</param>
         private void addTweet(Status status)
         {
             _flag = true;
@@ -148,9 +152,11 @@ namespace TwitterWidget
             }
             _flag = false;
         }
-
         bool _flag = false;
 
+        /// <summary>
+        /// Avoke streaming feature. Timeline will be refreshed automatically.
+        /// </summary>
         private async void stream()
         {
             var twitterContext = new TwitterContext(authorizer);
@@ -181,13 +187,14 @@ namespace TwitterWidget
                         }));
                     }
 
-                    if (count++ == 10)
+                    if (count++ == 100)
                     {
                         strm.CloseStream();
                     }
                 });
         }
 
+        // get latest 20 tweets and add into timeline.
         private async void refresh()
         {
             try
@@ -206,10 +213,6 @@ namespace TwitterWidget
             catch (Exception e){
                 Console.WriteLine(e.ToString());
             }
-        }
-
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
         }
     }
 }

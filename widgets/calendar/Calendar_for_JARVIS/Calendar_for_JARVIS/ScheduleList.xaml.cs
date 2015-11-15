@@ -31,8 +31,10 @@ namespace Calendar_for_JARVIS
         {
             InitializeComponent();
 
+            // clear all schedules.
             ScheduleListView.Items.Clear();
 
+            // add date and schedule items into list.
             CultureInfo ci = new CultureInfo("en-US");
             Events events = calendar_for_jarvis.events;
             int? prevDay = null;
@@ -43,6 +45,7 @@ namespace Calendar_for_JARVIS
 
                     try
                     {
+                        // add date item only if start date of event is changed.
                         DateTime startDateTime = (eventItem.Start.DateTime == null ? DateTime.Parse(eventItem.Start.Date) : eventItem.Start.DateTime.Value);
                         if (prevDay == null || startDateTime.Day != prevDay )
                             ScheduleListView.Items.Add(NewDateItem(startDateTime));
@@ -62,6 +65,11 @@ namespace Calendar_for_JARVIS
             }
         }
 
+        /// <summary>
+        /// Add new date into schedule list
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         private ListViewItem NewDateItem(DateTime date)
         {
             ListViewItem _listViewItem = new ListViewItem {
@@ -79,6 +87,11 @@ namespace Calendar_for_JARVIS
             return _listViewItem;
         }
 
+        /// <summary>
+        /// Add new schedule into schedule list
+        /// </summary>
+        /// <param name="eventItem"></param>
+        /// <returns></returns>
         private ListViewItem NewScheduleItem(Event eventItem)
         {
             CultureInfo ci = new CultureInfo("en-US");
@@ -121,14 +134,6 @@ namespace Calendar_for_JARVIS
             _listViewItem.Content = _innerStackPannel;
 
             return _listViewItem;
-        }
-        public void OnListView_SelectionChanged(Object sender, RoutedEventArgs e)
-        {
-            if (null != sender && sender is ListView)
-            {
-                ListView lv = sender as ListView;
-                lv.SelectedIndex = -1;
-            }
         }
     }
 }
