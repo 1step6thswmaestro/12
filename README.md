@@ -35,8 +35,8 @@ TV 디스플레이에 알맞게 거울을 재단한 후, 거울을 TV 디스플�
 * [코리아정보통신](http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=A514733995&frm3=V2)
 
 #### 3. 미니PC 및 Raspberry PI 설치
-적당한 크기와 성능의 미니PC와 라즈베리 파이를 준비한 후 TV에 연결합니다.
-이때 라즈베리 파이는 반드시 HDMI로 TV와 연결되도록 합니다.
+적당한 크기와 성능의 미니PC와 라즈베리 파이를 준비한 후 TV에 연결합니다.  
+이때 라즈베리 파이는 반드시 HDMI로 TV와 연결되도록 합니다.  
 libcec가 지원하는 브랜드의 TV여야 합니다.
 
 #### 4. Raspberry PI 센서 연결
