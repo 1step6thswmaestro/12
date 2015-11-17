@@ -68,6 +68,7 @@ libcec가 지원하는 브랜드의 TV여야 합니다.
 * [시계 위젯 (Clock Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/ClockWidget.md)
 * [갤러리 위젯 (Gallery Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/GalleryWidget.md)
 * [날씨 위젯 (Weather Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/WeatherWidget.md)
+* [명언 위젯 (TodaysWord Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/TodaysWordWidget.md)
 * [음악 위젯 (Music Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/MusicWidget.md)
 * [소식 위젯 (RSS Widget)](https://github.com/1step6thswmaestro/12/blob/master/docs/RSSWidget.md)
 * [하드웨어 관련 (Hardwares)](https://github.com/1step6thswmaestro/12/blob/master/docs/Hardware.md)
