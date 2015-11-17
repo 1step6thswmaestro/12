@@ -7,7 +7,7 @@
 
 ## key.json
 key.json 파일은 트위터에서 정보를 갖기 위한 사용자 인증 정보를 저장합니다. 아래 형식을 갖습니다.
-```json
+```javascript
 {
     'ConsumerKey' : 'Here is Consumer Key',
     'ConsumerSecrey' : 'Here is Consumer Secret',
