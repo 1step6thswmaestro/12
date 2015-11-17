@@ -1,4 +1,4 @@
-﻿# Lumino
+﻿# Information Mirror
 Team. **JARVIS**
 
 * **멘티**
@@ -10,7 +10,7 @@ Team. **JARVIS**
 
 
 ## 소개
-* Lumino는 **Mirror TV를 위한 .NET 기반의 플랫폼**입니다.
+* 본 프로젝트는 **Mirror TV를 위한 .NET 기반의 플랫폼**입니다.
 * 하드웨어 부분은 [Smart Mirror](https://www.kickstarter.com/projects/513673859/smartmirror)와 [Raspberry Pi Magic Mirror](http://michaelteeuw.nl/post/84026273526/and-there-it-is-the-end-result-of-the-magic)로부터 많은 참고를 하였습니다.
 
 
@@ -41,7 +41,7 @@ libcec가 지원하는 브랜드의 TV여야 합니다.
 
 * [PIR 인체감지 센서](http://www.artrobot.co.kr/front/php/product.php?product_no=757&main_cate_no=&display_group=)
 
-#### 4. Lumino 플랫폼 탑재 및 실행
+#### 4. 플랫폼 탑재 및 실행
 
 
 ## 문서
