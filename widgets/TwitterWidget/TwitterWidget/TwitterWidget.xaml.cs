@@ -37,29 +37,48 @@ namespace TwitterWidget
         {
             InitializeComponent();
 
+            authorize();
+
             Timeline.Children.Clear();
             refresh();
             stream();
         }
         
-        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-        private SingleUserAuthorizer authorizer = new SingleUserAuthorizer
+        private SingleUserAuthorizer authorizer;
+        /// <summary>
+        /// get auth from twitter
+        /// </summary>
+        private void authorize()
         {
-            CredentialStore = new SingleUserInMemoryCredentialStore
+            try
             {
-                ConsumerKey = "Ag6SLQ18wa2VxFukDkisjvllf",
-                ConsumerSecret = "wIARhN2BpcgqSTB3nMS9NDm5ktaapNeTKZCv4K07ShL9tuBX2W",
-                AccessToken = "1310844906-JAoo9N8MqUQ8SWjPmjf1gozgNFomsMZaFmBA5kO",
-                AccessTokenSecret = "RYSRcdHFTNcxLbA5n199BwWSMef5YK5sLifK5QO5oe8wB"
+                using (StreamReader reader = new StreamReader("key.json")) {
+                    String jsonString = reader.ReadToEnd();
+                    dynamic json = JsonConvert.DeserializeObject(jsonString);
+                    authorizer = new SingleUserAuthorizer
+                    {
+                        CredentialStore = new SingleUserInMemoryCredentialStore
+                        {
+                            ConsumerKey = json.ConsumerKey,
+                            ConsumerSecret = json.ConsumerSecret,
+                            AccessToken = json.AccessToken,
+                            AccessTokenSecret = json.AccessTokenSecret
+                        }
+                    };
+                }
             }
-        };
-
-        private void refreshTimeLine(object sender, EventArgs e)
-        {
-            Timeline.Children.Clear();
-            refresh();
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
+        /// <summary>
+        /// Add new tweet into timeline.
+        /// </summary>
+        /// <param name="name">Name of writter.</param>
+        /// <param name="id">ID of writter.</param>
+        /// <param name="text">Content of tweet.</param>
         private void addTweet(string name, string id, string text)
         {
             _flag = true;
@@ -105,6 +124,10 @@ namespace TwitterWidget
             _flag = false;
         }
 
+        /// <summary>
+        /// Add new tweet into timeline.
+        /// </summary>
+        /// <param name="status">Status object of tweet.</param>
         private void addTweet(Status status)
         {
             _flag = true;
@@ -148,46 +171,58 @@ namespace TwitterWidget
             }
             _flag = false;
         }
-
         bool _flag = false;
 
+        /// <summary>
+        /// Avoke streaming feature. Timeline will be refreshed automatically.
+        /// </summary>
         private async void stream()
         {
             var twitterContext = new TwitterContext(authorizer);
 
             int count = 0;
 
-            await
-                (from strm in twitterContext.Streaming
-                 where strm.Type == StreamingType.User
-                 select strm)
-                .StartAsync(async strm =>
-                {
-                    string message =
-                        string.IsNullOrEmpty(strm.Content) ?
-                            "Keep-Alive" : strm.Content;
-
-                    if (message.Contains("created_at")) {
-
-                        while (_flag != false);
-
-                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                        {
-                            dynamic obj = JsonConvert.DeserializeObject(message);
-                            string name = obj.user.name;
-                            string id = obj.user.screen_name;
-                            string text = obj.text;
-                            addTweet(name, id, text);
-                        }));
-                    }
-
-                    if (count++ == 10)
+            try
+            {
+                await
+                    (from strm in twitterContext.Streaming
+                     where strm.Type == StreamingType.User
+                     select strm)
+                    .StartAsync(async strm =>
                     {
-                        strm.CloseStream();
-                    }
-                });
+                        string message =
+                            string.IsNullOrEmpty(strm.Content) ?
+                                "Keep-Alive" : strm.Content;
+
+                        if (message.Contains("created_at"))
+                        {
+
+                            while (_flag != false) ;
+
+                            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                            {
+                                dynamic obj = JsonConvert.DeserializeObject(message);
+                                string name = obj.user.name;
+                                string id = obj.user.screen_name;
+                                string text = obj.text;
+                                addTweet(name, id, text);
+                            }));
+                        }
+
+                        if (count++ == 100)
+                        {
+                            strm.CloseStream();
+                        }
+                    });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                stream();
+            }
         }
 
+        // get latest 20 tweets and add into timeline.
         private async void refresh()
         {
             try
@@ -206,10 +241,6 @@ namespace TwitterWidget
             catch (Exception e){
                 Console.WriteLine(e.ToString());
             }
-        }
-
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
         }
     }
 }

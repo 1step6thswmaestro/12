@@ -1,6 +1,6 @@
 # Core
 * Team. JARVIS : **소현섭** (iodes, [iodesme@gmail.com](mailTo:iodesme@gmail.com), [Facebook](https://www.facebook.com/profile.php?id=100009172387549))
-* 해당 문서는 [플랫폼](https://github.com/1step6thswmaestro/12)의 [코어(Core)](https://github.com/1step6thswmaestro/12/tree/master/core) 부분에 대하여 기술합니다.
+* 해당 문서는 [Lumino](https://github.com/1step6thswmaestro/12) 플랫폼의 [코어(Core)](https://github.com/1step6thswmaestro/12/tree/master/core) 부분에 대하여 기술합니다.
 
 ## 위젯 구성
 코어에서는 다음의 형식으로 작성한 위젯 파일을 자동으로 불러옵니다.

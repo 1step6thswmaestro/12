@@ -7,20 +7,27 @@ Public Class ExpandView
     Private Sub ExpandView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         If Not IsReady Then
             If IO.Directory.Exists(DataStore) Then
-                ' 경로에서 음악 탐색
                 Dim LoadWorker As New BackgroundWorker
                 AddHandler LoadWorker.DoWork,
                 Sub()
+                    ' 경로에서 음악 탐색
                     MediaManager.MusicList.Clear()
 
                     Dim Musics() As String = IO.Directory.GetFiles(DataStore, "*.mp3")
                     For Each Target As String In Musics
+                        Dim Album As BitmapFrame = TagManager.GetAlbumArt(Target)
+                        Dim AlbumThumb As BitmapFrame = Nothing
+                        Dispatcher.Invoke(
+                            Sub()
+                                AlbumThumb = ImageHelper.Resize(Album, 100, 100)
+                            End Sub)
+
                         Dim Music As New MusicItem With {
-                            .Path = Target,
-                            .Title = TagManager.GetTag(Target, TagManager.TagType.Title),
-                            .Artist = TagManager.GetTag(Target, TagManager.TagType.Artist),
-                            .AlbumArt = TagManager.GetAlbumArt(Target)
-                        }
+                                .Path = Target,
+                                .Title = TagManager.GetTag(Target, TagManager.TagType.Title),
+                                .Artist = TagManager.GetTag(Target, TagManager.TagType.Artist),
+                                .AlbumArt = AlbumThumb
+                            }
 
                         MediaManager.MusicList.Add(Music)
                     Next

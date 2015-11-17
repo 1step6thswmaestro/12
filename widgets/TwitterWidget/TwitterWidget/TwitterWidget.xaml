@@ -36,7 +36,6 @@
     
     <Viewbox>
         <Grid Background="Black"
-              MouseDown="Grid_MouseDown"
               Margin="1, 1, 0, 0"
               >
             <Grid.RowDefinitions>
