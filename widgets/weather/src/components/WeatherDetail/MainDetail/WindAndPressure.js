@@ -11,6 +11,17 @@ var texts = {
     'barometer': 0
 };
 
+
+/**
+ * 이 클래스는 WindAndPressure 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * initDescriptionText(): 컴포넌트에 날씨 정보를 표시합니다.
+ * displayContext(): 컴포넌트에 날씨 정보를 표시합니다.
+ *
+ * @version 151106
+ * @author 나석주
+ */
 var WindAndPressure = {
     initialize: function($) {
         DOM = $('#day-weather-wind-and-pressure');

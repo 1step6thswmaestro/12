@@ -36,6 +36,13 @@ function disableComponent() {
     });
 }
 
+/**
+ * 이 클래스는 WeatherDetail 컴포넌트입니다.
+ * 이 클래스는 Widget이 Active 상태가 되었을 때 호출됩니다.
+ *
+ * @version 151110
+ * @author 나석주
+ */
 
 var WeatherDetail = {
     initialize: function($) {

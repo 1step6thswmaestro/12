@@ -17,7 +17,18 @@ var currentIndex;
 
 var $;
 
-
+/**
+ * 이 클래스는 DateSelector 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * initSlider(): 컴포넌트의 슬라이더를 초기화합니다.
+ * initItems(): 컴포넌트의 슬라이더에 아이템들을 초기화합니다.
+ * selectItem(): 슬라이더의 아이템이 선택되었을때 실행되는 콜백 메소드입니다.
+ * getCurrentIndex(): 현재 선택된 아이템의 index를 반환합니다.
+ *
+ * @version 151108
+ * @author 나석주
+ */
 var DateSelector = _.extend({}, EventEmitter.prototype, {
     initialize: function(_$) {
         $ = _$;
