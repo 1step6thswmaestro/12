@@ -23,7 +23,12 @@ using Google.Apis.Util.Store;
 namespace Calendar_for_JARVIS
 {
     /// <summary>
-    /// Interaction logic for ScheduleList.xaml
+    /// This class is for controling calendar widget.
+    /// This class shows Fullscreen view and get schedules from calendar_for_jarvis class.
+    /// This class starts after calendar_for_jarvis class item is created.
+    /// 
+    /// @version 2015-11-18
+    /// @author NULLEDGE
     /// </summary>
     public partial class ScheduleList : UserControl
     {

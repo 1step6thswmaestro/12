@@ -27,7 +27,12 @@ using System.Threading;
 namespace Calendar_for_JARVIS
 {
     /// <summary>
-    /// Interaction logic for Calendar.xaml
+    /// This class is for controling calendar widget.
+    /// This class shows widget view and get schedules from Google Calendar.
+    /// This class starts at initial time.
+    /// 
+    /// @version 2015-11-18
+    /// @author NULLEDGE
     /// </summary>
     public partial class calendar_for_jarvis : UserControl
     {

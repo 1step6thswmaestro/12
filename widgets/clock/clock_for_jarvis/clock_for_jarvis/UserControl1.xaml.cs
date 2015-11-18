@@ -17,7 +17,11 @@ using System.Windows.Shapes;
 namespace clock_for_jarvis
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// This class is controling clock widget.
+    /// This class shows and refresh time every seconds.
+    /// 
+    /// @version 2015-11-18
+    /// @author NULLEDGE
     /// </summary>
     public partial class UserControl1 : UserControl
     {

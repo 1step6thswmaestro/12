@@ -29,7 +29,12 @@ using System.Windows.Threading;
 namespace TwitterWidget
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// This Class is for controling Twitter Widget.
+    /// This Class streaming user's Twitter timeline.
+    /// This Class automatically starts when widget is loaded.
+    /// 
+    /// @version 2015-11-18
+    /// @author NULLEDGE
     /// </summary>
     public partial class UserControl1 : UserControl
     {
@@ -69,7 +74,7 @@ namespace TwitterWidget
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 
