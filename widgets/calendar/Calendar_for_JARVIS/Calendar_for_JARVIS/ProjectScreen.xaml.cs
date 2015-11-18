@@ -29,13 +29,12 @@ namespace Calendar_for_JARVIS
             InitializeComponent();
 
             widgetView = new calendar_for_jarvis();
+            while (calendar_for_jarvis.events == null) ;
             scheduleView = new ScheduleList();
 
-#if DEBUG
-            Screen.Content = scheduleView;
-#else
             Screen.Content = widgetView;
-#endif
+
+            IsExpand(true);
         }
 
         public void IsExpand(bool value)
