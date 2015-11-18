@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="RSS.View.RSSView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RSS.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="65" d:DesignWidth="300">
+    
+    <Grid>
+        <TextBlock x:Name="TextTitle" Text="기사의 제목" HorizontalAlignment="Stretch" Margin="15,10,15,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" Foreground="White" FontSize="11" FontFamily="Microsoft NeoGothic"/>
+        <TextBlock x:Name="TextPublicationDate" Text="yyyy년 MM월 dd일 tt hh시 mmm분" HorizontalAlignment="Stretch" Margin="15,30,15,15" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" Foreground="#B2FFFFFF" FontSize="9" FontFamily="Microsoft NeoGothic"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,16 @@
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\bin\Debug\Debug.exe.config
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\bin\Debug\Debug.exe
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\bin\Debug\Debug.pdb
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.csprojResolveAssemblyReference.cache
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\MainWindow.g.cs
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\App.g.cs
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug_MarkupCompile.cache
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug_MarkupCompile.lref
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\MainWindow.baml
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.g.resources
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.Properties.Resources.resources
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.csproj.GenerateResource.Cache
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.exe
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\obj\Debug\Debug.pdb
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\bin\Debug\RSS.dll
+c:\Users\SEOP\documents\visual studio 2015\Projects\RSS\Debug\bin\Debug\RSS.pdb
