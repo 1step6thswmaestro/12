@@ -30,7 +30,15 @@ function disableComponent() {
     DOM.attr('style', 'display: none;');
 }
 
-
+/**
+ * 이 클래스는 TodayWeather 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다.
+ * setWeatherData(): 컴포넌트에 날씨 정보를 표시합니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 var TodayWeather = {
     initialize: function($) {
         DOM = $('section#today-weather-component');

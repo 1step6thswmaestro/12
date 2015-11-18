@@ -14,6 +14,16 @@ var texts = {
     'detail-lowTemp': 0
 };
 
+
+/**
+ * 이 클래스는 DayWeatherHeader 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * displayContext(): 컴포넌트에 날씨 정보를 표시합니다.
+ *
+ * @version 151106
+ * @author 나석주
+ */
 var DayWeatherHeader = {
     initialize: function($) {
         DOM = $('#day-weather-header');
