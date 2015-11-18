@@ -1,0 +1,14 @@
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\bin\Debug\RSS.dll
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\bin\Debug\RSS.pdb
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\View\RSSView.g.cs
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\Widget.g.cs
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS_MarkupCompile.cache
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS_MarkupCompile.lref
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\View\RSSView.baml
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\Widget.baml
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.g.resources
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.Properties.Resources.resources
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.csproj.GenerateResource.Cache
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.dll
+c:\users\seop\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.pdb
+C:\Users\SEOP\documents\visual studio 2015\Projects\RSS\RSS\obj\Debug\RSS.csprojResolveAssemblyReference.cache

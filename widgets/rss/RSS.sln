@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSS", "RSS\RSS.csproj", "{AE8CEA42-D162-495D-B662-708E4CC47BDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "Debug\Debug.csproj", "{633F5832-F4AA-4F9B-9F12-F8E0A294D527}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE8CEA42-D162-495D-B662-708E4CC47BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8CEA42-D162-495D-B662-708E4CC47BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8CEA42-D162-495D-B662-708E4CC47BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8CEA42-D162-495D-B662-708E4CC47BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{633F5832-F4AA-4F9B-9F12-F8E0A294D527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{633F5832-F4AA-4F9B-9F12-F8E0A294D527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{633F5832-F4AA-4F9B-9F12-F8E0A294D527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{633F5832-F4AA-4F9B-9F12-F8E0A294D527}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

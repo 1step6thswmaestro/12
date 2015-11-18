@@ -19,3 +19,6 @@
 * Step 5. 적절한 위치에 미니 PC를 고정합니다. 베사 마운트가 없다면 테이프를 이용해 부착합니다.
 * Step 7. 적절한 위치에 라즈베리 파이와 열적외선 감지기를 부착합니다.
 * Step 6. 전원과 연결선을 모두 연결합니다. 이때 라즈베리 파이와 TV는 반드시 HDMI로 연결되어야 합니다.
+
+## 사용 라이브러리
+* [Pulse-Eight libcec](https://github.com/Pulse-Eight/libcec)
