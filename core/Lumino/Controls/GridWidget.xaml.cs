@@ -15,7 +15,7 @@ using Lumino.Controls;
 namespace Lumino
 {
     /// <summary>
-    /// GridWidget.xaml에 대한 상호 작용 논리
+    /// 격자 위에 배치할 수 있는 위젯입니다.
     /// </summary>
     public partial class GridWidget : UserControl
     {

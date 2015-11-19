@@ -11,6 +11,10 @@ using System.Windows.Media;
 
 namespace Lumino.Controls
 {
+    /// <summary>
+    /// ScrollViewer를 터치 인터페이스에 자연스럽게 대응할 수 있도록 개선합니다.
+    /// 출처 : http://goo.gl/6yatQy
+    /// </summary>
     class ScrollViewerWithTouch : ScrollViewer
     {
         /// <summary>

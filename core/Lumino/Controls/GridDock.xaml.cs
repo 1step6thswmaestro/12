@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 namespace Lumino
 {
     /// <summary>
-    /// GridDock.xaml에 대한 상호 작용 논리
+    /// 위젯을 배치할 수 있는 격자 시스템을 제공합니다.
     /// </summary>
     public partial class GridDock : UserControl
     {

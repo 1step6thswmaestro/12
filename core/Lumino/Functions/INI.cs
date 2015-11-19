@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace Lumino.Functions
 {
+    /// <summary>
+    /// INI 파일의 읽기 및 쓰기를 제공합니다.
+    /// </summary>
     class INI
     {
         private string Path;
