@@ -27,6 +27,7 @@ namespace Lumino
         private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
+            MessageBox.Show(e.Exception.Message);
             Console.WriteLine("Global Exception : " + e.Exception.Message);
         }
     }
