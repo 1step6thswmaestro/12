@@ -95,6 +95,18 @@
 @color-yellow: #FFEB3B;
 
 
+* {
+    cursor: default;
+    outline: none;
+}
+
+::selection {
+    background: transparent; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+    background: transparent; /* Gecko Browsers */
+}
+
 html, body {
     width: 100%;
     height: 100%;

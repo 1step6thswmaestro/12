@@ -24,6 +24,15 @@ function disableComponent() {
 var Screen;
 var DOM;
 
+
+/**
+ * 이 클래스는 LiveTiles 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ *
+ * @version 151108
+ * @author 나석주
+ */
 var LiveTiles = {
     initialize: function($) {
         Screen = $('#SCREEN_NORMAL');
@@ -33,7 +42,6 @@ var LiveTiles = {
     activeApp: Flowing.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
         function() {
-            console.log("active");
             disableComponent();
         }
     ),

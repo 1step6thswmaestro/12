@@ -2798,7 +2798,7 @@ function activeComponent() {
                 opacity: 1
             }, 500, 'swing');
         });
-    
+
     setTimeout(function() {
         selectedImage.data('owlCarousel').reinit({
             singleItem : true,
@@ -2866,6 +2866,16 @@ var selector;
 var btnPrev;
 var btnNext;
 
+
+/**
+ * 이 클래스는 ImageSlider 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * initSlider(): 컴포넌트의 슬라이더를 초기화합니다.
+ *
+ * @version 151108
+ * @author 나석주
+ */
 var ImageSlider = {
     initialize: function($) {
         Screen = $('#SCREEN_ACTIVE');
@@ -2901,6 +2911,7 @@ var ImageSlider = {
 };
 
 module.exports = ImageSlider;
+
 },{"../../constants/Constants":9,"../../controller/AppFlowController":10}],8:[function(require,module,exports){
 var Flowing = require('../../controller/AppFlowController');
 var Constants = require('../../constants/Constants');
@@ -2928,6 +2939,15 @@ function disableComponent() {
 var Screen;
 var DOM;
 
+
+/**
+ * 이 클래스는 LiveTiles 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ *
+ * @version 151108
+ * @author 나석주
+ */
 var LiveTiles = {
     initialize: function($) {
         Screen = $('#SCREEN_NORMAL');
@@ -2937,7 +2957,6 @@ var LiveTiles = {
     activeApp: Flowing.addSubscribe(
         Constants.FlowID.ACTIVE_APP,
         function() {
-            console.log("active");
             disableComponent();
         }
     ),
@@ -2951,6 +2970,7 @@ var LiveTiles = {
 };
 
 module.exports = LiveTiles;
+
 },{"../../constants/Constants":9,"../../controller/AppFlowController":10}],9:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
@@ -2965,6 +2985,13 @@ module.exports = {
 var FlowController = require('flowing-js').FlowController;
 var Constants = require('../constants/Constants');
 
+/**
+ * 이 클래스는 데이터 플로우를 컨트롤하기 위한 클래스입니다.
+ * 이 클래스는 main 모듈이 실행 시 초기화됩니다.
+ *
+ * @version 151026
+ * @author 나석주
+ */
 var AppFlowController = new FlowController();
 
 AppFlowController.addFlow(Constants.FlowID.LOAD_PICTURES);
@@ -2972,11 +2999,20 @@ AppFlowController.addFlow(Constants.FlowID.ACTIVE_APP);
 AppFlowController.addFlow(Constants.FlowID.DISABLE_APP);
 
 module.exports = AppFlowController;
+
 },{"../constants/Constants":9,"flowing-js":2}],11:[function(require,module,exports){
 var AppFlowController = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
 
 
+/**
+ * 이 클래스는 액션 발생기 - Dispatcher의 메소드를 정의한 클래스입니다.
+ * 이 클래스는 액션의 흐름을 정의하고, 액션의 인터페이스를 정의합니다.
+ *
+ *
+ * @version 151028
+ * @author 나석주
+ */
 var AppDispatcher = {
     activeApp: function() {
         AppFlowController.dispatch(
@@ -2994,6 +3030,7 @@ var AppDispatcher = {
 };
 
 module.exports = AppDispatcher;
+
 },{"../constants/Constants":9,"../controller/AppFlowController":10}],12:[function(require,module,exports){
 'use strict';
 
@@ -3003,6 +3040,13 @@ require('./stores/PictureStore');
 var ImageSlider = require('./components/ImageSlider/ImageSlider');
 var LiveTiles = require('./components/LiveTiles/LiveTiles');
 
+/**
+ * 이 클래스는 컴포넌트 모듈을 초기화하기 위한 클래스입니다.
+ * 이 클래스는 DOM 트리 구축이 완료 되었을 때 호출됩니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 $(document).ready(function() {
     var liveTiles = $('#component-live-tiles');
 
@@ -3011,6 +3055,7 @@ $(document).ready(function() {
     LiveTiles.initialize($);
     ImageSlider.initialize($);
 });
+
 },{"./components/ImageSlider/ImageSlider":7,"./components/LiveTiles/LiveTiles":8,"./stores/PictureStore":13,"./utils/PlatformCommands":14}],13:[function(require,module,exports){
 var Flowing = require('../controller/AppFlowController');
 var Constants = require('../constants/Constants');
@@ -3041,6 +3086,15 @@ module.exports = PictureStore;
 },{"../constants/Constants":9,"../controller/AppFlowController":10,"flowing-js":2}],14:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 
+/**
+ * 이 클래스는 플랫폼의 API를 정의한 클래스입니다.
+ * 이 클래스는 플랫폼이 사용가능한 IsExpend(@param) 메소드를 window 객체에 등록합니다.
+ * IsExpand(@param) - @param이 true일 경우, Widget을 Active 상태로 바꿉니다.
+ *                  - @param이 false일 경우, Widget을 Disable 상태로 바꿉니다.
+ *
+ * @version 151101
+ * @author 나석주
+ */
 var initWidget = (function (window) {
     function addExpendMethod() {
         if (window.hasOwnProperty('IsExpand')) { return; }
@@ -3060,4 +3114,5 @@ var initWidget = (function (window) {
 })(window);
 
 module.exports = initWidget;
+
 },{"../dispatcher/AppDispatcher":11}]},{},[12]);

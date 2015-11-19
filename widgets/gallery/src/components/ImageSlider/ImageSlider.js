@@ -11,7 +11,7 @@ function activeComponent() {
                 opacity: 1
             }, 500, 'swing');
         });
-    
+
     setTimeout(function() {
         selectedImage.data('owlCarousel').reinit({
             singleItem : true,
@@ -79,6 +79,16 @@ var selector;
 var btnPrev;
 var btnNext;
 
+
+/**
+ * 이 클래스는 ImageSlider 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * initSlider(): 컴포넌트의 슬라이더를 초기화합니다.
+ *
+ * @version 151108
+ * @author 나석주
+ */
 var ImageSlider = {
     initialize: function($) {
         Screen = $('#SCREEN_ACTIVE');

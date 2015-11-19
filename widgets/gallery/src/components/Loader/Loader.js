@@ -29,7 +29,15 @@ function loadComplete() {
     PlatformCommands();
 }
 
-
+/**
+ * 이 클래스는 Loader 컴포넌트입니다.
+ *
+ * initialize(): 이 클래스를 초기화합니다. DOM 객체를 저장합니다.
+ * loadStart(): 컴포넌트를 loading 상태로 만듭니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 var Loader = {
     initialize: function($) {
         LoaderDOM = $('#loader');

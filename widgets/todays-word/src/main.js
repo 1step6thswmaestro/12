@@ -9,6 +9,14 @@ var authorConstants = [
 	'&#151; Thomas A. Edison'
 ];
 
+
+/**
+ * 이 클래스는 컴포넌트 모듈을 초기화하기 위한 클래스입니다.
+ * 이 클래스는 DOM 트리 구축이 완료 되었을 때 호출됩니다.
+ *
+ * @version 151028
+ * @author 나석주
+ */
 $(document).ready(function($){
 
     author = $('#author').find('span');
@@ -24,12 +32,12 @@ $(document).ready(function($){
 		typeLettersDelay = 150,
 		selectionDuration = 500,
 		typeAnimationDelay = selectionDuration + 800,
-		//clip effect 
+		//clip effect
 		revealDuration = 600,
 		revealAnimationDelay = 1500;
-	
+
 	initHeadline();
-	
+
 
 	function initHeadline() {
 		//insert <i> element for each letter of a changing word
@@ -58,7 +66,7 @@ $(document).ready(function($){
 		var duration = animationDelay;
 		$headlines.each(function(){
 			var headline = $(this);
-			
+
 			if(headline.hasClass('loading-bar')) {
 				duration = barAnimationDelay;
 				setTimeout(function(){ headline.find('.cd-words-wrapper').addClass('is-loading') }, barWaiting);
@@ -103,16 +111,16 @@ $(document).ready(function($){
 	function hideWord($word) {
         authorize();
         var nextWord = takeNext($word);
-		
+
 		if($word.parents('.cd-headline').hasClass('type')) {
 			var parentSpan = $word.parent('.cd-words-wrapper');
-			parentSpan.addClass('selected').removeClass('waiting');	
-			setTimeout(function(){ 
-				parentSpan.removeClass('selected'); 
+			parentSpan.addClass('selected').removeClass('waiting');
+			setTimeout(function(){
+				parentSpan.removeClass('selected');
 				$word.removeClass('is-visible').addClass('is-hidden').children('i').removeClass('in').addClass('out');
 			}, selectionDuration);
 			setTimeout(function(){ showWord(nextWord, typeLettersDelay) }, typeAnimationDelay);
-		
+
 		} else if($word.parents('.cd-headline').hasClass('letters')) {
 			var bool = ($word.children('i').length >= nextWord.children('i').length) ? true : false;
 			hideLetter($word.find('i').eq(0), $word, bool, lettersDelay);
@@ -142,33 +150,33 @@ $(document).ready(function($){
 			$word.addClass('is-visible').removeClass('is-hidden');
 
 		}  else if($word.parents('.cd-headline').hasClass('clip')) {
-			$word.parents('.cd-words-wrapper').animate({ 'width' : $word.width() + 10 }, revealDuration, function(){ 
-				setTimeout(function(){ hideWord($word) }, revealAnimationDelay); 
+			$word.parents('.cd-words-wrapper').animate({ 'width' : $word.width() + 10 }, revealDuration, function(){
+				setTimeout(function(){ hideWord($word) }, revealAnimationDelay);
 			});
 		}
 	}
 
 	function hideLetter($letter, $word, $bool, $duration) {
 		$letter.removeClass('in').addClass('out');
-		
+
 		if(!$letter.is(':last-child')) {
-		 	setTimeout(function(){ hideLetter($letter.next(), $word, $bool, $duration); }, $duration);  
-		} else if($bool) { 
+		 	setTimeout(function(){ hideLetter($letter.next(), $word, $bool, $duration); }, $duration);
+		} else if($bool) {
 		 	setTimeout(function(){ hideWord(takeNext($word)) }, animationDelay);
 		}
 
 		if($letter.is(':last-child') && $('html').hasClass('no-csstransitions')) {
 			var nextWord = takeNext($word);
 			switchWord($word, nextWord);
-		} 
+		}
 	}
 
 	function showLetter($letter, $word, $bool, $duration) {
 		$letter.addClass('in').removeClass('out');
-		
-		if(!$letter.is(':last-child')) { 
-			setTimeout(function(){ showLetter($letter.next(), $word, $bool, $duration); }, $duration); 
-		} else { 
+
+		if(!$letter.is(':last-child')) {
+			setTimeout(function(){ showLetter($letter.next(), $word, $bool, $duration); }, $duration);
+		} else {
 			if($word.parents('.cd-headline').hasClass('type')) { setTimeout(function(){ $word.parents('.cd-words-wrapper').addClass('waiting'); }, 200);}
 			if(!$bool) { setTimeout(function(){ hideWord($word) }, animationDelay) }
 		}
