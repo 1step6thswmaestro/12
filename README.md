@@ -10,8 +10,12 @@ Team. **JARVIS**
 
 
 ## 소개
+
+<iframe width="960" height="720" src="https://www.youtube.com/embed/THxZh55u7LA?rel=0" frameborder="0" allowfullscreen></iframe>
+
 * 본 프로젝트는 **Mirror TV를 위한 .NET 기반의 플랫폼**입니다.
 * 하드웨어 부분은 [Smart Mirror](https://www.kickstarter.com/projects/513673859/smartmirror)와 [Raspberry Pi Magic Mirror](http://michaelteeuw.nl/post/84026273526/and-there-it-is-the-end-result-of-the-magic)로부터 많은 참고를 하였습니다.
+
 
 ## 설치 및 실행
 ### 하드웨어

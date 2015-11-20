@@ -95,17 +95,6 @@
 @color-yellow: #FFEB3B;
 
 
-* {
-    cursor: default;
-    outline: none;
-}
-
-::selection {
-    background: transparent; /* WebKit/Blink Browsers */
-}
-::-moz-selection {
-    background: transparent; /* Gecko Browsers */
-}
 
 html, body {
     width: 100%;
@@ -142,7 +131,7 @@ html, body {
             -webkit-flex: 1;
             flex: 1;
 
-            margin: -10px;
+            padding: .5vh .5vw;
 
             display: -webkit-flex;
             display: flex;
@@ -177,7 +166,7 @@ html, body {
                 padding: 0;
                 margin: 0;
                 outline: 0;
-                border: 15px solid transparent;
+                border: 3px solid transparent;
                 display: block;
                 z-index: 20;
                 overflow: hidden;
@@ -229,7 +218,7 @@ html, body {
                     &.yellow { background-color: @color-yellow; }
 
                     span {
-                        font-size: 5vw;
+                        font-size: 4vw;
                         font-family: @font-main;
                         line-height: 1.3;
                         color: @color-white;
