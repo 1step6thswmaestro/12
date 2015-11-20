@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 namespace Lumino
 {
     /// <summary>
-    /// GridDock.xaml에 대한 상호 작용 논리
+    /// 위젯을 배치할 수 있는 격자 시스템을 제공합니다.
     /// </summary>
     public partial class GridDock : UserControl
     {
@@ -330,9 +330,12 @@ namespace Lumino
                     IsDrawerOpen = false;
                     GridWidget Target = new GridWidget
                     {
-                        NowLoading = true
+                        NowLoading = true,
+                        LazyLoading = Path,
+                        LoadingImage = (BitmapImage)WidgerThumb.Source
                     };
-                    if (Target.Load(Path))
+
+                    if (Target.LoadConfig(Path))
                     {
                         Add(Target);
                         Target.StartMouseDown();
@@ -342,7 +345,7 @@ namespace Lumino
                         AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
                             "오류",
                             "위젯을 로드할 수 없습니다.\n" +
-                            "구성 파일을 확인해주십시오.",
+                            "구성 파일 오류가 발생하였습니다.",
                             false);
 
                         Dialog.ShowDialog();

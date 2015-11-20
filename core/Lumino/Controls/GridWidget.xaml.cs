@@ -10,11 +10,12 @@ using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Windows.Media;
+using Lumino.Controls;
 
 namespace Lumino
 {
     /// <summary>
-    /// GridWidget.xaml에 대한 상호 작용 논리
+    /// 격자 위에 배치할 수 있는 위젯입니다.
     /// </summary>
     public partial class GridWidget : UserControl
     {
@@ -195,6 +196,27 @@ namespace Lumino
             set
             {
                 _NowLoading = value;
+            }
+        }
+
+        private string _LazyLoading;
+        public string LazyLoading
+        {
+            get { return _LazyLoading; }
+            set
+            {
+                _LazyLoading = value;
+            }
+        }
+
+        private BitmapImage _LoadingImage;
+        public BitmapImage LoadingImage
+        {
+            get { return _LoadingImage; }
+            set
+            {
+                _LoadingImage = value;
+                ImgLoading.Source = value;
             }
         }
         #endregion
@@ -439,23 +461,15 @@ namespace Lumino
         #endregion
 
         #region 사용자 함수
-        public bool Load(string Path)
+        public bool Load(string Path, bool AssemblyOnly = false)
         {
             try
             {
-                // 위젯 분석
-                INI Widget = new INI(Path);
-                string Local = "<%LOCAL%>";
-                _INI = Path;
-                _Title = Widget.GetValue("General", "Title");
-                _Author = Widget.GetValue("General", "Author");
-                _Summary = Widget.GetValue("General", "Summary");
-                _AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                _AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                _AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
-                _AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
-                _AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
-                _AppearanceExpandable = bool.Parse(Widget.GetValue("Appearance", "Expandable"));
+                // 구성 파일 로드
+                if (!AssemblyOnly)
+                {
+                    LoadConfig(Path);
+                }
 
                 if (AssemblyFile.Equals("local"))
                 {
@@ -496,6 +510,32 @@ namespace Lumino
                     // 검색된 컨트롤을 현재 컨트롤에 추가
                     BorderContent.Child = WidgetControl;
                 }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool LoadConfig(string Path)
+        {
+            try
+            {
+                // 위젯 분석
+                INI Widget = new INI(Path);
+                string Local = "<%LOCAL%>";
+                _INI = Path;
+                _Title = Widget.GetValue("General", "Title");
+                _Author = Widget.GetValue("General", "Author");
+                _Summary = Widget.GetValue("General", "Summary");
+                _AssemblyFile = Widget.GetValue("Assembly", "File").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyEntry = Widget.GetValue("Assembly", "Entry").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AssemblyArgument = Widget.GetValue("Assembly", "Argument").Replace(Local, System.IO.Path.GetDirectoryName(Path)).Trim();
+                _AppearanceWidth = int.Parse(Widget.GetValue("Appearance", "Width"));
+                _AppearanceHeight = int.Parse(Widget.GetValue("Appearance", "Height"));
+                _AppearanceExpandable = bool.Parse(Widget.GetValue("Appearance", "Expandable"));
 
                 // 위젯 모양새 적용
                 if (ParentDock != null)
@@ -565,8 +605,11 @@ namespace Lumino
 
         private void PositionAnimation_Completed(object sender, EventArgs e)
         {
-            Canvas.SetLeft(this, ParentDock.GridWidth * LastColumn);
-            Canvas.SetTop(this, ParentDock.GridHeight * LastRow);
+            if (ParentDock != null)
+            {
+                Canvas.SetLeft(this, ParentDock.GridWidth * LastColumn);
+                Canvas.SetTop(this, ParentDock.GridHeight * LastRow);
+            }
         }
 
         public void StartMouseDown(MouseButtonEventArgs e = null)
@@ -599,7 +642,11 @@ namespace Lumino
                 ParentDock.GridTopDeleteMenu.Visibility = Visibility.Collapsed;
             }
 
-            if (!DeleteSelect)
+            if (DeleteSelect)
+            {
+                ParentDock.Remove(this);
+            }
+            else
             {
                 if (PositionError)
                 {
@@ -659,6 +706,26 @@ namespace Lumino
                     {
                         StopMouseDown();
                         NowLoading = false;
+
+                        if (LazyLoading != null)
+                        {
+                            if (Load(LazyLoading, true))
+                            {
+                                ImgLoading.Visibility = Visibility.Collapsed;
+                            }
+                            else if (ParentDock != null)
+                            {
+                                ParentDock.Remove(this);
+
+                                AlertDialog Dialog = new AlertDialog(Application.Current.MainWindow,
+                                    "오류",
+                                    "위젯을 로드할 수 없습니다.\n" +
+                                    "어셈블리 오류가 발생하였습니다.",
+                                    false);
+
+                                Dialog.ShowDialog();
+                            }
+                        }
                     }
                 }
                 else
@@ -713,10 +780,6 @@ namespace Lumino
             if (!Expand)
             {
                 StopMouseDown();
-                if (DeleteSelect)
-                {
-                    ParentDock.Remove(this);
-                }
             }
         }
 

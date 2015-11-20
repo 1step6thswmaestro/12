@@ -5,7 +5,7 @@ using System.Windows.Media;
 namespace Lumino
 {
     /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
+    /// 플랫폼의 메인 진입점입니다.
     /// </summary>
     public partial class MainWindow : Window
     {

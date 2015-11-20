@@ -5,6 +5,9 @@ using System.IO;
 
 namespace Lumino.Functions
 {
+    /// <summary>
+    /// 환경 설정 구성 파일을 관리합니다.
+    /// </summary>
     public class ConfigManager
     {
         public static string VirtualStore = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lumino";

@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace Lumino.Controls
 {
     /// <summary>
-    /// AlertDialog.xaml에 대한 상호 작용 논리
+    /// 사용자 지정 형식의 대화 상자를 제공합니다.
     /// </summary>
     public partial class AlertDialog : Window
     {
